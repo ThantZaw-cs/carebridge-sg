@@ -1,0 +1,1768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>CareBridge SG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Tamil:wght@400;700&display=swap">
+<style>
+/* Layout: the poster itself. A flat indigo canvas, with content on off-white rounded "boards"; inside them, cream cards with
+   indigo number discs, lavender caption strips, a blue title bar with a white icon, month tags. One look, no dark variant (poster is one look).
+   Human help is the poster's coin yellow and nothing else uses it. */
+:root{
+  color-scheme:light;
+  --canvas:#4446BF; --canvas-2:#3B3DB0; --canvas-line:rgba(255,255,255,.22);
+  --board:#F5F5FC; --card:#FFFEFA; --line:#E0E1F2; --line-2:#CFD1EE;
+  --ink:#1B1F4E; --muted:#4B5180;
+  --indigo:#2A2EA3; --brand:#3B3FC2; --brand-deep:#2A2EA3; --brand-ink:#FFFFFF;
+  --lav:#E2E1FF; --lav-2:#ECEDFF; --lav-ink:#262A95;
+  --teal:#0D8C77; --teal-2:#14A38B; --teal-soft:#D2F2EB;
+  --purple:#6A4FD9; --purple-soft:#E8E2FF;
+  --sun:#F5B83D; --sun-ink:#2A1C00; --sun-soft:#FFF4DA; --sun-line:#E8C46E;
+  --good:#1A6C44; --good-soft:#E0F3E8; --warn:#8A5000; --warn-soft:#FFEFD0; --alert:#A8221B; --alert-soft:#FBE6E4;
+  --white:#FFFFFF; --white-2:rgba(255,255,255,.84);
+  --bg:var(--board); --surface:var(--card);
+  --scrim:rgba(18,18,60,.55); --focus:#F5B83D;
+  --f:'Poppins','Noto Sans SC','Noto Sans Tamil',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --r-sm:12px; --r-md:16px; --r-lg:22px; --r-xl:28px; --hs:1;
+}
+html{font-size:112.5%}
+html[data-size="2"]{font-size:131.25%}
+html[data-size="3"]{font-size:150%}
+html[lang="ta"]{--hs:.82}
+body{background:var(--canvas);color:var(--ink);font-family:var(--f);font-size:1rem;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+*{box-sizing:border-box}
+h1,h2,h3,h4{font-family:var(--f);line-height:1.25;text-wrap:balance;margin:0;font-weight:700;color:var(--indigo)}
+h1{font-size:calc(1.85rem*var(--hs))}
+h2{font-size:calc(1.35rem*var(--hs))}
+h3{font-size:calc(1.08rem*var(--hs))}
+p{margin:0}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:4px solid var(--focus);outline-offset:3px;border-radius:8px}
+.ic{width:1.5em;height:1.5em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* top bar */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--canvas)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--canvas);border-bottom:1px solid var(--canvas-line)}
+.top-in{max-width:76rem;margin:0 auto;display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:4px;cursor:pointer;color:var(--white);font-weight:700;font-size:1.2rem}
+.brand svg{width:2.3rem;height:2.3rem}
+.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto}
+.tbtn{display:inline-flex;align-items:center;gap:6px;min-height:2.8rem;padding:0 14px;border-radius:999px;border:2px solid rgba(255,255,255,.5);background:transparent;color:var(--white);font-weight:600;cursor:pointer}
+.tbtn:hover{background:rgba(255,255,255,.1)}
+.size{display:flex;align-items:center;gap:2px;border-radius:999px;border:2px solid rgba(255,255,255,.5);padding:2px}
+.size button{min-width:2.4rem;height:2.4rem;border-radius:999px;border:0;background:none;color:var(--white);cursor:pointer;font-weight:700}
+.size button[data-arg="1"]{font-size:.82rem}.size button[data-arg="2"]{font-size:1rem}.size button[data-arg="3"]{font-size:1.22rem}
+.size button[aria-pressed="true"]{background:var(--white);color:var(--indigo)}
+
+/* page */
+#app{display:flex;flex-direction:column;gap:22px;padding-block:22px 9rem;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#app:focus{outline:none}
+h1:focus{outline:none}
+.wrap{width:100%;max-width:50rem;margin:0 auto;background:var(--board);border-radius:var(--r-xl);padding:24px;display:flex;flex-direction:column;gap:24px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.lead{font-size:1.08rem;color:var(--muted)}
+.label{font-weight:600;color:var(--brand);font-size:.92rem}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.5rem;padding:.65rem 1.35rem;border-radius:var(--r-sm);border:2px solid transparent;font-weight:600;font-size:1rem;cursor:pointer;text-align:center;line-height:1.25}
+.btn-primary{background:var(--brand);color:var(--brand-ink)}
+.btn-primary:hover{background:var(--brand-deep)}
+.btn-human{background:var(--sun);color:var(--sun-ink)}
+.btn-human:hover{background:#EAAA2B}
+.btn-quiet{background:var(--card);color:var(--indigo);border-color:var(--line-2)}
+.btn-quiet:hover{border-color:var(--brand)}
+.btn-white{background:var(--white);color:var(--indigo)}
+.btn-white:hover{background:var(--lav-2)}
+.btn-ghost{background:transparent;color:var(--white);border-color:rgba(255,255,255,.7)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;min-height:3.1rem;padding:0 18px 0 10px;border-radius:999px;border:2px solid var(--line-2);background:var(--card);color:var(--indigo);font-weight:600;cursor:pointer}
+.back:hover{border-color:var(--brand)}
+.linkbtn{background:none;border:0;padding:8px 0;color:var(--brand);font-weight:600;text-decoration:underline;text-underline-offset:4px;cursor:pointer;text-align:left}
+
+/* poster devices */
+.num{width:2.3rem;height:2.3rem;border-radius:50%;background:var(--brand);color:var(--white);display:inline-grid;place-items:center;font-weight:700;font-size:1.05rem;flex:none;box-shadow:0 0 0 4px var(--lav)}
+.disc{width:2.6rem;height:2.6rem;border-radius:50%;background:var(--brand);color:var(--white);display:inline-grid;place-items:center;flex:none}
+.disc .ic{width:1.35rem;height:1.35rem}
+.disc.teal{background:var(--teal-2)}.disc.purple{background:var(--purple)}
+.titlepill{display:inline-flex;align-items:center;gap:12px;padding:.5rem 1.4rem .5rem .9rem;border-radius:999px;background:var(--lav);border:2px solid #C9C8FA;color:var(--indigo);font-weight:700;font-size:calc(1.45rem*var(--hs));line-height:1.2}
+.titlepill .ic{width:1.9rem;height:1.9rem;color:var(--brand)}
+.pillhead{display:flex;align-items:center;gap:12px 22px;flex-wrap:wrap}
+.pillhead p{flex:1 1 18rem;min-width:0;color:var(--indigo);font-weight:600;font-size:1.02rem;line-height:1.4}
+.barhead{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:var(--r-lg);background:var(--canvas);color:var(--white)}
+.barhead > .ic{width:2.4rem;height:2.4rem}
+.barhead h1,.barhead h2{color:var(--white)}
+.barhead h1{font-size:calc(1.55rem*var(--hs))}
+.barhead p{color:var(--white-2);font-size:.95rem}
+.barhead > div{min-width:0}
+.strip{background:var(--lav-2);color:var(--lav-ink);border-radius:var(--r-sm);padding:10px 14px;font-size:.88rem;font-weight:600;line-height:1.4}
+.pic{display:block}
+.pic svg{display:block;width:100%;height:100%}
+.mini{width:6rem;height:4.1rem;flex:none;display:block}
+.mini svg{display:block;width:100%;height:100%}
+
+/* landing: hero */
+.hero{width:100%;max-width:76rem;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr) minmax(0,1.1fr);gap:20px 28px;align-items:center;color:var(--white)}
+.hero-txt{display:flex;flex-direction:column;gap:14px;min-width:0}
+.langrow{display:flex;gap:8px;flex-wrap:wrap}
+.lp{min-height:2.6rem;padding:0 14px;border-radius:999px;border:2px solid rgba(255,255,255,.45);background:transparent;color:var(--white);font-weight:600;cursor:pointer;font-family:var(--f);font-size:.9rem}
+.lp[aria-pressed="true"]{background:var(--white);color:var(--indigo);border-color:var(--white)}
+.bigbrand{display:flex;align-items:center;gap:16px}
+.bigbrand svg{width:4.6rem;height:4.6rem;flex:none}
+.bigbrand h1{color:var(--white);font-size:calc(2.7rem*var(--hs));font-weight:800;letter-spacing:-.01em;line-height:1.05}
+.tagline{font-weight:700;font-size:calc(1.22rem*var(--hs));line-height:1.35}
+.hero-lead{color:var(--white-2);max-width:32rem}
+.hero-note{color:var(--white-2);font-size:.88rem}
+.hero-art{align-self:end;min-width:0}
+.hero-art svg{display:block;width:100%;height:auto}
+.probcard{background:var(--white);color:var(--ink);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ph-row{display:flex;align-items:center;gap:12px}
+.alert-dot{width:2.4rem;height:2.4rem;border-radius:50%;background:var(--brand);color:var(--white);display:grid;place-items:center;flex:none}
+.alert-dot .ic{stroke-width:3}
+.probcard > p{font-size:.95rem;color:var(--muted)}
+.stmt{background:var(--lav-2);border-radius:var(--r-md);padding:16px;display:flex;flex-direction:column;gap:8px}
+.stmt .ph-row .ic{color:var(--brand);width:1.9rem;height:1.9rem}
+.stmt h3{font-size:1rem}
+.stmt p{color:var(--indigo);font-weight:600;line-height:1.45}
+
+/* landing: boards */
+.board{width:100%;max-width:76rem;margin:0 auto;background:var(--board);border-radius:var(--r-xl);padding:24px;display:flex;flex-direction:column;gap:20px}
+.features{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.feat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.feat-h{display:flex;align-items:flex-start;gap:12px}
+.feat-h h3{font-size:calc(1rem*var(--hs));padding-top:.15rem}
+.feat .pic{height:7rem}
+.dots{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;font-size:.9rem;line-height:1.45}
+.dots li::marker{color:var(--brand)}
+.feat .strip{margin-top:auto;text-align:center}
+.motto{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.motto div{border-radius:var(--r-lg);padding:16px 20px;display:flex;flex-direction:column;gap:4px}
+.motto .dig{background:var(--lav);color:var(--indigo)}
+.motto .hum{background:var(--sun);color:var(--sun-ink)}
+.motto b{font-weight:700;font-size:calc(1.2rem*var(--hs));line-height:1.25}
+.motto span{font-size:.92rem}
+.plan{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:26px}
+.plan li{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;min-width:0}
+.plan li + li::before{content:"";position:absolute;left:-20px;top:50%;width:13px;height:13px;border-top:3px solid var(--brand);border-right:3px solid var(--brand);transform:translateY(-50%) rotate(45deg)}
+.plan .ph-row{gap:8px}
+.mtag{font-weight:700;font-size:.85rem;padding:3px 12px;border-radius:999px;background:var(--lav);color:var(--indigo);white-space:nowrap}
+.mtag.teal{background:var(--teal-soft);color:#075A4C}.mtag.purple{background:var(--purple-soft);color:#45309E}
+.plan h3{font-size:calc(.98rem*var(--hs))}
+.plan p{font-size:.86rem;color:var(--muted);line-height:1.45}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.trio article{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.trio .lens{font-size:.82rem;font-weight:600;color:var(--muted)}
+.trio p{font-size:.93rem}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 26px}
+.how > div{display:flex;gap:12px;min-width:0}
+.how h3{font-size:calc(1rem*var(--hs));margin-bottom:2px}
+.how p{font-size:.9rem;color:var(--muted)}
+.subhead{display:flex;align-items:center;gap:12px;padding-top:6px;border-top:1px solid var(--line)}
+.subhead h2{padding-top:14px}
+
+/* landing: impact */
+.impact{width:100%;max-width:76rem;margin:0 auto;border:1.5px solid var(--canvas-line);background:var(--canvas-2);border-radius:var(--r-xl);padding:22px;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr)) minmax(0,1.05fr);gap:18px;align-items:start;color:var(--white)}
+.impact > .imp-title,.impact > .quote{align-self:center}
+.imp-title{display:flex;align-items:center;gap:12px;padding-right:8px}
+.imp-title .ic{width:2.6rem;height:2.6rem}
+.imp-title h2{color:var(--white);font-size:calc(1.4rem*var(--hs))}
+.imp-g{display:flex;gap:12px;align-items:flex-start;padding-left:18px;border-left:1.5px solid var(--canvas-line);min-width:0}
+.imp-ic{width:3rem;height:3rem;border-radius:50%;background:var(--white);color:var(--brand);display:grid;place-items:center;flex:none}
+.imp-g h3{color:var(--white);font-size:calc(1rem*var(--hs));margin-bottom:4px}
+.imp-g ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-size:.86rem;color:var(--white-2);line-height:1.4}
+.imp-g li{display:flex;gap:6px}
+.imp-g li .ic{width:1.05em;height:1.05em;margin-top:.15em;stroke-width:2.6;color:var(--white)}
+.quote{display:flex;gap:12px;align-items:center;background:var(--lav);color:var(--indigo);border-radius:var(--r-lg);padding:16px 18px;font-weight:700;line-height:1.35;font-size:calc(1rem*var(--hs))}
+.quote .ic{color:var(--brand);width:2rem;height:2rem;fill:var(--brand)}
+.canvas-foot{width:100%;max-width:76rem;margin:0 auto}
+.foot{border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:6px;font-size:.85rem;color:var(--muted)}
+.canvas-foot .foot{color:var(--white-2);border-color:var(--canvas-line)}
+
+/* home */
+.greet{width:100%;max-width:50rem;margin:0 auto;display:flex;flex-direction:column;gap:4px;color:var(--white)}
+.greet h1{color:var(--white);font-size:calc(2.1rem*var(--hs));font-weight:800}
+.greet .hi{color:var(--white-2)}
+.greet p{color:var(--white-2);font-size:1.08rem}
+.greet .chip{align-self:flex-start;margin-top:6px;background:rgba(255,255,255,.16);color:var(--white)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:.84rem;font-weight:600;background:var(--lav);color:var(--lav-ink)}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.alert{background:var(--alert-soft);color:var(--alert)}
+.chip.sun{background:var(--sun-soft);color:var(--sun-ink)}
+.today{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.today-row{display:flex;gap:14px;align-items:center;padding:14px 18px;flex-wrap:wrap}
+.today-row + .today-row{border-top:1px solid var(--line)}
+.today-row > div{flex:1 1 0;min-width:0}
+.today-row > .btn{margin-left:auto}
+.cards4{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.hcard{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:var(--r-lg);background:var(--card);border:2px solid var(--line);text-align:left;cursor:pointer;min-width:0;color:var(--ink)}
+.hcard:hover{border-color:var(--brand)}
+.hcard .feat-h h2{font-size:calc(1.15rem*var(--hs));padding-top:.2rem}
+.hcard .pic{height:7.4rem}
+.hcard p{color:var(--muted);font-size:.92rem}
+.hcard .strip{margin-top:auto}
+.banner{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:var(--r-md);background:var(--sun-soft);border:1px solid var(--sun-line);flex-wrap:wrap}
+.banner > .ic{color:var(--sun-ink)}
+.banner > div{flex:1 1 16rem;min-width:0}
+.banner.info{background:var(--lav-2);border-color:var(--line-2)}
+.banner.info > .ic{color:var(--brand)}
+
+/* sections */
+.section{display:flex;flex-direction:column;gap:14px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:12px}
+.item{display:flex;gap:16px;align-items:flex-start;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);flex-wrap:wrap}
+.item > .body{flex:1 1 14rem;min-width:0;display:flex;flex-direction:column;gap:4px}
+.item h3{font-size:calc(1.05rem*var(--hs))}
+.datebox{width:4.2rem;flex:none;text-align:center;border-radius:var(--r-sm);background:var(--brand);color:var(--white);padding:8px 4px;line-height:1.1}
+.datebox b{display:block;font-size:1.55rem;font-weight:700}
+.datebox span{font-size:.8rem;font-weight:600}
+.docic{width:3rem;height:3rem;border-radius:50%;display:grid;place-items:center;background:var(--lav);color:var(--brand);flex:none}
+.empty{padding:20px;border:2px dashed var(--line-2);border-radius:var(--r-md);color:var(--muted)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;font-weight:600;min-width:0}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.why{background:var(--lav-2);border-radius:var(--r-md);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.why h4{font-size:1rem;display:flex;gap:8px;align-items:center}
+.why ul{margin:0;padding-left:1.2em}
+.ai{border:2px dashed #B9A9F2;background:var(--purple-soft);border-radius:var(--r-md);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.ai .tag{display:flex;align-items:center;gap:6px;color:#45309E;font-weight:600;font-size:.88rem}
+.toggle{min-height:3rem;padding:0 16px;border-radius:999px;border:2px solid var(--line-2);background:var(--card);font-weight:600;cursor:pointer;display:inline-flex;gap:8px;align-items:center;color:var(--indigo)}
+.toggle[aria-pressed="true"]{border-color:var(--good);color:var(--good);background:var(--good-soft)}
+.suggest{border:2px solid var(--teal-2);background:var(--teal-soft)}
+.suggest h3{color:#075A4C;display:flex;gap:8px;align-items:center}
+
+/* step flows */
+.progress{display:flex;flex-direction:column;gap:8px}
+.bar{height:10px;background:var(--lav);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand);border-radius:999px;transition:width .3s}
+.q{font-size:calc(1.6rem*var(--hs))}
+.choices{display:flex;flex-direction:column;gap:12px}
+.choice{display:flex;align-items:center;gap:14px;width:100%;min-height:4rem;padding:14px 18px;border-radius:var(--r-md);border:2px solid var(--line-2);background:var(--card);text-align:left;cursor:pointer;font-size:1.02rem;font-weight:600;color:var(--ink)}
+.choice:hover{border-color:var(--brand)}
+.choice small{display:block;font-weight:400;color:var(--muted);font-size:.88rem}
+.choice .mark{width:1.7rem;height:1.7rem;border-radius:50%;border:2px solid var(--muted);flex:none;display:grid;place-items:center}
+.choice.multi .mark{border-radius:7px}
+.choice[aria-pressed="true"]{border-color:var(--brand);background:var(--lav-2)}
+.choice[aria-pressed="true"] .mark{background:var(--brand);border-color:var(--brand);color:var(--white)}
+.choice[aria-pressed="true"] .mark::after{content:"";width:.5rem;height:.85rem;border:solid currentColor;border-width:0 3px 3px 0;transform:translate(0,-2px) rotate(45deg)}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label,.flabel{font-weight:600;font-size:1.02rem}
+.field .hint{font-size:.88rem;color:var(--muted)}
+.input{min-height:3.5rem;padding:0 16px;border-radius:var(--r-sm);border:2px solid var(--line-2);background:var(--card);font-size:1.05rem;width:100%}
+.input:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 4px var(--lav)}
+.prefilled{background:var(--sun-soft);border-color:var(--sun-line)}
+.prefill-tag{font-size:.85rem;display:flex;gap:6px;align-items:center;color:var(--muted);margin-top:-4px}
+.err{color:var(--alert);font-weight:600}
+.check{display:flex;gap:14px;align-items:flex-start;padding:16px;border:2px solid var(--line-2);border-radius:var(--r-md);background:var(--card);cursor:pointer}
+.check input{width:1.8rem;height:1.8rem;flex:none;accent-color:var(--brand);margin-top:2px}
+.check:has(input:checked){border-color:var(--brand);background:var(--lav-2)}
+.stepfoot{display:flex;flex-direction:column;gap:12px;padding-top:4px}
+.helpme{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 16px;border-radius:var(--r-md);background:var(--sun-soft);border:1px dashed var(--sun-line)}
+.helpme p{flex:1 1 12rem;font-size:.9rem;min-width:0}
+.helpme .btn{min-height:3.1rem}
+.singpass{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:var(--r-md);background:var(--lav-2)}
+.result{border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:10px;border:2px solid}
+.result.good{background:var(--good-soft);border-color:var(--good)}
+.result.warn{background:var(--warn-soft);border-color:var(--warn)}
+.result.alert{background:var(--alert-soft);border-color:var(--alert)}
+.result h1{display:flex;gap:10px;align-items:center;font-size:calc(1.4rem*var(--hs));color:var(--ink)}
+.spinner{width:3rem;height:3rem;border-radius:50%;border:5px solid var(--lav);border-top-color:var(--brand);animation:spin 1s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scheme{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:12px}
+.scheme-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.status{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.status li{display:flex;gap:12px;align-items:flex-start;position:relative;padding-bottom:12px}
+.status li:last-child{padding-bottom:0}
+.status li::before{content:"";position:absolute;left:.85rem;top:1.8rem;bottom:0;width:2px;background:var(--line-2)}
+.status li:last-child::before{display:none}
+.status .dot{width:1.8rem;height:1.8rem;border-radius:50%;flex:none;display:grid;place-items:center;border:2px solid var(--line-2);background:var(--card);position:relative;z-index:1}
+.status .dot .ic{width:1rem;height:1rem;stroke-width:3}
+.status .done .dot{background:var(--brand);border-color:var(--brand);color:var(--white)}
+.status .now .dot{border-color:var(--sun);background:var(--sun)}
+.status .now{font-weight:600}
+.status .todo{color:var(--muted)}
+
+/* help button + sheets */
+.fab{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:12px;padding:10px 22px 10px 10px;border-radius:999px;border:3px solid var(--white);background:var(--sun);color:var(--sun-ink);font-size:1rem;line-height:1.2;text-align:left;cursor:pointer;box-shadow:0 8px 22px rgba(16,16,70,.35);max-width:calc(100vw - 32px)}
+.fab .fi{width:3rem;height:3rem;border-radius:50%;background:var(--sun-ink);color:var(--sun);display:grid;place-items:center;flex:none}
+.fab b{display:block;font-weight:700;font-size:1.08rem}
+.layer{position:fixed;inset:0;z-index:50;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center;padding-top:env(safe-area-inset-top,0px)}
+@media (min-width:700px){.layer{align-items:center;padding:24px}}
+.sheet{background:var(--board);width:100%;max-width:36rem;max-height:92vh;overflow:auto;border-radius:var(--r-xl) var(--r-xl) 0 0;padding-block:20px calc(24px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px;animation:rise .22s ease-out}
+@media (min-width:700px){.sheet{border-radius:var(--r-xl)}}
+@keyframes rise{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.x{min-width:3.2rem;min-height:3.2rem;border-radius:50%;border:2px solid var(--line-2);background:var(--card);display:grid;place-items:center;cursor:pointer;color:var(--indigo)}
+.opt{display:flex;gap:16px;align-items:center;width:100%;padding:16px;border-radius:var(--r-md);border:2px solid var(--line-2);background:var(--card);cursor:pointer;text-align:left;color:var(--ink)}
+.opt:hover{border-color:var(--sun-line)}
+.opt .oi{width:3.3rem;height:3.3rem;border-radius:50%;background:var(--sun);color:var(--sun-ink);display:grid;place-items:center;flex:none}
+.opt b{display:block;font-weight:700;font-size:calc(1.12rem*var(--hs));color:var(--indigo)}
+.opt span span{color:var(--muted);font-size:.92rem}
+.help-hero{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.help-hero .mini{width:8.5rem;height:5.8rem}
+.help-hero p{flex:1 1 14rem;min-width:0;font-size:.93rem}
+.bignum{font-size:2.5rem;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums;user-select:all;color:var(--indigo)}
+.demo-label{display:inline-block;background:var(--alert-soft);color:var(--alert);font-weight:600;border-radius:8px;padding:2px 10px;font-size:.85rem}
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{min-height:3.1rem;padding:0 18px;border-radius:999px;border:2px solid var(--line-2);background:var(--card);font-weight:600;cursor:pointer;color:var(--indigo)}
+.pill[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--white)}
+.langopt{font-size:1.15rem}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(110px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--white);padding:14px 20px;border-radius:var(--r-md);font-weight:600;width:max-content;max-width:calc(100% - 32px);display:flex;gap:10px;align-items:center;box-shadow:0 8px 22px rgba(16,16,70,.3)}
+
+@media (max-width:1180px){
+  .hero{grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr)}
+  .probcard{grid-column:1/-1}
+  .features{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .plan{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .plan li + li::before{display:none}
+  .impact{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .imp-title,.quote{grid-column:1/-1}
+  .imp-g:nth-child(2){border-left:0;padding-left:0}
+}
+@media (max-width:820px){
+  .features,.trio,.how{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .impact{grid-template-columns:1fr}
+  .imp-g{border-left:0;padding-left:0}
+}
+@media (max-width:640px){
+  .hero{grid-template-columns:1fr}
+  .hero-art{max-width:20rem;justify-self:center}
+  .bigbrand svg{width:3.4rem;height:3.4rem}
+  .bigbrand h1{font-size:calc(2.05rem*var(--hs))}
+  .features,.trio,.how,.plan,.cards4,.motto{grid-template-columns:1fr}
+  .wrap,.board{padding:18px;border-radius:var(--r-lg)}
+  h1,.greet h1{font-size:calc(1.65rem*var(--hs))}
+  .q{font-size:calc(1.4rem*var(--hs))}
+  .titlepill{font-size:calc(1.2rem*var(--hs))}
+  .tbtn .tl{display:none}
+  .fab{padding:8px 16px 8px 8px}
+  .fab .fi{width:2.6rem;height:2.6rem}
+  .barhead{padding:12px 16px}
+  .today-row > .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<header class="top"><div class="top-in">
+  <button class="brand" data-act="brandHome" aria-label="CareBridge SG">
+    <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22.5 24 7l19 15.5"/><path d="M10 18.5V39a3 3 0 0 0 3 3h22a3 3 0 0 0 3-3V18.5"/><circle cx="17.5" cy="26" r="3"/><circle cx="30.5" cy="26" r="3"/><circle cx="24" cy="23" r="3.4"/><path d="M12.5 37.5c.4-3.6 2.4-5.6 5-5.6M35.5 37.5c-.4-3.6-2.4-5.6-5-5.6M18.5 38c.5-4.3 2.7-6.8 5.5-6.8s5 2.5 5.5 6.8"/></svg>
+    <span>CareBridge SG</span>
+  </button>
+  <div class="tools">
+    <button class="tbtn" id="langBtn" data-act="openLang"></button>
+    <div class="size" role="group" id="sizeGroup">
+      <button data-act="size" data-arg="1" aria-label="A">A</button>
+      <button data-act="size" data-arg="2" aria-label="A+">A</button>
+      <button data-act="size" data-arg="3" aria-label="A++">A</button>
+    </div>
+    <button class="tbtn" id="homeBtn" data-act="goHome" hidden></button>
+  </div>
+</div></header>
+
+<main id="app" tabindex="-1"></main>
+
+<button class="fab" id="fab" data-act="openHelp" aria-haspopup="dialog"></button>
+<div id="helpLayer" class="layer" hidden></div>
+<div id="sheetLayer" class="layer" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+const L={};
+L.en={
+langName:'English',
+tagline:'Smarter support. Healthier seniors. Stronger families.',
+back:'Back',home:'Home',start:'Start page',next:'Next',textSize:'Text size',language:'Language',chooseLang:'Choose your language',
+needHelp:'Need help?',talk:'Talk to someone',
+exampleFamily:'Example family. Nothing here is real.',
+emergency:'Emergency? Call <b>995</b>.',
+disclaimer:'<b>About this prototype.</b> CareBridge SG is a concept prototype. It is not run or endorsed by the Singapore Government. All people, numbers and places are examples. Nothing you type is sent anywhere.',
+stepOf:'Step {i} of {n}',
+helpMeTitle:'Stuck? A person can help.',helpMeText:'A facilitator can finish this with you. Your answers are kept.',helpMeBtn:'Help me complete this',
+whyTitle:'Why we suggest this',aiTag:'In simple words (written by AI)',saveFinish:'Save and finish',
+heroLead:'An app plus community support. It helps caregivers notice changing needs and get the right help early.',
+btnSetup:'Set up for my family',btnExample:'See an example family',
+setupNote:'Takes about 3 minutes. Prefer help? Tap <b>Need help?</b> at the bottom.',
+mottoD:'Digital when convenient.',mottoDs:'Reminders, papers and forms, done for you.',
+mottoH:'Human when needed.',mottoHs:'Trained facilitators by phone or at your community centre.',
+probTitle:'Why CareBridge?',
+probText:'More families in Singapore are caring for ageing parents. Many wait too long to ask for help, because of guilt, family expectations, or not knowing where to start. Help exists, but it is hard to find and use.',
+servTitle:'What CareBridge does',servNote:'In the app, these are grouped into 4 simple sections.',
+s1t:'Personal setup and information hub',s1d:'Health, care and family details in one place.',
+s2t:'Documents and appointments',s2d:'Keep papers safe. Get a reminder before every visit.',
+s3t:'Financial help navigator',s3d:'See schemes you may get. Forms filled in for you, with your permission.',
+s4t:'Activities and community',s4d:'Find nearby activities that suit your loved one.',
+s5t:'Check-ins and human support',s5d:'A monthly check-in. Real people help when needed.',
+tspTitle:'Technology That Supports People',
+stemL:'STEM',stemT:'Smarter Care',stemD:'AI assistance reduces paperwork and spots possible changes in care needs.',
+bizL:'Business & Governance',bizT:'Sustainable Support',bizD:'Partnerships, joined-up services and privacy-conscious processes make it workable and trustworthy.',
+humL:'Social Sciences & Humanities',humT:'Human-Centred Care',humD:'Respect for family values, caregiver wellbeing, senior dignity and real human connection.',
+howTitle:'How CareBridge works',
+h1t:'Local partners',h1d:'Active Ageing Centres, Community Clubs and Centres, clinics and care providers host our facilitators.',
+h2t:'Proposed funding',h2d:'Public support plus partner funding is proposed. No funding is confirmed yet.',
+h3t:'Enter details once',h3d:'Your details are reused across forms, only with your permission.',
+h4t:'Services work together',h4d:'With your consent, clinics, centres and family stay in step.',
+h5t:'Your data, your choice',h5d:'We follow PDPA principles. We ask first, use data only for the reason given, keep it safe, let you see or correct it, and delete it when no longer needed.',
+h6t:'People decide big things',h6d:'A trained facilitator checks every grant application, referral and major care decision.',
+planTitle:'Our 12-month plan',planSub:'A step-by-step rollout with community partners.',
+p1m:'Month 1–2',p1t:'Set up and design together',p1d:'Partner with centres. Train facilitators.',
+p2m:'Month 3–4',p2t:'Invite families',p2d:'Reach 50–100 households through partners.',
+p3m:'Month 5–7',p3t:'Launch the app',p3d:'Help families get started. Begin check-ins.',
+p4m:'Month 8–10',p4t:'Human support and referrals',p4d:'Consultations, grant help and care coordination.',
+p5m:'Month 11',p5t:'Review and improve',p5d:'Measure results. Listen to feedback.',
+p6m:'Month 12',p6t:'Plan to grow',p6d:'Final report and a plan for a wider rollout.',
+impTitle:'The difference it makes',
+impS:'For seniors',impS1:'Timely, suitable care',impS2:'Better health and social connection',impS3:'Independence and dignity',
+impC:'For caregivers',impC1:'Less paperwork',impC2:'More peace of mind',impC3:'More time for work and life',
+impM:'For the community',impM1:'Stronger support networks',impM2:'Better use of existing services',impM3:'A more sustainable eldercare system',
+impQuote:'Better care starts with the right support, at the right time.',
+ob0q:'First, what should we call you?',
+singpassBtn:'Fill in with Singpass',singpassNote:'Concept only. In the real app, Singpass would share your details only after you agree. Here we filled in example details.',
+orType:'Or type your details',
+yourName:'Your name',yourNamePh:'e.g. Mei Ling',relQ:'How are you related to them?',
+rel_daughter:'Daughter',rel_son:'Son',rel_spouse:'Husband or wife',rel_family:'Other family',rel_friend:'Friend or neighbour',
+ob1q:'Who are you caring for?',theirName:'Their name',theirNamePh:'e.g. Mdm Tan',theirNameHint:'The name you call them by.',age:'Their age',agePh:'e.g. 78',
+ob2q:'What would your family like?',ob2hint:'Choose any. You can change this later.',
+pref_home:'Care at home',pref_homeS:'With some extra help',
+pref_respite:'A break sometimes',pref_respiteS:'Someone cares for them for a few hours or days',
+pref_activities:'Community activities',pref_activitiesS:'Classes and groups nearby',
+pref_unsure:'Not sure yet',pref_unsureS:'Talk it through with a facilitator',
+ob2note:'<b>Your family decides.</b> We never suggest a nursing home based only on health or money. Facilitators help you explore options, with no pressure.',
+ob3q:'How comfortable are you with phones and apps?',
+tech_ok:'I’m comfortable',tech_some:'I need a little help',tech_person:'I’d rather a person helps',
+techPersonT:'That’s completely fine.',techPersonD:'Facilitators help people who find apps hard. They can set things up with you, by phone or in person.',techPersonBtn:'Talk to a facilitator',
+ob4q:'Your information, your choice',
+ob4a:'We keep your details <b>only to help you care</b>.',ob4b:'We share them <b>only when you say yes</b>.',ob4c:'You can <b>see, change or delete</b> them anytime.',ob4d:'We keep them safe and delete them when no longer needed.',
+consent1:'<b>I agree</b> to CareBridge keeping my information to help me care.',consent1n:'(Needed)',
+consent2:'<b>Fill in forms for me</b> with these details. I will check before anything is sent.',consent2n:'(Optional)',
+finishSetup:'Finish',personSetup:'I’d rather set this up with a person',
+errName:'Please type your name and choose how you are related.',errSenior:'Please type their name.',errAge:'Please type their age as a number, like 78.',errPrefs:'Please choose at least one.',errOne:'Please choose one answer.',errConsent:'We need your agreement to continue. A facilitator can also help you without the app.',
+welcome:'All set. Welcome, {n}.',
+morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',hello:'Hello, {n}',caringFor:'You are caring for <b>{s}</b>, {a}.',
+unsureT:'You wanted to talk through your options.',unsureD:'Meet a facilitator nearby. No pressure.',unsureBtn:'Meet a facilitator',
+nextAppt:'Next appointment',noAppt:'No appointments yet.',
+ckDue:'Time for this month’s check-in on {s}.',ckDueS:'2 minutes. Helps spot changes early.',ckStart:'Start check-in',ckDone:'Last check-in: {d}',
+c1t:'My Senior’s Care',c1d:'Health details and monthly check-ins',
+c2t:'Appointments & Documents',c2d:'Visits, reminders and papers',
+c3t:'Financial Help',c3d:'Schemes you may be able to get',
+c4t:'Activities & Support',c4d:'Things to do, and a break for you',
+howLink:'How CareBridge works and keeps your information safe',
+careTitle:'My Senior’s Care',ageL:'Age',caredBy:'Cared for by',health:'Health conditions',noneYet:'Not added yet. A facilitator can help you add these.',matters:'What matters to {s}',
+ex_m1:'Likes to bathe in the morning, by herself where she can',ex_m2:'Speaks Hokkien and some English',ex_m3:'Enjoys her morning walk with friends',
+ex_c1:'High blood pressure',ex_c2:'Type 2 diabetes',
+dignity:'Include {s} in decisions about their care. Their wishes come first.',
+ckTitle:'Monthly check-in',ckIntro:'Six quick questions about how {s} has been. Small changes noticed early are easier to help with.',ckBtn:'Start check-in (2 minutes)',ckEmpty:'No check-ins yet. The first one gives a starting point.',
+youT:'How are you doing?',youD:'Your wellbeing matters too. Try the 1-minute caregiver check-in.',youBtn:'Check in on me',
+ckSenior:'Check-in on {s}',ckCarer:'Your check-in',
+q_eat:'How has {s} been eating?',o_eat:['Same as usual','Eating less','Hardly eating'],
+q_sleep:'How has {s} been sleeping?',o_sleep:['Same as usual','A bit worse','Much worse'],
+q_fall:'Has {s} fallen or nearly fallen recently?',o_fall:['No','Nearly fell','Yes, fell'],
+q_mind:'Is {s} more forgetful or confused?',o_mind:['No change','A little more','A lot more'],
+q_mood:'How is {s}’s mood?',o_mood:['Same as usual','A bit quieter','Much quieter, staying in'],
+q_daily:'Does {s} need more help with bathing, dressing or walking?',o_daily:['No change','A little more','A lot more'],
+tapNext:'Tap an answer to continue.',prevQ:'Previous question',
+r_eat1:'{s} is eating less.',r_eat2:'{s} is hardly eating.',r_sleep1:'Sleep is a bit worse.',r_sleep2:'Sleep is much worse.',r_fall1:'{s} nearly fell.',r_fall2:'{s} had a fall.',r_mind1:'A little more forgetful or confused.',r_mind2:'A lot more forgetful or confused.',r_mood1:'{s} seems quieter.',r_mood2:'{s} is much quieter and staying in.',r_daily1:'{s} needs a little more help.',r_daily2:'{s} needs a lot more help.',
+resGoodT:'No big changes',resGoodD:'Things look steady. We will remind you next month.',
+resWarnT:'Some changes to watch',resWarnD:'A few things have changed. Noticing them now helps you act early.',
+resAlertT:'Please see a doctor soon',resAlertD:'Some answers need a doctor to check. This is <b>not a diagnosis</b>.',
+rulesNote:'Simple rules, based on your answers:',medNote:'Falls, eating much less or new confusion should be checked soon, even if {s} seems fine.',
+nBook:'Book a doctor visit',nFin:'See help for walking aids and care costs',nAct:'Find activities {s} may enjoy',nTalk:'Talk to a facilitator',
+emerg995:'If {s} is very unwell, has chest pain, trouble breathing or a bad fall, call <b>995</b> now.',
+lbl_good:'No big changes',lbl_warn:'Changes to watch',lbl_alert:'Doctor check suggested',
+cq_tired:'How often have you felt worn out lately?',co_tired:['Rarely','Sometimes','Often'],
+cq_self:'How often do you get time for yourself?',co_self:['Often','Sometimes','Rarely'],
+cq_alone:'How often do you feel alone in caring?',co_alone:['Rarely','Sometimes','Often'],
+cq_money:'Are money worries adding to your stress?',co_money:['Not really','Sometimes','Often'],
+cq_work:'Is it hard to juggle care with work or family?',co_work:['Not really','Sometimes','Often'],
+cGoodT:'You seem to be coping well',cGoodD:'Keep making time for yourself.',
+cWarnT:'You’re carrying quite a bit',cWarnD:'Feeling tired is common. Asking for help does not mean you care less.',cAlertT:'You’re carrying a lot right now',
+o_break:'Take a proper break',o_breakD:'Respite care: a trained carer looks after {s} for a few hours or days.',o_breakB:'Ask about respite care',
+o_alone:'Talk to other caregivers',o_aloneD:'A caregiver circle meets nearby every month.',o_aloneB:'See support groups',
+o_money:'Check for money help',o_moneyD:'5 quick questions show schemes you may get.',o_moneyB:'Check financial help',
+o_work:'Work and care',o_workD:'A facilitator can help you plan a talk with your employer or family.',o_workB:'Request a callback',
+sosT:'You don’t have to manage this alone.',sosD:'A facilitator can call you. If you feel overwhelmed or unsafe, call Samaritans of Singapore on <b>1767</b> (24 hours).',
+clbl_good:'Coping well',clbl_warn:'Feeling stretched',clbl_alert:'Carrying a lot',ckSaved:'Check-in saved',
+apTitle:'Appointments & Documents',upcoming:'Coming up',addAppt:'Add appointment',remOn:'Text reminder: {r}',remOff:'Reminder off',remove:'Remove',apEmpty:'No appointments yet. Add one and we will text you a reminder.',
+sugT:'Suggested check-up',sugD:'People with diabetes usually have an eye check every year. {s}’s last one was over a year ago.',sugNote:'A suggestion, not medical advice. Please ask the doctor.',sugBtn:'Add this check-up',
+docs:'Documents',addDoc:'Add document',docsIntro:'Take a photo of a letter or receipt. We sort it for you, and you check.',docEmpty:'No documents yet. Start with hospital letters, appointment slips or receipts.',
+byAI:'Sorted by AI, checked by you',byYou:'Folder chosen by you',
+remConfirmT:'Remove this appointment?',remConfirmD:'“{t}” on {d} will be removed and its reminder cancelled.',yesRemove:'Yes, remove it',noBack:'No, go back',
+apptRemoved:'Appointment removed',remTurnedOff:'Reminder turned off',remTurnedOn:'Reminder on: 1 day before',
+newAppt:'New appointment',aq0:'What is it for?',type_doc:'Doctor or polyclinic',type_spec:'Hospital specialist',type_ther:'Therapy',type_dent:'Dental',type_other:'Something else',
+aq1:'When is it?',date:'Date',time:'Time',aq2:'Where is it?',place:'Place',placePh:'e.g. Westwood Polyclinic',placeHint:'Type the name, or tap one below.',
+aq3:'Would you like a reminder?',aq3hint:'We send a text message to your phone.',rem_1d:'1 day before',rem_2h:'2 hours before',rem_both:'1 day and 2 hours before',rem_none:'No reminder',
+aq4:'Check and save',what:'What',when:'When',where:'Where',reminder:'Reminder',fixHint:'Something wrong? Tap Back.',saveAppt:'Save appointment',apptSaved:'Appointment saved',
+errType:'Please choose one.',errWhen:'Please choose a date and a time.',errPast:'That date has passed. Please choose another.',errPlace:'Please type the place.',
+addDocT:'Add a document',docQ:'Which document?',photoBtn:'Take a photo or choose a file',fileNote:'In this prototype, only the file name is read. Your file stays on your device.',tryEx:'Or try an example',
+reading:'Reading your document…',readingD:'Looking for words that show what it is.',weThink:'This looks like: {c}',
+conf_3:'Quite sure',conf_2:'Fairly sure',conf_1:'Not sure, please check',conf_0:'Could not tell',
+foundWords:'We found these words: {w}.',noWords:'We didn’t recognise any words. Please choose the folder.',youChanged:'You chose this folder.',
+followT:'This mentions a follow-up visit.',followD:'Add it to your appointments? You can check it first.',followBtn:'Add appointment',
+saveIn:'Yes, save in {c}',otherFolder:'Choose another folder',folderQ:'Which folder?',savedIn:'Saved in {c}',filledFromDoc:'Filled in from the document. Please check.',
+cat_med:'Medical records',cat_appt:'Appointment letters',cat_bill:'Bills and receipts',cat_fin:'Money and grants',cat_id:'Identity and legal',cat_other:'Other',
+sd0:'{s} left hospital after a chest infection. Finish the antibiotics in 5 days, then see the polyclinic doctor in about 2 weeks.',sd1:'A clinic visit date and time. Bring the IC and the medicine list.',sd2:'A pharmacy receipt for $42.60. Keep it in case you can claim it.',sd3:'Good news: a grant was approved. Money will be paid every month.',
+checkWithSender:'If unsure, ask whoever sent it.',
+finTitle:'Financial Help',finLead:'Answer 5 short questions. See which schemes your family <b>may</b> get, and why.',
+finNotice:'<b>Possibly eligible only.</b> These are simple rules in a prototype. The agency running each scheme decides. CareBridge is not a government service.',
+finStart:'Check what help we may get',finAgain:'Check again',finLast:'See my last results',myApps:'My applications',appsEmpty:'No applications yet.',
+finWorry:'Money worries are common for working caregivers.',finWorryD:'A facilitator can go through your options and help with forms.',reqCb:'Request a callback',
+fq_age:'How old is {s}?',u60:'Under 60',a60:'60 to 64',a65:'65 or older',
+fq_born:'When was {s} born?',pg:'1949 or earlier',mg:'1950 to 1959',later:'1960 or later',
+fq_adl:'How many of these can {s} NOT do alone?',adlList:'Bathing, dressing, eating, using the toilet, walking, getting out of bed',adl0:'None',adl1:'1 or 2',adl3:'3 or more',
+fq_inc:'What is your household’s monthly income per person?',incHint:'Add up everyone’s income at home, then divide by the number of people.',low:'Under $1,500',mid:'$1,500 to $3,600',high:'Over $3,600',na:'I’d rather not say',
+fq_cit:'Is {s} a Singapore Citizen?',sc:'Singapore Citizen',pr:'Permanent Resident',no:'Neither',
+preAge:'We chose this from your profile. Change it if needed.',seeResults:'See results',finCheckL:'Financial help check',
+resTitle:'Schemes you may get',resNotice:'<b>Possibly eligible, needs an official check.</b> Only the agency can confirm eligibility and amounts.',
+possibly:'Possibly eligible',runBy:'Run by: {a}',explainBtn:'Explain in simple words',hideExplain:'Hide explanation',prepBtn:'Prepare application',askFac:'Ask a facilitator',
+noMatch:'No schemes in this prototype matched. There may still be help. A facilitator can look at your situation.',nextT:'Not sure what to do next?',nextD:'A facilitator can check these with you.',
+w_adl3:'{s} cannot do 3 or more daily activities alone.',w_inc:'Your income is within the example limit.',w_incNA:'You did not share income. The agency will check.',w_sc:'{s} is a Singapore Citizen.',w_pr:'{s} is a PR (family conditions may apply).',w_60:'{s} is 60 or older.',w_adl1:'{s} needs some help moving or with daily tasks.',w_fall:'A check-in mentioned a fall.',w_65:'You care for someone aged 65 or older.',w_bigHelp:'You care for someone who needs a lot of help.',w_csl:'This is the usual condition for a payout, if insured.',w_pg:'{s} was born in 1949 or earlier.',w_mg:'{s} was born between 1950 and 1959.',w_low:'Your household income is in the lower range.',
+hcg_what:'Monthly cash to help families care for a senior at home.',hcg_simple:'If {s} needs a lot of daily help, your family may get money every month for care at home.',
+smf_what:'Lower costs for walking aids, wheelchairs, shower chairs and home care items.',smf_simple:'This can make things that help {s} move safely cheaper. A therapist usually checks first.',
+ctg_what:'Helps pay for caregiver training courses.',ctg_simple:'Learn skills like moving someone safely. This grant helps pay the fees.',
+csl_what:'Monthly payouts if the insured person cannot do 3 or more daily activities.',csl_simple:'If {s} has this insurance, it may pay every month. First check if {s} is covered.',
+pg_what:'Extra healthcare subsidies for eligible seniors born in or before 1949.',pg_simple:'Many clinic visits and medicines may cost less. This is usually given automatically.',
+mg_what:'Extra healthcare subsidies for eligible seniors born from 1950 to 1959.',mg_simple:'Many clinic visits and medicines may cost less. This is usually given automatically.',
+comcare_what:'Help with daily costs for lower-income households.',comcare_simple:'If money is tight, a Social Service Office can look at your situation.',
+appL:'{n} application',ff0q:'Can we fill in the form for you?',ff0d:'We can use details you already gave us. You will check each one.',weUse:'We would use:',
+fYourName:'Your name',fRel:'Relationship',fSenior:'Person you care for',fAge:'Their age',ffYes:'Yes, fill it in for me',ffNo:'No, I’ll type it myself',
+ff1q:'Check your details',yellowNote:'Yellow boxes were filled in for you.',prefTag:'Filled in from your profile. Please check.',
+fFull:'Your full name',fRelL:'Your relationship to them',fSFull:'Their full name',fPhone:'Your mobile number',fPhoneHint:'So a facilitator can call you.',
+ff2q:'Ready to send for checking?',scheme:'Scheme',mobile:'Mobile',ff2note:'<b>A person checks first.</b> A facilitator reviews it with you. Only then is it sent to {a}, with your permission.',
+sendCheck:'Send to a facilitator for checking',cfSendT:'Send for checking?',cfSendD:'A facilitator will review it with you. It is <b>not</b> sent to the agency until you both agree.',cfYesSend:'Yes, send for checking',
+sentT:'Sent for checking',sentD:'A facilitator will call you within 2 working days. <b>Nothing has gone to {a} yet.</b>',yourRef:'Your reference: <b>{r}</b>',protoNote:'Prototype: nothing was actually sent.',backHome:'Back to home',seeApps:'See my applications',
+errFill:'Please fill in every box.',errPhone:'Please type an 8-digit Singapore number, like 9123 4567.',
+st0:'Sent for checking',st1:'Checked with facilitator',st2:'Submitted to agency',st3:'Waiting for decision',st4:'Decision',
+actTitle:'Activities & Support',ywT:'Your wellbeing matters too',ywD:'Caring is tiring. A 1-minute check-in helps you notice when you need a break.',ywBtn:'How am I doing? (1 minute)',lastCk:'Last check-in: {d}',
+nearT:'Activities near you',nearD:'Staying connected helps {s} stay well. Ask {s} what they would enjoy.',
+interested:'I’m interested',noted:'Interest noted',notedToast:'Noted. The centre will contact you.',removedToast:'Interest removed',forCarers:'For caregivers',suitedFor:'Why suggested: {w}',
+a1t:'Morning qigong in the park',a1w:'Tuesdays and Thursdays, 8am',a1d:'Gentle movement, good for balance. Chairs available.',a1why:'mornings, close to home, helps balance',
+a2t:'Kopi and chat',a2w:'Wednesdays, 2:30pm',a2d:'A relaxed afternoon chat in Hokkien, Mandarin and English.',a2why:'speaks Hokkien, enjoys chatting',
+a3t:'Karaoke afternoon',a3w:'Fridays, 3pm',a3d:'Old favourites in many languages. Family welcome.',a3why:'social, family can join',
+a4t:'Caregiver circle',a4w:'First Saturday of the month, 10am',a4d:'Meet other caregivers, share tips and talk openly. Tea provided.',a4why:'support for you',
+respT:'Take a break: respite care',respD:'A trained carer looks after {s} for a few hours, a day or a short stay. You get time to rest.',respBtn:'Ask about respite care',
+famT:'Caring as a family',famD:'Many of us feel that caring for our parents is our duty, and asking for help can feel wrong. Sharing care with family or services is still caring. It often means better care, for longer.',famD2:'A facilitator can help your family plan who does what, with {s} included.',
+hpTitle:'Talk to a real person',hpIntro:'Our care facilitators are trained people, not a computer. <b>They help caregivers who find apps hard to use</b>, and can do tasks with you or for you.',hpTopic:'<b>You asked for help with: {t}.</b> Your answers are kept.',
+opCall:'Call for help',opCallD:'Speak to someone now',opCb:'Request a callback',opCbD:'We call you when it suits you',opMeet:'Meet a facilitator',opMeetD:'At a community centre near you',noSignup:'No sign-up needed.',
+callT:'Call for help',callIntro:'Call the CareBridge helpline:',demoNum:'Demo number. Not a real line.',hours:'Monday to Saturday, 8am to 8pm. English, Mandarin, Malay, Tamil and dialects.',copy:'Copy number',copied:'Number copied',selected:'Number selected. Copy it from your menu.',cantCall:'Can’t call now?',askCall:'Ask us to call you',
+cbT:'Request a callback',phone:'Your phone number',phonePh:'e.g. 9123 4567',whichDay:'Which day?',todayD:'Today',tomorrow:'Tomorrow',whatTime:'What time?',morningT:'Morning (9am–12pm)',afternoonT:'Afternoon (12–5pm)',eveningT:'Evening (5–8pm)',prefLang:'Preferred language',sendCbBtn:'Request my callback',errDayTime:'Please choose a day and a time.',
+meetT:'Meet a facilitator',meetIntro:'Choose a place near you.',whenSuits:'When suits you?',wkM:'Weekday morning',wkA:'Weekday afternoon',satM:'Saturday morning',meetPhonePh:'So the centre can confirm',sendMeetBtn:'Request a meeting',errCentre:'Please choose a place and a time.',
+walk:'{n} min walk',bus:'{n} min by bus',exCentre:'Example centre',
+cbDoneT:'We will call you',cbDoneD:'A facilitator will call {p}. Day: {d}. Time: {t}.',meetDoneT:'Meeting requested',meetDoneD:'{c} will call {p} within 2 working days to confirm. It’s free, with no commitment.',
+done:'Done',close:'Close',today:'today',daysAgo:'{n} days ago'
+};
+
+L.zh={
+langName:'中文',
+tagline:'更贴心的支援，更健康的长者，更坚强的家庭。',
+back:'返回',home:'主页',start:'首页',next:'下一步',textSize:'字体大小',language:'语言',chooseLang:'选择语言',
+needHelp:'需要帮助？',talk:'找人谈谈',
+exampleFamily:'示例家庭。这里的内容都不是真实的。',
+emergency:'紧急情况？请拨打 <b>995</b>。',
+disclaimer:'<b>关于此原型。</b>CareBridge SG 是一个概念原型，并非由新加坡政府运营或认可。所有人物、号码和地点都是示例。您输入的内容不会发送到任何地方。',
+stepOf:'第 {i} 步，共 {n} 步',
+helpMeTitle:'遇到困难？可以请人帮忙。',helpMeText:'协调员可以和您一起完成。您的答案会被保存。',helpMeBtn:'帮我完成',
+whyTitle:'为什么这样建议',aiTag:'简单说明（由人工智能撰写）',saveFinish:'保存并完成',
+heroLead:'一个应用程序，加上社区支援。帮助照顾者及早发现需要的变化，获得合适的帮助。',
+btnSetup:'为我的家庭设置',btnExample:'看看示例家庭',
+setupNote:'大约需要 3 分钟。想有人帮忙？点击屏幕下方的<b>需要帮助？</b>',
+mottoD:'方便时，用科技。',mottoDs:'提醒、文件和表格，帮您处理好。',
+mottoH:'需要时，有真人。',mottoHs:'受过训练的协调员，通过电话或在社区中心为您服务。',
+probTitle:'为什么需要 CareBridge？',
+probText:'新加坡越来越多家庭在照顾年迈的父母。许多人因为内疚、家庭期望或不知从何开始，迟迟不寻求帮助。帮助是有的，但难以找到和使用。',
+servTitle:'CareBridge 能做什么',servNote:'在应用程序里，这些功能分成 4 个简单的部分。',
+s1t:'个人设置与资料中心',s1d:'健康、护理和家庭资料都放在一个地方。',
+s2t:'文件与预约',s2d:'安全保存文件。每次看诊前都有提醒。',
+s3t:'经济援助导航',s3d:'查看您可能符合的计划。经您同意后帮您填表。',
+s4t:'活动与社区联系',s4d:'找到适合家人的附近活动。',
+s5t:'定期关怀与真人支援',s5d:'每月一次关怀检查。需要时有真人帮忙。',
+tspTitle:'支持人的科技',
+stemL:'STEM（科学、技术、工程与数学）',stemT:'更聪明的护理',stemD:'人工智能协助减少文书工作，并及早发现护理需要的可能变化。',
+bizL:'商业与治理',bizT:'可持续的支援',bizD:'合作伙伴、服务协调和重视隐私的流程，让方案更可行、更可信。',
+humL:'社会科学与人文',humT:'以人为本的护理',humD:'尊重家庭价值观、照顾者的身心健康、长者的尊严，以及真诚的人际联系。',
+howTitle:'CareBridge 如何运作',
+h1t:'本地合作伙伴',h1d:'活跃乐龄中心、民众俱乐部与联络所、诊所和护理机构为我们的协调员提供服务地点。',
+h2t:'建议的资金模式',h2d:'建议由公共支持加上合作伙伴共同资助。目前尚未确认任何资金。',
+h3t:'资料只需填一次',h3d:'经您同意，您的资料可以在不同表格中重复使用。',
+h4t:'服务互相配合',h4d:'经您同意，诊所、中心和家人之间保持协调。',
+h5t:'您的资料，由您决定',h5d:'我们遵循个人资料保护法（PDPA）的原则：先征求同意，只用于说明的用途，妥善保管，让您查看或更正，不再需要时删除。',
+h6t:'重大决定由人来做',h6d:'每份津贴申请、转介和重大护理决定，都由受过训练的协调员检查。',
+planTitle:'我们的 12 个月计划',planSub:'与社区伙伴一步一步推行。',
+p1m:'第 1–2 个月',p1t:'一起设计和准备',p1d:'与中心合作，培训协调员。',
+p2m:'第 3–4 个月',p2t:'邀请家庭参与',p2d:'通过合作伙伴接触 50–100 户家庭。',
+p3m:'第 5–7 个月',p3t:'推出应用程序',p3d:'帮助家庭开始使用，开始关怀检查。',
+p4m:'第 8–10 个月',p4t:'真人支援与转介',p4d:'咨询、协助申请津贴和协调护理。',
+p5m:'第 11 个月',p5t:'检讨与改进',p5d:'衡量成果，听取意见。',
+p6m:'第 12 个月',p6t:'规划扩展',p6d:'最终报告，以及更大范围的推行计划。',
+impTitle:'带来的改变',
+impS:'对长者',impS1:'及时、合适的护理',impS2:'更好的健康和社交联系',impS3:'保持独立和尊严',
+impC:'对照顾者',impC1:'更少的文书工作',impC2:'更安心',impC3:'更多时间工作和生活',
+impM:'对社区',impM1:'更强的支援网络',impM2:'更好地利用现有服务',impM3:'更可持续的乐龄护理体系',
+impQuote:'更好的护理，从在对的时候得到对的支援开始。',
+ob0q:'首先，我们该怎么称呼您？',
+singpassBtn:'用 Singpass 填写',singpassNote:'仅为概念展示。在真正的应用程序中，Singpass 只会在您同意后分享您的资料。这里填入的是示例资料。',
+orType:'或者自己输入',
+yourName:'您的名字',yourNamePh:'例如：美玲',relQ:'您和对方是什么关系？',
+rel_daughter:'女儿',rel_son:'儿子',rel_spouse:'丈夫或妻子',rel_family:'其他家人',rel_friend:'朋友或邻居',
+ob1q:'您在照顾谁？',theirName:'对方的名字',theirNamePh:'例如：陈女士',theirNameHint:'用您平时对他们的称呼。',age:'对方的年龄',agePh:'例如：78',
+ob2q:'您的家庭希望怎样？',ob2hint:'可以选多项，以后也可以更改。',
+pref_home:'在家照顾',pref_homeS:'加上一些额外帮助',
+pref_respite:'有时休息一下',pref_respiteS:'有人代为照顾几个小时或几天',
+pref_activities:'社区活动',pref_activitiesS:'附近的课程和小组',
+pref_unsure:'还不确定',pref_unsureS:'和协调员一起讨论',
+ob2note:'<b>由您的家庭决定。</b>我们绝不会只根据健康或经济情况建议入住疗养院。协调员会帮您了解各种选择，没有任何压力。',
+ob3q:'您使用手机和应用程序方便吗？',
+tech_ok:'我用得很顺手',tech_some:'我需要一点帮助',tech_person:'我宁愿有人帮我',
+techPersonT:'完全没问题。',techPersonD:'协调员会帮助觉得应用程序难用的人。他们可以通过电话或当面和您一起设置。',techPersonBtn:'和协调员谈谈',
+ob4q:'您的资料，由您决定',
+ob4a:'我们保存您的资料，<b>只为帮助您照顾家人</b>。',ob4b:'<b>只有在您同意时</b>我们才会分享。',ob4c:'您可以随时<b>查看、更改或删除</b>。',ob4d:'我们会妥善保管，不再需要时删除。',
+consent1:'<b>我同意</b> CareBridge 保存我的资料，以帮助我照顾家人。',consent1n:'（必选）',
+consent2:'<b>帮我填写表格</b>，使用这些资料。发送前我会先检查。',consent2n:'（可选）',
+finishSetup:'完成',personSetup:'我宁愿有人陪我设置',
+errName:'请输入您的名字，并选择关系。',errSenior:'请输入对方的名字。',errAge:'请用数字输入年龄，例如 78。',errPrefs:'请至少选择一项。',errOne:'请选择一个答案。',errConsent:'需要您的同意才能继续。协调员也可以在不用应用程序的情况下帮助您。',
+welcome:'设置完成。欢迎您，{n}。',
+morning:'早上好',afternoon:'下午好',evening:'晚上好',hello:'您好，{n}',caringFor:'您正在照顾 <b>{s}</b>，{a} 岁。',
+unsureT:'您想讨论一下各种选择。',unsureD:'在附近和协调员见面，没有压力。',unsureBtn:'和协调员见面',
+nextAppt:'下一个预约',noAppt:'还没有预约。',
+ckDue:'该为{s}做本月的关怀检查了。',ckDueS:'只需 2 分钟，帮助及早发现变化。',ckStart:'开始检查',ckDone:'上次检查：{d}',
+c1t:'我的长者护理',c1d:'健康资料和每月关怀检查',
+c2t:'预约与文件',c2d:'看诊、提醒和文件',
+c3t:'经济援助',c3d:'您可能符合的计划',
+c4t:'活动与支援',c4d:'活动安排，也让您休息一下',
+howLink:'CareBridge 如何运作，如何保护您的资料',
+careTitle:'我的长者护理',ageL:'年龄',caredBy:'照顾者',health:'健康状况',noneYet:'还没有添加。协调员可以帮您添加。',matters:'对{s}重要的事',
+ex_m1:'喜欢早上洗澡，尽量自己来',ex_m2:'会说福建话和一些英语',ex_m3:'喜欢早上和朋友一起散步',
+ex_c1:'高血压',ex_c2:'2 型糖尿病',
+dignity:'让{s}参与有关自己护理的决定。他们的意愿最重要。',
+ckTitle:'每月关怀检查',ckIntro:'六个简单问题，了解{s}最近的情况。及早发现的小变化更容易处理。',ckBtn:'开始检查（2 分钟）',ckEmpty:'还没有检查记录。第一次检查会作为起点。',
+youT:'您还好吗？',youD:'您的身心健康也很重要。试试 1 分钟的照顾者检查。',youBtn:'检查我自己的情况',
+ckSenior:'{s}的关怀检查',ckCarer:'您的检查',
+q_eat:'{s}最近吃得怎么样？',o_eat:['和平时一样','吃得比较少','几乎不吃'],
+q_sleep:'{s}最近睡得怎么样？',o_sleep:['和平时一样','差了一点','差了很多'],
+q_fall:'{s}最近有跌倒或差点跌倒吗？',o_fall:['没有','差点跌倒','有，跌倒了'],
+q_mind:'{s}是不是比以前更健忘或糊涂？',o_mind:['没有变化','多了一点','多了很多'],
+q_mood:'{s}的心情怎么样？',o_mood:['和平时一样','安静了一点','安静很多，不愿出门'],
+q_daily:'{s}在洗澡、穿衣或走路方面需要更多帮助吗？',o_daily:['没有变化','多一点','多很多'],
+tapNext:'点击答案继续。',prevQ:'上一题',
+r_eat1:'{s}吃得比较少。',r_eat2:'{s}几乎不吃东西。',r_sleep1:'睡眠差了一点。',r_sleep2:'睡眠差了很多。',r_fall1:'{s}差点跌倒。',r_fall2:'{s}跌倒了。',r_mind1:'健忘或糊涂多了一点。',r_mind2:'健忘或糊涂多了很多。',r_mood1:'{s}好像安静了。',r_mood2:'{s}安静很多，不愿出门。',r_daily1:'{s}需要多一点帮助。',r_daily2:'{s}需要多很多帮助。',
+resGoodT:'没有大的变化',resGoodD:'情况稳定。我们下个月会提醒您。',
+resWarnT:'有些变化需要留意',resWarnD:'有几方面起了变化。现在留意，可以及早处理。',
+resAlertT:'请尽快看医生',resAlertD:'有些答案需要医生检查。这<b>不是诊断</b>。',
+rulesNote:'根据您的答案和简单规则：',medNote:'跌倒、吃得少很多或新出现的糊涂，应尽快检查，即使{s}看起来没事。',
+nBook:'预约看医生',nFin:'查看助行器和护理费用的援助',nAct:'找{s}可能喜欢的活动',nTalk:'和协调员谈谈',
+emerg995:'如果{s}非常不适、胸痛、呼吸困难或严重跌倒，请立即拨打 <b>995</b>。',
+lbl_good:'没有大变化',lbl_warn:'需要留意',lbl_alert:'建议看医生',
+cq_tired:'最近您有多常感到筋疲力尽？',co_tired:['很少','有时','经常'],
+cq_self:'您有多常有自己的时间？',co_self:['经常','有时','很少'],
+cq_alone:'您有多常觉得独自承担照顾？',co_alone:['很少','有时','经常'],
+cq_money:'经济担忧有没有增加您的压力？',co_money:['不太有','有时','经常'],
+cq_work:'同时兼顾照顾和工作或家庭难吗？',co_work:['不太难','有时','经常'],
+cGoodT:'您似乎应付得不错',cGoodD:'继续为自己留些时间。',
+cWarnT:'您承担了不少',cWarnD:'感到疲累很常见。寻求帮助并不代表您不够关心。',cAlertT:'您现在承担得很多',
+o_break:'好好休息一下',o_breakD:'暂托护理：由受过训练的护理员照顾{s}几个小时或几天。',o_breakB:'询问暂托护理',
+o_alone:'和其他照顾者聊聊',o_aloneD:'附近每月都有照顾者交流小组。',o_aloneB:'查看支援小组',
+o_money:'查看经济援助',o_moneyD:'5 个简单问题，看看您可能符合的计划。',o_moneyB:'查看经济援助',
+o_work:'工作与照顾',o_workD:'协调员可以帮您准备和雇主或家人的沟通。',o_workB:'要求回电',
+sosT:'您不必独自面对。',sosD:'协调员可以打电话给您。如果您感到不堪负荷或不安全，请拨打新加坡援人协会（SOS）<b>1767</b>（24 小时）。',
+clbl_good:'应付得不错',clbl_warn:'有些吃力',clbl_alert:'承担很多',ckSaved:'检查已保存',
+apTitle:'预约与文件',upcoming:'即将到来',addAppt:'添加预约',remOn:'短信提醒：{r}',remOff:'提醒已关闭',remove:'删除',apEmpty:'还没有预约。添加后我们会发短信提醒您。',
+sugT:'建议的检查',sugD:'糖尿病患者通常每年做一次眼睛检查。{s}上次检查已超过一年。',sugNote:'这是建议，不是医疗意见。请询问医生。',sugBtn:'添加这个检查',
+docs:'文件',addDoc:'添加文件',docsIntro:'拍下信件或收据。我们帮您分类，您来确认。',docEmpty:'还没有文件。可以从医院信件、预约单或收据开始。',
+byAI:'由人工智能分类，经您确认',byYou:'由您选择的文件夹',
+remConfirmT:'删除这个预约吗？',remConfirmD:'{d} 的“{t}”将被删除，提醒也会取消。',yesRemove:'是的，删除',noBack:'不，返回',
+apptRemoved:'预约已删除',remTurnedOff:'提醒已关闭',remTurnedOn:'提醒已开启：提前 1 天',
+newAppt:'新预约',aq0:'这个预约是做什么的？',type_doc:'医生或综合诊疗所',type_spec:'医院专科',type_ther:'治疗（如物理治疗）',type_dent:'牙科',type_other:'其他',
+aq1:'什么时候？',date:'日期',time:'时间',aq2:'在哪里？',place:'地点',placePh:'例如：Westwood 综合诊疗所',placeHint:'输入名称，或点击下面的选项。',
+aq3:'需要提醒吗？',aq3hint:'我们会发短信到您的手机。',rem_1d:'提前 1 天',rem_2h:'提前 2 小时',rem_both:'提前 1 天和 2 小时',rem_none:'不需要提醒',
+aq4:'检查并保存',what:'内容',when:'时间',where:'地点',reminder:'提醒',fixHint:'有错误？点击返回修改。',saveAppt:'保存预约',apptSaved:'预约已保存',
+errType:'请选择一项。',errWhen:'请选择日期和时间。',errPast:'这个日期已经过了，请选择其他日期。',errPlace:'请输入地点。',
+addDocT:'添加文件',docQ:'要添加哪份文件？',photoBtn:'拍照或选择文件',fileNote:'在这个原型中，只会读取文件名。您的文件留在您的设备上。',tryEx:'或者试试示例文件',
+reading:'正在读取您的文件……',readingD:'正在寻找能说明文件类型的字词。',weThink:'这看起来是：{c}',
+conf_3:'相当肯定',conf_2:'比较肯定',conf_1:'不太肯定，请检查',conf_0:'无法判断',
+foundWords:'我们找到了这些字词：{w}。',noWords:'我们没有认出任何字词。请选择文件夹。',youChanged:'您选择了这个文件夹。',
+followT:'这份文件提到复诊。',followD:'要添加到预约吗？您可以先检查。',followBtn:'添加预约',
+saveIn:'是的，保存到“{c}”',otherFolder:'选择其他文件夹',folderQ:'放在哪个文件夹？',savedIn:'已保存到“{c}”',filledFromDoc:'已根据文件填写，请检查。',
+cat_med:'医疗记录',cat_appt:'预约信',cat_bill:'账单和收据',cat_fin:'经济与津贴',cat_id:'身份与法律',cat_other:'其他',
+sd0:'{s}因胸部感染住院，现已出院。5 天内吃完抗生素，大约 2 周后到综合诊疗所复诊。',sd1:'诊所看诊的日期和时间。请带身份证和药物清单。',sd2:'药房收据，金额 $42.60。请保留，以备日后申报。',sd3:'好消息：津贴申请已获批准，每月发放。',
+checkWithSender:'如有不清楚，请询问发出文件的单位。',
+finTitle:'经济援助',finLead:'回答 5 个简单问题，看看您的家庭<b>可能</b>符合哪些计划，以及原因。',
+finNotice:'<b>仅表示可能符合资格。</b>这是原型中的简单规则。最终由负责各计划的机构决定。CareBridge 不是政府服务。',
+finStart:'看看我们可能获得的帮助',finAgain:'重新检查',finLast:'查看上次结果',myApps:'我的申请',appsEmpty:'还没有申请。',
+finWorry:'在职照顾者常有经济上的担忧。',finWorryD:'协调员可以和您一起了解选择，并帮忙填写表格。',reqCb:'要求回电',
+fq_age:'{s}多大年纪？',u60:'60 岁以下',a60:'60 至 64 岁',a65:'65 岁或以上',
+fq_born:'{s}是哪年出生的？',pg:'1949 年或更早',mg:'1950 至 1959 年',later:'1960 年或以后',
+fq_adl:'以下事情中，{s}有几项无法独自完成？',adlList:'洗澡、穿衣、吃饭、上厕所、走路、起床',adl0:'没有',adl1:'1 或 2 项',adl3:'3 项或以上',
+fq_inc:'您家庭每人每月的收入是多少？',incHint:'把家里每个人的收入加起来，再除以家里的人数。',low:'低于 $1,500',mid:'$1,500 至 $3,600',high:'高于 $3,600',na:'我不想说',
+fq_cit:'{s}是新加坡公民吗？',sc:'新加坡公民',pr:'永久居民',no:'都不是',
+preAge:'我们根据您的资料选了这个答案。如有需要请更改。',seeResults:'查看结果',finCheckL:'经济援助检查',
+resTitle:'您可能获得的计划',resNotice:'<b>可能符合资格，需官方确认。</b>只有负责机构才能确认资格和金额。',
+possibly:'可能符合',runBy:'负责机构：{a}',explainBtn:'用简单的话解释',hideExplain:'隐藏解释',prepBtn:'准备申请',askFac:'询问协调员',
+noMatch:'这个原型中没有符合的计划。但仍可能有其他帮助，协调员可以了解您的情况。',nextT:'不确定下一步怎么做？',nextD:'协调员可以和您一起核对。',
+w_adl3:'{s}有 3 项或以上日常活动无法独自完成。',w_inc:'您的收入在示例限额以内。',w_incNA:'您没有提供收入，机构会核查。',w_sc:'{s}是新加坡公民。',w_pr:'{s}是永久居民（可能有家庭方面的条件）。',w_60:'{s}年满 60 岁。',w_adl1:'{s}在行动或日常事务上需要一些帮助。',w_fall:'关怀检查中提到跌倒。',w_65:'您照顾的人年满 65 岁。',w_bigHelp:'您照顾的人需要很多帮助。',w_csl:'如有投保，这是一般的赔付条件。',w_pg:'{s}在 1949 年或更早出生。',w_mg:'{s}在 1950 至 1959 年间出生。',w_low:'您家庭的收入较低。',
+hcg_what:'每月发放现金，帮助家庭在家照顾长者。',hcg_simple:'如果{s}在日常生活中需要很多帮助，您的家庭每月可能获得一笔钱，用于在家护理。',
+smf_what:'降低助行器、轮椅、沐浴椅和居家护理用品的费用。',smf_simple:'这可以让帮助{s}安全行动的用品更便宜。通常需要治疗师先评估。',
+ctg_what:'帮助支付照顾者培训课程的费用。',ctg_simple:'学习如何安全地扶抱和移动病人等技能，这项津贴帮您支付学费。',
+csl_what:'如果受保人有 3 项或以上日常活动无法完成，每月赔付。',csl_simple:'如果{s}有这项保险，可能每月获得赔付。请先确认{s}是否受保。',
+pg_what:'为 1949 年或更早出生的合格长者提供额外医疗补贴。',pg_simple:'许多看诊和药物可能更便宜，通常会自动获得。',
+mg_what:'为 1950 至 1959 年出生的合格长者提供额外医疗补贴。',mg_simple:'许多看诊和药物可能更便宜，通常会自动获得。',
+comcare_what:'帮助低收入家庭应付日常开销。',comcare_simple:'如果经济紧张，社会服务办事处可以了解您的情况。',
+appL:'{n} 申请',ff0q:'要我们帮您填写表格吗？',ff0d:'我们可以使用您已经提供的资料。每一项您都会检查。',weUse:'我们会使用：',
+fYourName:'您的名字',fRel:'关系',fSenior:'您照顾的人',fAge:'对方的年龄',ffYes:'好的，帮我填写',ffNo:'不用，我自己输入',
+ff1q:'检查您的资料',yellowNote:'黄色框是帮您填好的。',prefTag:'根据您的资料填写，请检查。',
+fFull:'您的全名',fRelL:'您和对方的关系',fSFull:'对方的全名',fPhone:'您的手机号码',fPhoneHint:'方便协调员打电话给您。',
+ff2q:'准备好发送检查了吗？',scheme:'计划',mobile:'手机',ff2note:'<b>先由人检查。</b>协调员会和您一起审阅。之后才会在您同意下发送给 {a}。',
+sendCheck:'发送给协调员检查',cfSendT:'发送检查吗？',cfSendD:'协调员会和您一起审阅。在你们都同意之前，<b>不会</b>发送给机构。',cfYesSend:'是的，发送检查',
+sentT:'已发送检查',sentD:'协调员会在 2 个工作日内打电话给您。<b>目前还没有发送给 {a}。</b>',yourRef:'您的参考编号：<b>{r}</b>',protoNote:'原型：实际上没有发送任何内容。',backHome:'回到主页',seeApps:'查看我的申请',
+errFill:'请填写每一栏。',errPhone:'请输入 8 位数的新加坡号码，例如 9123 4567。',
+st0:'已发送检查',st1:'已与协调员核对',st2:'已提交给机构',st3:'等待结果',st4:'结果',
+actTitle:'活动与支援',ywT:'您的身心健康也很重要',ywD:'照顾家人很累。1 分钟的检查帮您知道什么时候需要休息。',ywBtn:'我还好吗？（1 分钟）',lastCk:'上次检查：{d}',
+nearT:'附近的活动',nearD:'保持社交有助于{s}保持健康。问问{s}喜欢什么。',
+interested:'我有兴趣',noted:'已记下兴趣',notedToast:'已记下，中心会联系您。',removedToast:'已取消',forCarers:'照顾者专用',suitedFor:'推荐原因：{w}',
+a1t:'公园晨间气功',a1w:'星期二和星期四，早上 8 点',a1d:'动作温和，有助于平衡。备有椅子。',a1why:'早上进行、离家近、有助平衡',
+a2t:'咖啡聊天会',a2w:'星期三，下午 2:30',a2d:'用福建话、华语和英语轻松聊天。',a2why:'会说福建话、喜欢聊天',
+a3t:'卡拉OK 下午',a3w:'星期五，下午 3 点',a3d:'多种语言的经典老歌，欢迎家人参加。',a3why:'社交活动、家人可同行',
+a4t:'照顾者交流小组',a4w:'每月第一个星期六，早上 10 点',a4d:'认识其他照顾者，分享经验，畅所欲言。提供茶点。',a4why:'给您的支援',
+respT:'休息一下：暂托护理',respD:'受过训练的护理员照顾{s}几个小时、一天或短期住宿。您可以有时间休息。',respBtn:'询问暂托护理',
+famT:'一家人一起照顾',famD:'我们许多人觉得照顾父母是责任，寻求帮助会让人觉得不对。和家人或服务机构分担照顾，仍然是在照顾。这往往能让家人得到更好、更长久的护理。',famD2:'协调员可以帮助您的家庭安排分工，也让{s}一起参与。',
+hpTitle:'和真人谈谈',hpIntro:'我们的护理协调员是受过训练的真人，不是电脑。<b>他们帮助觉得应用程序难用的照顾者</b>，可以和您一起或替您完成事情。',hpTopic:'<b>您需要帮助的事项：{t}。</b>您的答案会被保存。',
+opCall:'打电话求助',opCallD:'现在就和人通话',opCb:'要求回电',opCbD:'在您方便的时间我们打给您',opMeet:'和协调员见面',opMeetD:'在您附近的社区中心',noSignup:'不需要注册。',
+callT:'打电话求助',callIntro:'拨打 CareBridge 求助热线：',demoNum:'示例号码，不是真实的电话线。',hours:'星期一至星期六，早上 8 点至晚上 8 点。提供英语、华语、马来语、淡米尔语和方言服务。',copy:'复制号码',copied:'号码已复制',selected:'号码已选中，请从菜单复制。',cantCall:'现在不方便打电话？',askCall:'请我们打给您',
+cbT:'要求回电',phone:'您的电话号码',phonePh:'例如：9123 4567',whichDay:'哪一天？',todayD:'今天',tomorrow:'明天',whatTime:'什么时间？',morningT:'上午（9 点至 12 点）',afternoonT:'下午（12 点至 5 点）',eveningT:'晚上（5 点至 8 点）',prefLang:'希望使用的语言',sendCbBtn:'要求回电',errDayTime:'请选择日期和时间。',
+meetT:'和协调员见面',meetIntro:'选择您附近的地点。',whenSuits:'什么时候方便？',wkM:'平日上午',wkA:'平日下午',satM:'星期六上午',meetPhonePh:'方便中心确认时间',sendMeetBtn:'要求见面',errCentre:'请选择地点和时间。',
+walk:'步行 {n} 分钟',bus:'乘巴士 {n} 分钟',exCentre:'示例中心',
+cbDoneT:'我们会打给您',cbDoneD:'协调员会打电话到 {p}。日期：{d}。时间：{t}。',meetDoneT:'已要求见面',meetDoneD:'{c}会在 2 个工作日内打电话到 {p} 确认。免费，没有任何承诺。',
+done:'完成',close:'关闭',today:'今天',daysAgo:'{n} 天前'
+};
+
+L.ms={
+langName:'Bahasa Melayu',
+tagline:'Sokongan lebih bijak. Warga emas lebih sihat. Keluarga lebih kukuh.',
+back:'Kembali',home:'Laman utama',start:'Halaman mula',next:'Seterusnya',textSize:'Saiz tulisan',language:'Bahasa',chooseLang:'Pilih bahasa anda',
+needHelp:'Perlukan bantuan?',talk:'Bercakap dengan seseorang',
+exampleFamily:'Keluarga contoh. Semua di sini bukan sebenar.',
+emergency:'Kecemasan? Hubungi <b>995</b>.',
+disclaimer:'<b>Tentang prototaip ini.</b> CareBridge SG ialah prototaip konsep. Ia tidak dikendalikan atau disokong oleh Pemerintah Singapura. Semua orang, nombor dan tempat ialah contoh. Apa yang anda taip tidak dihantar ke mana-mana.',
+stepOf:'Langkah {i} daripada {n}',
+helpMeTitle:'Tersekat? Seseorang boleh membantu.',helpMeText:'Seorang fasilitator boleh menyelesaikannya bersama anda. Jawapan anda disimpan.',helpMeBtn:'Bantu saya selesaikan',
+whyTitle:'Mengapa kami mencadangkan ini',aiTag:'Dalam bahasa mudah (ditulis oleh AI)',saveFinish:'Simpan dan selesai',
+heroLead:'Sebuah aplikasi bersama sokongan masyarakat. Ia membantu penjaga menyedari perubahan keperluan dan mendapat bantuan yang betul lebih awal.',
+btnSetup:'Sediakan untuk keluarga saya',btnExample:'Lihat keluarga contoh',
+setupNote:'Mengambil masa kira-kira 3 minit. Mahu bantuan? Tekan <b>Perlukan bantuan?</b> di bawah.',
+mottoD:'Digital apabila mudah.',mottoDs:'Peringatan, dokumen dan borang, diuruskan untuk anda.',
+mottoH:'Manusia apabila perlu.',mottoHs:'Fasilitator terlatih melalui telefon atau di pusat masyarakat anda.',
+probTitle:'Mengapa CareBridge?',
+probText:'Semakin ramai keluarga di Singapura menjaga ibu bapa yang semakin tua. Ramai menunggu terlalu lama untuk meminta bantuan kerana rasa bersalah, harapan keluarga, atau tidak tahu di mana hendak bermula. Bantuan ada, tetapi sukar dicari dan digunakan.',
+servTitle:'Apa yang CareBridge lakukan',servNote:'Dalam aplikasi, semua ini disusun dalam 4 bahagian yang mudah.',
+s1t:'Pendaftaran peribadi dan pusat maklumat',s1d:'Butiran kesihatan, penjagaan dan keluarga di satu tempat.',
+s2t:'Dokumen dan temu janji',s2d:'Simpan dokumen dengan selamat. Dapatkan peringatan sebelum setiap lawatan.',
+s3t:'Panduan bantuan kewangan',s3d:'Lihat skim yang mungkin anda layak. Borang diisi untuk anda, dengan kebenaran anda.',
+s4t:'Aktiviti dan masyarakat',s4d:'Cari aktiviti berdekatan yang sesuai untuk orang tersayang.',
+s5t:'Semakan berkala dan sokongan manusia',s5d:'Semakan setiap bulan. Orang sebenar membantu apabila perlu.',
+tspTitle:'Teknologi yang Menyokong Manusia',
+stemL:'STEM',stemT:'Penjagaan Lebih Bijak',stemD:'Bantuan AI mengurangkan kerja dokumen dan mengesan kemungkinan perubahan keperluan penjagaan.',
+bizL:'Perniagaan & Tadbir Urus',bizT:'Sokongan Mampan',bizD:'Perkongsian, penyelarasan perkhidmatan dan proses yang menjaga privasi menjadikannya praktikal dan boleh dipercayai.',
+humL:'Sains Sosial & Kemanusiaan',humT:'Penjagaan Berpusatkan Manusia',humD:'Menghormati nilai keluarga, kesejahteraan penjaga, maruah warga emas dan hubungan sesama manusia.',
+howTitle:'Cara CareBridge berfungsi',
+h1t:'Rakan kongsi tempatan',h1d:'Pusat Penuaan Aktif, Kelab dan Pusat Masyarakat, klinik dan penyedia penjagaan menempatkan fasilitator kami.',
+h2t:'Cadangan pembiayaan',h2d:'Kami mencadangkan sokongan awam serta pembiayaan rakan kongsi. Belum ada pembiayaan yang disahkan.',
+h3t:'Isi butiran sekali sahaja',h3d:'Butiran anda digunakan semula dalam borang lain, hanya dengan kebenaran anda.',
+h4t:'Perkhidmatan bekerjasama',h4d:'Dengan persetujuan anda, klinik, pusat dan keluarga sentiasa selaras.',
+h5t:'Data anda, pilihan anda',h5d:'Kami mengikut prinsip PDPA. Kami bertanya dahulu, guna data hanya untuk tujuan yang dinyatakan, menyimpannya dengan selamat, membenarkan anda melihat atau membetulkannya, dan memadamnya apabila tidak lagi diperlukan.',
+h6t:'Manusia membuat keputusan besar',h6d:'Fasilitator terlatih menyemak setiap permohonan geran, rujukan dan keputusan penjagaan yang penting.',
+planTitle:'Pelan 12 bulan kami',planSub:'Pelancaran langkah demi langkah bersama rakan masyarakat.',
+p1m:'Bulan 1–2',p1t:'Bersedia dan reka bentuk bersama',p1d:'Bekerjasama dengan pusat. Latih fasilitator.',
+p2m:'Bulan 3–4',p2t:'Jemput keluarga',p2d:'Capai 50–100 isi rumah melalui rakan kongsi.',
+p3m:'Bulan 5–7',p3t:'Lancarkan aplikasi',p3d:'Bantu keluarga bermula. Mulakan semakan.',
+p4m:'Bulan 8–10',p4t:'Sokongan manusia dan rujukan',p4d:'Perundingan, bantuan geran dan penyelarasan penjagaan.',
+p5m:'Bulan 11',p5t:'Nilai dan perbaiki',p5d:'Ukur hasil. Dengar maklum balas.',
+p6m:'Bulan 12',p6t:'Rancang untuk berkembang',p6d:'Laporan akhir dan pelan untuk pelancaran lebih luas.',
+impTitle:'Perubahan yang dibawa',
+impS:'Untuk warga emas',impS1:'Penjagaan yang tepat pada masanya',impS2:'Kesihatan dan hubungan sosial lebih baik',impS3:'Berdikari dan bermaruah',
+impC:'Untuk penjaga',impC1:'Kurang kerja dokumen',impC2:'Lebih tenang fikiran',impC3:'Lebih masa untuk kerja dan kehidupan',
+impM:'Untuk masyarakat',impM1:'Rangkaian sokongan lebih kukuh',impM2:'Penggunaan perkhidmatan sedia ada yang lebih baik',impM3:'Sistem penjagaan warga emas yang lebih mampan',
+impQuote:'Penjagaan yang lebih baik bermula dengan sokongan yang betul, pada masa yang betul.',
+ob0q:'Pertama, apa nama panggilan anda?',
+singpassBtn:'Isi dengan Singpass',singpassNote:'Konsep sahaja. Dalam aplikasi sebenar, Singpass hanya berkongsi butiran anda selepas anda bersetuju. Di sini kami mengisi butiran contoh.',
+orType:'Atau taip butiran anda',
+yourName:'Nama anda',yourNamePh:'cth. Mei Ling',relQ:'Apakah hubungan anda dengan mereka?',
+rel_daughter:'Anak perempuan',rel_son:'Anak lelaki',rel_spouse:'Suami atau isteri',rel_family:'Ahli keluarga lain',rel_friend:'Kawan atau jiran',
+ob1q:'Siapa yang anda jaga?',theirName:'Nama mereka',theirNamePh:'cth. Mdm Tan',theirNameHint:'Nama yang biasa anda panggil.',age:'Umur mereka',agePh:'cth. 78',
+ob2q:'Apa yang keluarga anda mahukan?',ob2hint:'Pilih mana-mana. Anda boleh ubah kemudian.',
+pref_home:'Penjagaan di rumah',pref_homeS:'Dengan sedikit bantuan tambahan',
+pref_respite:'Rehat sekali-sekala',pref_respiteS:'Orang lain menjaga mereka selama beberapa jam atau hari',
+pref_activities:'Aktiviti masyarakat',pref_activitiesS:'Kelas dan kumpulan berdekatan',
+pref_unsure:'Belum pasti',pref_unsureS:'Bincang dengan fasilitator',
+ob2note:'<b>Keluarga anda yang membuat keputusan.</b> Kami tidak akan mencadangkan rumah jagaan berdasarkan kesihatan atau kewangan sahaja. Fasilitator membantu anda meneroka pilihan, tanpa tekanan.',
+ob3q:'Sejauh mana anda selesa menggunakan telefon dan aplikasi?',
+tech_ok:'Saya selesa',tech_some:'Saya perlukan sedikit bantuan',tech_person:'Saya lebih suka dibantu orang',
+techPersonT:'Itu tidak mengapa.',techPersonD:'Fasilitator membantu orang yang rasa aplikasi sukar digunakan. Mereka boleh menyediakannya bersama anda, melalui telefon atau bersemuka.',techPersonBtn:'Bercakap dengan fasilitator',
+ob4q:'Maklumat anda, pilihan anda',
+ob4a:'Kami menyimpan butiran anda <b>hanya untuk membantu anda menjaga</b>.',ob4b:'Kami berkongsi <b>hanya apabila anda bersetuju</b>.',ob4c:'Anda boleh <b>melihat, menukar atau memadamnya</b> bila-bila masa.',ob4d:'Kami menyimpannya dengan selamat dan memadamnya apabila tidak diperlukan.',
+consent1:'<b>Saya bersetuju</b> CareBridge menyimpan maklumat saya untuk membantu saya menjaga.',consent1n:'(Diperlukan)',
+consent2:'<b>Isi borang untuk saya</b> dengan butiran ini. Saya akan semak sebelum apa-apa dihantar.',consent2n:'(Pilihan)',
+finishSetup:'Selesai',personSetup:'Saya lebih suka disediakan bersama seseorang',
+errName:'Sila taip nama anda dan pilih hubungan anda.',errSenior:'Sila taip nama mereka.',errAge:'Sila taip umur mereka dalam nombor, contohnya 78.',errPrefs:'Sila pilih sekurang-kurangnya satu.',errOne:'Sila pilih satu jawapan.',errConsent:'Kami perlukan persetujuan anda untuk teruskan. Fasilitator juga boleh membantu anda tanpa aplikasi.',
+welcome:'Semua sudah siap. Selamat datang, {n}.',
+morning:'Selamat pagi',afternoon:'Selamat petang',evening:'Selamat malam',hello:'Helo, {n}',caringFor:'Anda menjaga <b>{s}</b>, {a} tahun.',
+unsureT:'Anda mahu membincangkan pilihan anda.',unsureD:'Jumpa fasilitator berdekatan. Tiada tekanan.',unsureBtn:'Jumpa fasilitator',
+nextAppt:'Temu janji seterusnya',noAppt:'Belum ada temu janji.',
+ckDue:'Masa untuk semakan bulan ini bagi {s}.',ckDueS:'2 minit. Membantu mengesan perubahan awal.',ckStart:'Mula semakan',ckDone:'Semakan terakhir: {d}',
+c1t:'Penjagaan Warga Emas Saya',c1d:'Butiran kesihatan dan semakan bulanan',
+c2t:'Temu Janji & Dokumen',c2d:'Lawatan, peringatan dan dokumen',
+c3t:'Bantuan Kewangan',c3d:'Skim yang mungkin anda layak',
+c4t:'Aktiviti & Sokongan',c4d:'Aktiviti, dan masa rehat untuk anda',
+howLink:'Cara CareBridge berfungsi dan menjaga maklumat anda',
+careTitle:'Penjagaan Warga Emas Saya',ageL:'Umur',caredBy:'Dijaga oleh',health:'Keadaan kesihatan',noneYet:'Belum ditambah. Fasilitator boleh membantu anda.',matters:'Perkara penting bagi {s}',
+ex_m1:'Suka mandi pada waktu pagi, sendiri jika boleh',ex_m2:'Bercakap Hokkien dan sedikit Bahasa Inggeris',ex_m3:'Suka berjalan pagi bersama kawan',
+ex_c1:'Tekanan darah tinggi',ex_c2:'Diabetes jenis 2',
+dignity:'Libatkan {s} dalam keputusan tentang penjagaan mereka. Kehendak mereka diutamakan.',
+ckTitle:'Semakan bulanan',ckIntro:'Enam soalan ringkas tentang keadaan {s}. Perubahan kecil yang dikesan awal lebih mudah dibantu.',ckBtn:'Mula semakan (2 minit)',ckEmpty:'Belum ada semakan. Semakan pertama menjadi titik permulaan.',
+youT:'Bagaimana keadaan anda?',youD:'Kesejahteraan anda juga penting. Cuba semakan penjaga 1 minit.',youBtn:'Semak keadaan saya',
+ckSenior:'Semakan untuk {s}',ckCarer:'Semakan anda',
+q_eat:'Bagaimana selera makan {s}?',o_eat:['Seperti biasa','Makan kurang','Hampir tidak makan'],
+q_sleep:'Bagaimana tidur {s}?',o_sleep:['Seperti biasa','Sedikit teruk','Jauh lebih teruk'],
+q_fall:'Adakah {s} terjatuh atau hampir terjatuh baru-baru ini?',o_fall:['Tidak','Hampir terjatuh','Ya, terjatuh'],
+q_mind:'Adakah {s} lebih pelupa atau keliru?',o_mind:['Tiada perubahan','Sedikit lebih','Jauh lebih'],
+q_mood:'Bagaimana emosi {s}?',o_mood:['Seperti biasa','Sedikit pendiam','Sangat pendiam, tidak mahu keluar'],
+q_daily:'Adakah {s} perlukan lebih bantuan untuk mandi, berpakaian atau berjalan?',o_daily:['Tiada perubahan','Sedikit lebih','Jauh lebih'],
+tapNext:'Tekan jawapan untuk teruskan.',prevQ:'Soalan sebelumnya',
+r_eat1:'{s} makan kurang.',r_eat2:'{s} hampir tidak makan.',r_sleep1:'Tidur sedikit teruk.',r_sleep2:'Tidur jauh lebih teruk.',r_fall1:'{s} hampir terjatuh.',r_fall2:'{s} terjatuh.',r_mind1:'Sedikit lebih pelupa atau keliru.',r_mind2:'Jauh lebih pelupa atau keliru.',r_mood1:'{s} kelihatan lebih pendiam.',r_mood2:'{s} sangat pendiam dan tidak mahu keluar.',r_daily1:'{s} perlukan sedikit lebih bantuan.',r_daily2:'{s} perlukan lebih banyak bantuan.',
+resGoodT:'Tiada perubahan besar',resGoodD:'Keadaan stabil. Kami akan mengingatkan anda bulan depan.',
+resWarnT:'Beberapa perubahan perlu diperhatikan',resWarnD:'Ada beberapa perubahan. Memerhatikannya sekarang membantu anda bertindak awal.',
+resAlertT:'Sila jumpa doktor segera',resAlertD:'Beberapa jawapan perlu disemak oleh doktor. Ini <b>bukan diagnosis</b>.',
+rulesNote:'Peraturan mudah, berdasarkan jawapan anda:',medNote:'Jatuh, makan jauh kurang atau keliru yang baru perlu disemak segera, walaupun {s} nampak sihat.',
+nBook:'Buat temu janji doktor',nFin:'Lihat bantuan untuk alat bantu berjalan dan kos penjagaan',nAct:'Cari aktiviti yang {s} mungkin suka',nTalk:'Bercakap dengan fasilitator',
+emerg995:'Jika {s} sangat tidak sihat, sakit dada, sukar bernafas atau jatuh teruk, hubungi <b>995</b> sekarang.',
+lbl_good:'Tiada perubahan besar',lbl_warn:'Perlu diperhatikan',lbl_alert:'Disyorkan jumpa doktor',
+cq_tired:'Kebelakangan ini, berapa kerap anda rasa sangat letih?',co_tired:['Jarang','Kadang-kadang','Kerap'],
+cq_self:'Berapa kerap anda ada masa untuk diri sendiri?',co_self:['Kerap','Kadang-kadang','Jarang'],
+cq_alone:'Berapa kerap anda rasa keseorangan dalam menjaga?',co_alone:['Jarang','Kadang-kadang','Kerap'],
+cq_money:'Adakah masalah wang menambah tekanan anda?',co_money:['Tidak sangat','Kadang-kadang','Kerap'],
+cq_work:'Adakah sukar mengimbangi penjagaan dengan kerja atau keluarga?',co_work:['Tidak sangat','Kadang-kadang','Kerap'],
+cGoodT:'Anda nampaknya dapat mengatasinya',cGoodD:'Teruskan meluangkan masa untuk diri sendiri.',
+cWarnT:'Beban anda agak berat',cWarnD:'Rasa letih adalah biasa. Meminta bantuan tidak bermakna anda kurang mengambil berat.',cAlertT:'Beban anda sangat berat sekarang',
+o_break:'Berehat dengan sewajarnya',o_breakD:'Penjagaan rehat: penjaga terlatih menjaga {s} selama beberapa jam atau hari.',o_breakB:'Tanya tentang penjagaan rehat',
+o_alone:'Berbual dengan penjaga lain',o_aloneD:'Kumpulan penjaga bertemu berdekatan setiap bulan.',o_aloneB:'Lihat kumpulan sokongan',
+o_money:'Semak bantuan kewangan',o_moneyD:'5 soalan ringkas menunjukkan skim yang mungkin anda layak.',o_moneyB:'Semak bantuan kewangan',
+o_work:'Kerja dan penjagaan',o_workD:'Fasilitator boleh membantu anda merancang perbincangan dengan majikan atau keluarga.',o_workB:'Minta panggilan balik',
+sosT:'Anda tidak perlu menghadapinya seorang diri.',sosD:'Fasilitator boleh menelefon anda. Jika anda rasa tertekan atau tidak selamat, hubungi Samaritans of Singapore di <b>1767</b> (24 jam).',
+clbl_good:'Dapat mengatasi',clbl_warn:'Agak terbeban',clbl_alert:'Sangat terbeban',ckSaved:'Semakan disimpan',
+apTitle:'Temu Janji & Dokumen',upcoming:'Akan datang',addAppt:'Tambah temu janji',remOn:'Peringatan SMS: {r}',remOff:'Peringatan dimatikan',remove:'Buang',apEmpty:'Belum ada temu janji. Tambah satu dan kami akan menghantar peringatan SMS.',
+sugT:'Pemeriksaan yang dicadangkan',sugD:'Pesakit diabetes biasanya membuat pemeriksaan mata setiap tahun. Pemeriksaan terakhir {s} lebih setahun yang lalu.',sugNote:'Ini cadangan, bukan nasihat perubatan. Sila tanya doktor.',sugBtn:'Tambah pemeriksaan ini',
+docs:'Dokumen',addDoc:'Tambah dokumen',docsIntro:'Ambil gambar surat atau resit. Kami susunkannya untuk anda, dan anda semak.',docEmpty:'Belum ada dokumen. Mulakan dengan surat hospital, slip temu janji atau resit.',
+byAI:'Disusun oleh AI, disemak oleh anda',byYou:'Folder dipilih oleh anda',
+remConfirmT:'Buang temu janji ini?',remConfirmD:'“{t}” pada {d} akan dibuang dan peringatannya dibatalkan.',yesRemove:'Ya, buang',noBack:'Tidak, kembali',
+apptRemoved:'Temu janji dibuang',remTurnedOff:'Peringatan dimatikan',remTurnedOn:'Peringatan dihidupkan: 1 hari sebelum',
+newAppt:'Temu janji baharu',aq0:'Untuk apa temu janji ini?',type_doc:'Doktor atau poliklinik',type_spec:'Pakar hospital',type_ther:'Terapi',type_dent:'Pergigian',type_other:'Lain-lain',
+aq1:'Bila?',date:'Tarikh',time:'Masa',aq2:'Di mana?',place:'Tempat',placePh:'cth. Poliklinik Westwood',placeHint:'Taip nama, atau tekan pilihan di bawah.',
+aq3:'Mahu peringatan?',aq3hint:'Kami menghantar SMS ke telefon anda.',rem_1d:'1 hari sebelum',rem_2h:'2 jam sebelum',rem_both:'1 hari dan 2 jam sebelum',rem_none:'Tiada peringatan',
+aq4:'Semak dan simpan',what:'Apa',when:'Bila',where:'Di mana',reminder:'Peringatan',fixHint:'Ada yang salah? Tekan Kembali.',saveAppt:'Simpan temu janji',apptSaved:'Temu janji disimpan',
+errType:'Sila pilih satu.',errWhen:'Sila pilih tarikh dan masa.',errPast:'Tarikh itu sudah berlalu. Sila pilih tarikh lain.',errPlace:'Sila taip tempatnya.',
+addDocT:'Tambah dokumen',docQ:'Dokumen yang mana?',photoBtn:'Ambil gambar atau pilih fail',fileNote:'Dalam prototaip ini, hanya nama fail dibaca. Fail anda kekal di peranti anda.',tryEx:'Atau cuba contoh',
+reading:'Membaca dokumen anda…',readingD:'Mencari perkataan yang menunjukkan jenis dokumen.',weThink:'Ini kelihatan seperti: {c}',
+conf_3:'Agak pasti',conf_2:'Cukup pasti',conf_1:'Kurang pasti, sila semak',conf_0:'Tidak dapat dikenal pasti',
+foundWords:'Kami menjumpai perkataan ini: {w}.',noWords:'Kami tidak mengenali sebarang perkataan. Sila pilih folder.',youChanged:'Anda memilih folder ini.',
+followT:'Dokumen ini menyebut lawatan susulan.',followD:'Tambah ke temu janji? Anda boleh menyemaknya dahulu.',followBtn:'Tambah temu janji',
+saveIn:'Ya, simpan dalam {c}',otherFolder:'Pilih folder lain',folderQ:'Folder yang mana?',savedIn:'Disimpan dalam {c}',filledFromDoc:'Diisi daripada dokumen. Sila semak.',
+cat_med:'Rekod perubatan',cat_appt:'Surat temu janji',cat_bill:'Bil dan resit',cat_fin:'Wang dan geran',cat_id:'Pengenalan dan undang-undang',cat_other:'Lain-lain',
+sd0:'{s} sudah keluar hospital selepas jangkitan dada. Habiskan antibiotik dalam 5 hari, kemudian jumpa doktor poliklinik dalam kira-kira 2 minggu.',sd1:'Tarikh dan masa lawatan klinik. Bawa IC dan senarai ubat.',sd2:'Resit farmasi sebanyak $42.60. Simpan sekiranya boleh dituntut.',sd3:'Berita baik: permohonan geran diluluskan. Wang akan dibayar setiap bulan.',
+checkWithSender:'Jika tidak pasti, tanya pihak yang menghantarnya.',
+finTitle:'Bantuan Kewangan',finLead:'Jawab 5 soalan ringkas. Lihat skim yang keluarga anda <b>mungkin</b> layak, dan sebabnya.',
+finNotice:'<b>Mungkin layak sahaja.</b> Ini peraturan mudah dalam prototaip. Agensi yang mengendalikan setiap skim membuat keputusan. CareBridge bukan perkhidmatan pemerintah.',
+finStart:'Semak bantuan yang mungkin kami dapat',finAgain:'Semak semula',finLast:'Lihat keputusan terakhir',myApps:'Permohonan saya',appsEmpty:'Belum ada permohonan.',
+finWorry:'Masalah wang adalah biasa bagi penjaga yang bekerja.',finWorryD:'Fasilitator boleh meneliti pilihan anda dan membantu mengisi borang.',reqCb:'Minta panggilan balik',
+fq_age:'Berapakah umur {s}?',u60:'Bawah 60',a60:'60 hingga 64',a65:'65 ke atas',
+fq_born:'Bilakah {s} dilahirkan?',pg:'1949 atau lebih awal',mg:'1950 hingga 1959',later:'1960 atau kemudian',
+fq_adl:'Berapa banyak perkara ini yang {s} TIDAK dapat lakukan sendiri?',adlList:'Mandi, berpakaian, makan, ke tandas, berjalan, bangun dari katil',adl0:'Tiada',adl1:'1 atau 2',adl3:'3 atau lebih',
+fq_inc:'Berapakah pendapatan bulanan isi rumah anda bagi setiap orang?',incHint:'Jumlahkan pendapatan semua orang di rumah, kemudian bahagikan dengan bilangan orang.',low:'Bawah $1,500',mid:'$1,500 hingga $3,600',high:'Lebih $3,600',na:'Saya tidak mahu menyatakan',
+fq_cit:'Adakah {s} warganegara Singapura?',sc:'Warganegara Singapura',pr:'Penduduk Tetap',no:'Bukan kedua-duanya',
+preAge:'Kami memilih ini berdasarkan profil anda. Ubah jika perlu.',seeResults:'Lihat keputusan',finCheckL:'Semakan bantuan kewangan',
+resTitle:'Skim yang mungkin anda layak',resNotice:'<b>Mungkin layak, perlu semakan rasmi.</b> Hanya agensi berkenaan boleh mengesahkan kelayakan dan jumlah.',
+possibly:'Mungkin layak',runBy:'Dikendalikan oleh: {a}',explainBtn:'Terangkan dengan mudah',hideExplain:'Sembunyikan penerangan',prepBtn:'Sediakan permohonan',askFac:'Tanya fasilitator',
+noMatch:'Tiada skim dalam prototaip ini yang sepadan. Mungkin masih ada bantuan. Fasilitator boleh meneliti keadaan anda.',nextT:'Tidak pasti langkah seterusnya?',nextD:'Fasilitator boleh menyemaknya bersama anda.',
+w_adl3:'{s} tidak dapat melakukan 3 atau lebih aktiviti harian sendiri.',w_inc:'Pendapatan anda dalam had contoh.',w_incNA:'Anda tidak menyatakan pendapatan. Agensi akan menyemaknya.',w_sc:'{s} ialah warganegara Singapura.',w_pr:'{s} ialah Penduduk Tetap (syarat keluarga mungkin terpakai).',w_60:'{s} berumur 60 tahun ke atas.',w_adl1:'{s} perlukan sedikit bantuan untuk bergerak atau tugas harian.',w_fall:'Semakan menyebut tentang jatuh.',w_65:'Anda menjaga seseorang berumur 65 tahun ke atas.',w_bigHelp:'Anda menjaga seseorang yang perlukan banyak bantuan.',w_csl:'Ini syarat biasa untuk bayaran, jika diinsuranskan.',w_pg:'{s} dilahirkan pada 1949 atau lebih awal.',w_mg:'{s} dilahirkan antara 1950 dan 1959.',w_low:'Pendapatan isi rumah anda dalam lingkungan rendah.',
+hcg_what:'Wang tunai bulanan untuk membantu keluarga menjaga warga emas di rumah.',hcg_simple:'Jika {s} perlukan banyak bantuan harian, keluarga anda mungkin mendapat wang setiap bulan untuk penjagaan di rumah.',
+smf_what:'Kos lebih rendah untuk alat bantu berjalan, kerusi roda, kerusi mandi dan barangan penjagaan di rumah.',smf_simple:'Ini boleh menjadikan alat yang membantu {s} bergerak dengan selamat lebih murah. Biasanya ahli terapi akan menilai dahulu.',
+ctg_what:'Membantu membayar kursus latihan penjaga.',ctg_simple:'Belajar kemahiran seperti mengalihkan seseorang dengan selamat. Geran ini membantu membayar yurannya.',
+csl_what:'Bayaran bulanan jika orang yang diinsuranskan tidak dapat melakukan 3 atau lebih aktiviti harian.',csl_simple:'Jika {s} ada insurans ini, ia mungkin membayar setiap bulan. Semak dahulu sama ada {s} dilindungi.',
+pg_what:'Subsidi kesihatan tambahan untuk warga emas yang layak, lahir pada atau sebelum 1949.',pg_simple:'Banyak lawatan klinik dan ubat mungkin lebih murah. Biasanya diberikan secara automatik.',
+mg_what:'Subsidi kesihatan tambahan untuk warga emas yang layak, lahir dari 1950 hingga 1959.',mg_simple:'Banyak lawatan klinik dan ubat mungkin lebih murah. Biasanya diberikan secara automatik.',
+comcare_what:'Bantuan untuk kos harian bagi isi rumah berpendapatan rendah.',comcare_simple:'Jika wang tidak mencukupi, Pejabat Perkhidmatan Sosial boleh meneliti keadaan anda.',
+appL:'Permohonan {n}',ff0q:'Boleh kami isikan borang untuk anda?',ff0d:'Kami boleh menggunakan butiran yang anda sudah berikan. Anda akan menyemak setiap satu.',weUse:'Kami akan menggunakan:',
+fYourName:'Nama anda',fRel:'Hubungan',fSenior:'Orang yang anda jaga',fAge:'Umur mereka',ffYes:'Ya, isikan untuk saya',ffNo:'Tidak, saya akan taip sendiri',
+ff1q:'Semak butiran anda',yellowNote:'Kotak kuning telah diisi untuk anda.',prefTag:'Diisi daripada profil anda. Sila semak.',
+fFull:'Nama penuh anda',fRelL:'Hubungan anda dengan mereka',fSFull:'Nama penuh mereka',fPhone:'Nombor telefon bimbit anda',fPhoneHint:'Supaya fasilitator boleh menelefon anda.',
+ff2q:'Sedia untuk dihantar untuk semakan?',scheme:'Skim',mobile:'Telefon bimbit',ff2note:'<b>Seseorang menyemak dahulu.</b> Fasilitator akan menelitinya bersama anda. Hanya selepas itu ia dihantar kepada {a}, dengan kebenaran anda.',
+sendCheck:'Hantar kepada fasilitator untuk semakan',cfSendT:'Hantar untuk semakan?',cfSendD:'Fasilitator akan menelitinya bersama anda. Ia <b>tidak</b> dihantar kepada agensi sehingga anda berdua bersetuju.',cfYesSend:'Ya, hantar untuk semakan',
+sentT:'Dihantar untuk semakan',sentD:'Fasilitator akan menelefon anda dalam 2 hari bekerja. <b>Belum ada apa-apa yang dihantar kepada {a}.</b>',yourRef:'Nombor rujukan anda: <b>{r}</b>',protoNote:'Prototaip: tiada apa-apa yang benar-benar dihantar.',backHome:'Kembali ke laman utama',seeApps:'Lihat permohonan saya',
+errFill:'Sila isi setiap kotak.',errPhone:'Sila taip nombor Singapura 8 digit, contohnya 9123 4567.',
+st0:'Dihantar untuk semakan',st1:'Disemak bersama fasilitator',st2:'Dihantar kepada agensi',st3:'Menunggu keputusan',st4:'Keputusan',
+actTitle:'Aktiviti & Sokongan',ywT:'Kesejahteraan anda juga penting',ywD:'Menjaga orang sangat memenatkan. Semakan 1 minit membantu anda tahu bila perlu berehat.',ywBtn:'Bagaimana keadaan saya? (1 minit)',lastCk:'Semakan terakhir: {d}',
+nearT:'Aktiviti berdekatan',nearD:'Kekal berhubung membantu {s} kekal sihat. Tanya {s} apa yang mereka suka.',
+interested:'Saya berminat',noted:'Minat dicatat',notedToast:'Dicatat. Pusat akan menghubungi anda.',removedToast:'Minat dibuang',forCarers:'Untuk penjaga',suitedFor:'Sebab dicadangkan: {w}',
+a1t:'Qigong pagi di taman',a1w:'Selasa dan Khamis, 8 pagi',a1d:'Gerakan lembut, baik untuk keseimbangan. Kerusi disediakan.',a1why:'waktu pagi, dekat rumah, membantu keseimbangan',
+a2t:'Kopi dan berbual',a2w:'Rabu, 2:30 petang',a2d:'Berbual santai dalam Hokkien, Mandarin dan Bahasa Inggeris.',a2why:'bercakap Hokkien, suka berbual',
+a3t:'Petang karaoke',a3w:'Jumaat, 3 petang',a3d:'Lagu-lagu lama dalam pelbagai bahasa. Keluarga dialu-alukan.',a3why:'bersosial, keluarga boleh ikut',
+a4t:'Kumpulan penjaga',a4w:'Sabtu pertama setiap bulan, 10 pagi',a4d:'Bertemu penjaga lain, berkongsi tip dan berbual secara terbuka. Teh disediakan.',a4why:'sokongan untuk anda',
+respT:'Berehat: penjagaan rehat',respD:'Penjaga terlatih menjaga {s} selama beberapa jam, sehari atau penginapan singkat. Anda dapat masa untuk berehat.',respBtn:'Tanya tentang penjagaan rehat',
+famT:'Menjaga sebagai keluarga',famD:'Ramai antara kita merasakan menjaga ibu bapa ialah tanggungjawab, dan meminta bantuan terasa tidak kena. Berkongsi penjagaan dengan keluarga atau perkhidmatan tetap bermakna menjaga. Selalunya ia membawa penjagaan yang lebih baik, untuk lebih lama.',famD2:'Fasilitator boleh membantu keluarga anda merancang siapa buat apa, dengan melibatkan {s}.',
+hpTitle:'Bercakap dengan orang sebenar',hpIntro:'Fasilitator penjagaan kami ialah orang terlatih, bukan komputer. <b>Mereka membantu penjaga yang rasa aplikasi sukar digunakan</b>, dan boleh melakukan tugas bersama atau untuk anda.',hpTopic:'<b>Anda meminta bantuan untuk: {t}.</b> Jawapan anda disimpan.',
+opCall:'Telefon untuk bantuan',opCallD:'Bercakap dengan seseorang sekarang',opCb:'Minta panggilan balik',opCbD:'Kami telefon anda pada masa yang sesuai',opMeet:'Jumpa fasilitator',opMeetD:'Di pusat masyarakat berdekatan',noSignup:'Tidak perlu mendaftar.',
+callT:'Telefon untuk bantuan',callIntro:'Hubungi talian bantuan CareBridge:',demoNum:'Nombor demo. Bukan talian sebenar.',hours:'Isnin hingga Sabtu, 8 pagi hingga 8 malam. Bahasa Inggeris, Mandarin, Melayu, Tamil dan dialek.',copy:'Salin nombor',copied:'Nombor disalin',selected:'Nombor dipilih. Salin daripada menu anda.',cantCall:'Tidak dapat menelefon sekarang?',askCall:'Minta kami telefon anda',
+cbT:'Minta panggilan balik',phone:'Nombor telefon anda',phonePh:'cth. 9123 4567',whichDay:'Hari apa?',todayD:'Hari ini',tomorrow:'Esok',whatTime:'Pukul berapa?',morningT:'Pagi (9 pagi–12 tengah hari)',afternoonT:'Petang (12–5 petang)',eveningT:'Malam (5–8 malam)',prefLang:'Bahasa pilihan',sendCbBtn:'Minta panggilan balik',errDayTime:'Sila pilih hari dan masa.',
+meetT:'Jumpa fasilitator',meetIntro:'Pilih tempat berdekatan anda.',whenSuits:'Bila sesuai untuk anda?',wkM:'Pagi hari bekerja',wkA:'Petang hari bekerja',satM:'Pagi Sabtu',meetPhonePh:'Supaya pusat boleh mengesahkan',sendMeetBtn:'Minta pertemuan',errCentre:'Sila pilih tempat dan masa.',
+walk:'{n} minit berjalan kaki',bus:'{n} minit dengan bas',exCentre:'Pusat contoh',
+cbDoneT:'Kami akan menelefon anda',cbDoneD:'Fasilitator akan menelefon {p}. Hari: {d}. Masa: {t}.',meetDoneT:'Pertemuan diminta',meetDoneD:'{c} akan menelefon {p} dalam 2 hari bekerja untuk mengesahkan. Percuma, tanpa sebarang komitmen.',
+done:'Selesai',close:'Tutup',today:'hari ini',daysAgo:'{n} hari lalu'
+};
+
+L.ta={
+langName:'தமிழ்',
+tagline:'சிறந்த ஆதரவு. ஆரோக்கியமான மூத்தோர். வலுவான குடும்பங்கள்.',
+back:'பின்செல்',home:'முகப்பு',start:'தொடக்கப் பக்கம்',next:'அடுத்து',textSize:'எழுத்து அளவு',language:'மொழி',chooseLang:'உங்கள் மொழியைத் தேர்ந்தெடுங்கள்',
+needHelp:'உதவி வேண்டுமா?',talk:'ஒருவரிடம் பேசுங்கள்',
+exampleFamily:'மாதிரிக் குடும்பம். இங்குள்ளவை உண்மையானவை அல்ல.',
+emergency:'அவசரமா? <b>995</b> அழையுங்கள்.',
+disclaimer:'<b>இந்த முன்மாதிரி பற்றி.</b> CareBridge SG ஒரு கருத்து முன்மாதிரி. இது சிங்கப்பூர் அரசாங்கத்தால் நடத்தப்படவோ அங்கீகரிக்கப்படவோ இல்லை. எல்லா நபர்கள், எண்கள், இடங்கள் அனைத்தும் மாதிரிகளே. நீங்கள் தட்டச்சு செய்வது எங்கும் அனுப்பப்படாது.',
+stepOf:'படி {i} / {n}',
+helpMeTitle:'சிக்கலா? ஒருவர் உதவுவார்.',helpMeText:'ஒருங்கிணைப்பாளர் உங்களுடன் சேர்ந்து இதை முடிக்கலாம். உங்கள் பதில்கள் சேமிக்கப்படும்.',helpMeBtn:'இதை முடிக்க உதவுங்கள்',
+whyTitle:'இதை ஏன் பரிந்துரைக்கிறோம்',aiTag:'எளிய சொற்களில் (AI எழுதியது)',saveFinish:'சேமித்து முடி',
+heroLead:'ஒரு செயலியும் சமூக ஆதரவும். மாறும் தேவைகளைப் பராமரிப்பாளர்கள் கவனித்து, சரியான உதவியை முன்கூட்டியே பெற இது உதவுகிறது.',
+btnSetup:'என் குடும்பத்துக்கு அமைக்கவும்',btnExample:'மாதிரிக் குடும்பத்தைப் பாருங்கள்',
+setupNote:'சுமார் 3 நிமிடங்கள் ஆகும். உதவி வேண்டுமா? கீழே உள்ள <b>உதவி வேண்டுமா?</b> என்பதைத் தட்டுங்கள்.',
+mottoD:'வசதியான போது டிஜிட்டல்.',mottoDs:'நினைவூட்டல்கள், ஆவணங்கள், படிவங்கள் உங்களுக்காகச் செய்யப்படும்.',
+mottoH:'தேவையான போது மனிதர்.',mottoHs:'பயிற்சி பெற்ற ஒருங்கிணைப்பாளர்கள், தொலைபேசியில் அல்லது உங்கள் சமூக நிலையத்தில்.',
+probTitle:'ஏன் CareBridge?',
+probText:'சிங்கப்பூரில் மேலும் பல குடும்பங்கள் வயதான பெற்றோரைப் பராமரிக்கின்றன. குற்ற உணர்வு, குடும்ப எதிர்பார்ப்புகள், அல்லது எங்கு தொடங்குவது என்று தெரியாததால், பலர் உதவி கேட்க நீண்ட காலம் காத்திருக்கிறார்கள். உதவி இருக்கிறது, ஆனால் அதைக் கண்டுபிடிப்பதும் பயன்படுத்துவதும் கடினம்.',
+servTitle:'CareBridge என்ன செய்கிறது',servNote:'செயலியில் இவை 4 எளிய பகுதிகளாகப் பிரிக்கப்பட்டுள்ளன.',
+s1t:'தனிப்பட்ட பதிவு மற்றும் தகவல் மையம்',s1d:'உடல்நலம், பராமரிப்பு, குடும்ப விவரங்கள் ஒரே இடத்தில்.',
+s2t:'ஆவணங்களும் மருத்துவச் சந்திப்புகளும்',s2d:'ஆவணங்களைப் பாதுகாப்பாக வைத்திருங்கள். ஒவ்வொரு சந்திப்புக்கும் முன் நினைவூட்டல்.',
+s3t:'நிதி உதவி வழிகாட்டி',s3d:'நீங்கள் பெறக்கூடிய திட்டங்களைப் பாருங்கள். உங்கள் அனுமதியுடன் படிவங்கள் நிரப்பப்படும்.',
+s4t:'நடவடிக்கைகளும் சமூகமும்',s4d:'உங்கள் அன்புக்குரியவருக்கு ஏற்ற அருகிலுள்ள நடவடிக்கைகள்.',
+s5t:'நலன் சரிபார்ப்பும் மனித ஆதரவும்',s5d:'மாதம் ஒருமுறை சரிபார்ப்பு. தேவைப்படும்போது உண்மையான மனிதர்கள் உதவுவார்கள்.',
+tspTitle:'மனிதர்களுக்கு உதவும் தொழில்நுட்பம்',
+stemL:'STEM',stemT:'சிறந்த பராமரிப்பு',stemD:'AI உதவி ஆவண வேலையைக் குறைத்து, பராமரிப்புத் தேவைகளில் ஏற்படக்கூடிய மாற்றங்களைக் கண்டறிகிறது.',
+bizL:'வணிகமும் ஆளுகையும்',bizT:'நிலையான ஆதரவு',bizD:'கூட்டாண்மைகள், சேவை ஒருங்கிணைப்பு, தனியுரிமையைக் காக்கும் நடைமுறைகள் இதை நடைமுறைக்கு உகந்ததாகவும் நம்பகமானதாகவும் ஆக்குகின்றன.',
+humL:'சமூக அறிவியலும் மனிதவியலும்',humT:'மனிதரை மையமாகக் கொண்ட பராமரிப்பு',humD:'குடும்ப விழுமியங்கள், பராமரிப்பாளர் நலன், மூத்தோரின் கண்ணியம், உண்மையான மனித உறவு ஆகியவற்றுக்கு மதிப்பு.',
+howTitle:'CareBridge எப்படிச் செயல்படுகிறது',
+h1t:'உள்ளூர்ப் பங்காளிகள்',h1d:'துடிப்பான மூப்படைதல் நிலையங்கள், சமூக மன்றங்கள், மருந்தகங்கள், பராமரிப்பு நிறுவனங்கள் எங்கள் ஒருங்கிணைப்பாளர்களுக்கு இடம் தருகின்றன.',
+h2t:'முன்மொழியப்பட்ட நிதி',h2d:'பொது ஆதரவும் பங்காளிகளின் நிதியும் முன்மொழியப்படுகின்றன. இதுவரை எந்த நிதியும் உறுதிப்படுத்தப்படவில்லை.',
+h3t:'விவரங்களை ஒருமுறை மட்டும் உள்ளிடுங்கள்',h3d:'உங்கள் அனுமதியுடன் மட்டுமே உங்கள் விவரங்கள் மற்ற படிவங்களிலும் பயன்படுத்தப்படும்.',
+h4t:'சேவைகள் இணைந்து செயல்படுகின்றன',h4d:'உங்கள் ஒப்புதலுடன், மருந்தகம், நிலையம், குடும்பம் அனைவரும் ஒருங்கிணைந்து இருப்பார்கள்.',
+h5t:'உங்கள் தரவு, உங்கள் முடிவு',h5d:'நாங்கள் PDPA கொள்கைகளைப் பின்பற்றுகிறோம். முதலில் அனுமதி கேட்கிறோம், சொன்ன காரணத்துக்கு மட்டும் பயன்படுத்துகிறோம், பாதுகாப்பாக வைக்கிறோம், நீங்கள் பார்க்கவோ திருத்தவோ அனுமதிக்கிறோம், தேவையில்லாதபோது நீக்குகிறோம்.',
+h6t:'பெரிய முடிவுகளை மனிதர்கள் எடுக்கிறார்கள்',h6d:'ஒவ்வொரு மானிய விண்ணப்பம், பரிந்துரை, முக்கியப் பராமரிப்பு முடிவையும் பயிற்சி பெற்ற ஒருங்கிணைப்பாளர் சரிபார்க்கிறார்.',
+planTitle:'எங்கள் 12 மாதத் திட்டம்',planSub:'சமூகப் பங்காளிகளுடன் படிப்படியான அறிமுகம்.',
+p1m:'மாதம் 1–2',p1t:'சேர்ந்து அமைத்து வடிவமைத்தல்',p1d:'நிலையங்களுடன் கூட்டு சேர்தல். ஒருங்கிணைப்பாளர்களுக்குப் பயிற்சி.',
+p2m:'மாதம் 3–4',p2t:'குடும்பங்களை அழைத்தல்',p2d:'பங்காளிகள் மூலம் 50–100 குடும்பங்களைச் சென்றடைதல்.',
+p3m:'மாதம் 5–7',p3t:'செயலியை அறிமுகப்படுத்துதல்',p3d:'குடும்பங்கள் தொடங்க உதவுதல். சரிபார்ப்புகளைத் தொடங்குதல்.',
+p4m:'மாதம் 8–10',p4t:'மனித ஆதரவும் பரிந்துரைகளும்',p4d:'ஆலோசனைகள், மானிய உதவி, பராமரிப்பு ஒருங்கிணைப்பு.',
+p5m:'மாதம் 11',p5t:'மதிப்பிட்டு மேம்படுத்துதல்',p5d:'முடிவுகளை அளவிடுதல். கருத்துகளைக் கேட்டல்.',
+p6m:'மாதம் 12',p6t:'விரிவாக்கத் திட்டம்',p6d:'இறுதி அறிக்கையும் பரந்த அறிமுகத்துக்கான திட்டமும்.',
+impTitle:'இது ஏற்படுத்தும் மாற்றம்',
+impS:'மூத்தோருக்கு',impS1:'சரியான நேரத்தில் பொருத்தமான பராமரிப்பு',impS2:'சிறந்த உடல்நலமும் சமூகத் தொடர்பும்',impS3:'சுதந்திரமும் கண்ணியமும்',
+impC:'பராமரிப்பாளர்களுக்கு',impC1:'குறைவான ஆவண வேலை',impC2:'அதிக மன அமைதி',impC3:'வேலைக்கும் வாழ்க்கைக்கும் அதிக நேரம்',
+impM:'சமூகத்துக்கு',impM1:'வலுவான ஆதரவு வலையமைப்புகள்',impM2:'தற்போதைய சேவைகளின் சிறந்த பயன்பாடு',impM3:'நிலையான மூத்தோர் பராமரிப்பு அமைப்பு',
+impQuote:'சிறந்த பராமரிப்பு, சரியான நேரத்தில் கிடைக்கும் சரியான ஆதரவில் தொடங்குகிறது.',
+ob0q:'முதலில், உங்களை எப்படி அழைக்கலாம்?',
+singpassBtn:'Singpass மூலம் நிரப்பவும்',singpassNote:'கருத்து மட்டுமே. உண்மையான செயலியில், நீங்கள் ஒப்புக்கொண்ட பின்னரே Singpass உங்கள் விவரங்களைப் பகிரும். இங்கு மாதிரி விவரங்களை நிரப்பியுள்ளோம்.',
+orType:'அல்லது உங்கள் விவரங்களைத் தட்டச்சு செய்யுங்கள்',
+yourName:'உங்கள் பெயர்',yourNamePh:'எ.கா. மீனா',relQ:'அவருடன் உங்கள் உறவு என்ன?',
+rel_daughter:'மகள்',rel_son:'மகன்',rel_spouse:'கணவர் அல்லது மனைவி',rel_family:'பிற குடும்ப உறுப்பினர்',rel_friend:'நண்பர் அல்லது அண்டை வீட்டார்',
+ob1q:'நீங்கள் யாரைப் பராமரிக்கிறீர்கள்?',theirName:'அவரது பெயர்',theirNamePh:'எ.கா. திருமதி டான்',theirNameHint:'நீங்கள் அவரை அழைக்கும் பெயர்.',age:'அவரது வயது',agePh:'எ.கா. 78',
+ob2q:'உங்கள் குடும்பம் எதை விரும்புகிறது?',ob2hint:'எதையும் தேர்ந்தெடுக்கலாம். பின்னர் மாற்றலாம்.',
+pref_home:'வீட்டிலேயே பராமரிப்பு',pref_homeS:'சிறிது கூடுதல் உதவியுடன்',
+pref_respite:'அவ்வப்போது ஓய்வு',pref_respiteS:'சில மணிநேரம் அல்லது நாட்கள் வேறொருவர் பராமரிப்பார்',
+pref_activities:'சமூக நடவடிக்கைகள்',pref_activitiesS:'அருகிலுள்ள வகுப்புகளும் குழுக்களும்',
+pref_unsure:'இன்னும் உறுதியாகத் தெரியவில்லை',pref_unsureS:'ஒருங்கிணைப்பாளருடன் பேசிப் பார்க்கலாம்',
+ob2note:'<b>முடிவு உங்கள் குடும்பத்தினுடையது.</b> உடல்நலம் அல்லது பணத்தை மட்டும் வைத்து நாங்கள் ஒருபோதும் தாதிமை இல்லத்தைப் பரிந்துரைக்க மாட்டோம். ஒருங்கிணைப்பாளர்கள் எந்த அழுத்தமும் இல்லாமல் வழிகளை ஆராய உதவுவார்கள்.',
+ob3q:'கைபேசியும் செயலிகளும் பயன்படுத்த உங்களுக்கு எவ்வளவு எளிது?',
+tech_ok:'எனக்கு எளிது',tech_some:'எனக்குச் சிறிது உதவி தேவை',tech_person:'ஒருவர் உதவுவதையே விரும்புகிறேன்',
+techPersonT:'அது முற்றிலும் சரி.',techPersonD:'செயலிகள் கடினமாக இருப்பவர்களுக்கு ஒருங்கிணைப்பாளர்கள் உதவுவார்கள். தொலைபேசியில் அல்லது நேரில் உங்களுடன் சேர்ந்து அமைப்பார்கள்.',techPersonBtn:'ஒருங்கிணைப்பாளரிடம் பேசுங்கள்',
+ob4q:'உங்கள் தகவல், உங்கள் முடிவு',
+ob4a:'<b>நீங்கள் பராமரிக்க உதவுவதற்காக மட்டுமே</b> உங்கள் விவரங்களை வைத்திருக்கிறோம்.',ob4b:'<b>நீங்கள் சம்மதித்தால் மட்டுமே</b> பகிர்கிறோம்.',ob4c:'எப்போது வேண்டுமானாலும் <b>பார்க்கலாம், மாற்றலாம், நீக்கலாம்</b>.',ob4d:'பாதுகாப்பாக வைத்து, தேவையில்லாதபோது நீக்குகிறோம்.',
+consent1:'நான் பராமரிக்க உதவ CareBridge என் தகவலை வைத்திருக்க <b>ஒப்புக்கொள்கிறேன்</b>.',consent1n:'(அவசியம்)',
+consent2:'இந்த விவரங்களைக் கொண்டு <b>எனக்காகப் படிவங்களை நிரப்பவும்</b>. அனுப்பும் முன் நான் சரிபார்ப்பேன்.',consent2n:'(விருப்பம்)',
+finishSetup:'முடி',personSetup:'ஒருவருடன் சேர்ந்து அமைக்க விரும்புகிறேன்',
+errName:'உங்கள் பெயரைத் தட்டச்சு செய்து, உறவைத் தேர்ந்தெடுங்கள்.',errSenior:'அவரது பெயரைத் தட்டச்சு செய்யுங்கள்.',errAge:'வயதை எண்ணாகத் தட்டச்சு செய்யுங்கள், எ.கா. 78.',errPrefs:'குறைந்தது ஒன்றைத் தேர்ந்தெடுங்கள்.',errOne:'ஒரு பதிலைத் தேர்ந்தெடுங்கள்.',errConsent:'தொடர உங்கள் ஒப்புதல் தேவை. செயலி இல்லாமலும் ஒருங்கிணைப்பாளர் உதவலாம்.',
+welcome:'அனைத்தும் தயார். வரவேற்கிறோம், {n}.',
+morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',hello:'வணக்கம், {n}',caringFor:'நீங்கள் <b>{s}</b> அவர்களைப் பராமரிக்கிறீர்கள், வயது {a}.',
+unsureT:'உங்கள் வழிகளைப் பற்றிப் பேச விரும்பினீர்கள்.',unsureD:'அருகில் ஒரு ஒருங்கிணைப்பாளரைச் சந்தியுங்கள். அழுத்தம் இல்லை.',unsureBtn:'ஒருங்கிணைப்பாளரைச் சந்திக்கவும்',
+nextAppt:'அடுத்த சந்திப்பு',noAppt:'இன்னும் சந்திப்புகள் இல்லை.',
+ckDue:'{s} அவர்களுக்கான இந்த மாதச் சரிபார்ப்புக்கு நேரம் ஆகிவிட்டது.',ckDueS:'2 நிமிடங்கள். மாற்றங்களை முன்கூட்டியே கண்டறிய உதவும்.',ckStart:'சரிபார்ப்பைத் தொடங்கு',ckDone:'கடைசி சரிபார்ப்பு: {d}',
+c1t:'என் மூத்தவரின் பராமரிப்பு',c1d:'உடல்நல விவரங்களும் மாதாந்திரச் சரிபார்ப்பும்',
+c2t:'சந்திப்புகளும் ஆவணங்களும்',c2d:'சந்திப்புகள், நினைவூட்டல்கள், ஆவணங்கள்',
+c3t:'நிதி உதவி',c3d:'நீங்கள் பெறக்கூடிய திட்டங்கள்',
+c4t:'நடவடிக்கைகளும் ஆதரவும்',c4d:'செய்ய வேண்டியவை, உங்களுக்கான ஓய்வும்',
+howLink:'CareBridge எப்படிச் செயல்படுகிறது, உங்கள் தகவலை எப்படிப் பாதுகாக்கிறது',
+careTitle:'என் மூத்தவரின் பராமரிப்பு',ageL:'வயது',caredBy:'பராமரிப்பவர்',health:'உடல்நல நிலைகள்',noneYet:'இன்னும் சேர்க்கப்படவில்லை. ஒருங்கிணைப்பாளர் உதவலாம்.',matters:'{s} அவர்களுக்கு முக்கியமானவை',
+ex_m1:'காலையில் குளிக்க விரும்புவார், முடிந்தவரை தானே',ex_m2:'ஹொக்கியனும் சிறிது ஆங்கிலமும் பேசுவார்',ex_m3:'நண்பர்களுடன் காலை நடை விரும்புவார்',
+ex_c1:'உயர் இரத்த அழுத்தம்',ex_c2:'வகை 2 நீரிழிவு',
+dignity:'{s} அவர்களின் பராமரிப்பு பற்றிய முடிவுகளில் அவரையும் சேர்த்துக்கொள்ளுங்கள். அவரது விருப்பமே முதன்மை.',
+ckTitle:'மாதாந்திரச் சரிபார்ப்பு',ckIntro:'{s} எப்படி இருக்கிறார் என்பது பற்றி ஆறு சிறிய கேள்விகள். முன்கூட்டியே கவனிக்கும் சிறு மாற்றங்களுக்கு உதவுவது எளிது.',ckBtn:'சரிபார்ப்பைத் தொடங்கு (2 நிமிடம்)',ckEmpty:'இன்னும் சரிபார்ப்புகள் இல்லை. முதல் சரிபார்ப்பு ஒரு தொடக்கப் புள்ளியாக இருக்கும்.',
+youT:'நீங்கள் எப்படி இருக்கிறீர்கள்?',youD:'உங்கள் நலனும் முக்கியம். 1 நிமிடப் பராமரிப்பாளர் சரிபார்ப்பைச் செய்து பாருங்கள்.',youBtn:'என்னைச் சரிபார்',
+ckSenior:'{s} அவர்களுக்கான சரிபார்ப்பு',ckCarer:'உங்கள் சரிபார்ப்பு',
+q_eat:'{s} எப்படிச் சாப்பிடுகிறார்?',o_eat:['வழக்கம் போல','குறைவாகச் சாப்பிடுகிறார்','கிட்டத்தட்டச் சாப்பிடுவதில்லை'],
+q_sleep:'{s} எப்படித் தூங்குகிறார்?',o_sleep:['வழக்கம் போல','சற்று மோசம்','மிகவும் மோசம்'],
+q_fall:'சமீபத்தில் {s} விழுந்தாரா அல்லது விழப் போனாரா?',o_fall:['இல்லை','விழப் போனார்','ஆம், விழுந்தார்'],
+q_mind:'{s} முன்பை விட அதிகம் மறக்கிறாரா அல்லது குழம்புகிறாரா?',o_mind:['மாற்றம் இல்லை','சற்று அதிகம்','மிக அதிகம்'],
+q_mood:'{s} அவர்களின் மனநிலை எப்படி?',o_mood:['வழக்கம் போல','சற்று அமைதியாக','மிகவும் அமைதி, வெளியே போவதில்லை'],
+q_daily:'குளிக்க, உடை அணிய, நடக்க {s} அவர்களுக்கு அதிக உதவி தேவையா?',o_daily:['மாற்றம் இல்லை','சற்று அதிகம்','மிக அதிகம்'],
+tapNext:'தொடர ஒரு பதிலைத் தட்டுங்கள்.',prevQ:'முந்தைய கேள்வி',
+r_eat1:'{s} குறைவாகச் சாப்பிடுகிறார்.',r_eat2:'{s} கிட்டத்தட்டச் சாப்பிடுவதில்லை.',r_sleep1:'தூக்கம் சற்று மோசமாகியுள்ளது.',r_sleep2:'தூக்கம் மிகவும் மோசமாகியுள்ளது.',r_fall1:'{s} விழப் போனார்.',r_fall2:'{s} விழுந்தார்.',r_mind1:'மறதி அல்லது குழப்பம் சற்று அதிகம்.',r_mind2:'மறதி அல்லது குழப்பம் மிக அதிகம்.',r_mood1:'{s} அமைதியாகத் தெரிகிறார்.',r_mood2:'{s} மிகவும் அமைதியாக, வெளியே போகாமல் இருக்கிறார்.',r_daily1:'{s} அவர்களுக்குச் சற்று அதிக உதவி தேவை.',r_daily2:'{s} அவர்களுக்கு மிக அதிக உதவி தேவை.',
+resGoodT:'பெரிய மாற்றங்கள் இல்லை',resGoodD:'நிலைமை சீராக உள்ளது. அடுத்த மாதம் நினைவூட்டுவோம்.',
+resWarnT:'கவனிக்க வேண்டிய சில மாற்றங்கள்',resWarnD:'சில விஷயங்கள் மாறியுள்ளன. இப்போதே கவனித்தால் முன்கூட்டியே செயல்படலாம்.',
+resAlertT:'விரைவில் மருத்துவரைப் பாருங்கள்',resAlertD:'சில பதில்களை மருத்துவர் சரிபார்க்க வேண்டும். இது <b>நோயறிதல் அல்ல</b>.',
+rulesNote:'உங்கள் பதில்களின் அடிப்படையில் எளிய விதிகள்:',medNote:'{s} நன்றாகத் தெரிந்தாலும், விழுதல், மிகக் குறைவாகச் சாப்பிடுதல் அல்லது புதிய குழப்பம் ஆகியவற்றை விரைவில் சரிபார்க்க வேண்டும்.',
+nBook:'மருத்துவச் சந்திப்பை முன்பதிவு செய்',nFin:'நடை உதவிக் கருவிகள், பராமரிப்புச் செலவுகளுக்கான உதவி',nAct:'{s} விரும்பக்கூடிய நடவடிக்கைகள்',nTalk:'ஒருங்கிணைப்பாளரிடம் பேசுங்கள்',
+emerg995:'{s} மிகவும் உடல்நலம் குன்றியிருந்தால், நெஞ்சு வலி, மூச்சுத் திணறல் அல்லது பலத்த விழுதல் இருந்தால், இப்போதே <b>995</b> அழையுங்கள்.',
+lbl_good:'பெரிய மாற்றம் இல்லை',lbl_warn:'கவனிக்க வேண்டும்',lbl_alert:'மருத்துவப் பரிசோதனை பரிந்துரை',
+cq_tired:'சமீபத்தில் எவ்வளவு அடிக்கடி மிகவும் களைப்பாக உணர்ந்தீர்கள்?',co_tired:['அரிதாக','சில நேரங்களில்','அடிக்கடி'],
+cq_self:'உங்களுக்கென்று நேரம் எவ்வளவு அடிக்கடி கிடைக்கிறது?',co_self:['அடிக்கடி','சில நேரங்களில்','அரிதாக'],
+cq_alone:'பராமரிப்பில் தனிமையாக எவ்வளவு அடிக்கடி உணர்கிறீர்கள்?',co_alone:['அரிதாக','சில நேரங்களில்','அடிக்கடி'],
+cq_money:'பணக் கவலைகள் உங்கள் மன அழுத்தத்தை அதிகரிக்கின்றனவா?',co_money:['அவ்வளவாக இல்லை','சில நேரங்களில்','அடிக்கடி'],
+cq_work:'வேலை அல்லது குடும்பத்துடன் பராமரிப்பைச் சமாளிப்பது கடினமா?',co_work:['அவ்வளவாக இல்லை','சில நேரங்களில்','அடிக்கடி'],
+cGoodT:'நீங்கள் நன்றாகச் சமாளிக்கிறீர்கள்',cGoodD:'உங்களுக்கான நேரத்தைத் தொடர்ந்து ஒதுக்குங்கள்.',
+cWarnT:'நீங்கள் கணிசமான சுமையைச் சுமக்கிறீர்கள்',cWarnD:'களைப்பு இயல்பானது. உதவி கேட்பது நீங்கள் குறைவாக அக்கறை காட்டுகிறீர்கள் என்று அர்த்தமல்ல.',cAlertT:'இப்போது நீங்கள் அதிகச் சுமையைச் சுமக்கிறீர்கள்',
+o_break:'முறையாக ஓய்வெடுங்கள்',o_breakD:'இடைக்காலப் பராமரிப்பு: பயிற்சி பெற்ற பராமரிப்பாளர் {s} அவர்களைச் சில மணிநேரம் அல்லது நாட்கள் கவனிப்பார்.',o_breakB:'இடைக்காலப் பராமரிப்பு பற்றிக் கேளுங்கள்',
+o_alone:'மற்ற பராமரிப்பாளர்களுடன் பேசுங்கள்',o_aloneD:'அருகில் மாதந்தோறும் பராமரிப்பாளர் குழு கூடுகிறது.',o_aloneB:'ஆதரவுக் குழுக்களைப் பாருங்கள்',
+o_money:'நிதி உதவியைச் சரிபாருங்கள்',o_moneyD:'5 எளிய கேள்விகள் நீங்கள் பெறக்கூடிய திட்டங்களைக் காட்டும்.',o_moneyB:'நிதி உதவியைச் சரிபார்',
+o_work:'வேலையும் பராமரிப்பும்',o_workD:'உங்கள் முதலாளி அல்லது குடும்பத்துடன் பேசத் திட்டமிட ஒருங்கிணைப்பாளர் உதவலாம்.',o_workB:'திரும்ப அழைக்கக் கோருங்கள்',
+sosT:'இதை நீங்கள் தனியாகச் சமாளிக்க வேண்டியதில்லை.',sosD:'ஒருங்கிணைப்பாளர் உங்களை அழைக்கலாம். நீங்கள் மிகுந்த அழுத்தத்தில் அல்லது பாதுகாப்பற்றதாக உணர்ந்தால், Samaritans of Singapore அமைப்பை <b>1767</b> எண்ணில் அழையுங்கள் (24 மணிநேரமும்).',
+clbl_good:'நன்றாகச் சமாளிக்கிறார்',clbl_warn:'சற்றுச் சிரமம்',clbl_alert:'அதிகச் சுமை',ckSaved:'சரிபார்ப்பு சேமிக்கப்பட்டது',
+apTitle:'சந்திப்புகளும் ஆவணங்களும்',upcoming:'வரவிருப்பவை',addAppt:'சந்திப்பைச் சேர்',remOn:'குறுஞ்செய்தி நினைவூட்டல்: {r}',remOff:'நினைவூட்டல் இல்லை',remove:'நீக்கு',apEmpty:'இன்னும் சந்திப்புகள் இல்லை. ஒன்றைச் சேர்த்தால் குறுஞ்செய்தி நினைவூட்டல் அனுப்புவோம்.',
+sugT:'பரிந்துரைக்கப்படும் பரிசோதனை',sugD:'நீரிழிவு உள்ளவர்கள் பொதுவாக ஆண்டுக்கு ஒருமுறை கண் பரிசோதனை செய்வார்கள். {s} அவர்களின் கடைசிப் பரிசோதனை ஓராண்டுக்கு முன்.',sugNote:'இது ஒரு பரிந்துரை, மருத்துவ ஆலோசனை அல்ல. மருத்துவரிடம் கேளுங்கள்.',sugBtn:'இந்தப் பரிசோதனையைச் சேர்',
+docs:'ஆவணங்கள்',addDoc:'ஆவணத்தைச் சேர்',docsIntro:'கடிதம் அல்லது ரசீதைப் படம் எடுங்கள். நாங்கள் வகைப்படுத்துவோம், நீங்கள் சரிபாருங்கள்.',docEmpty:'இன்னும் ஆவணங்கள் இல்லை. மருத்துவமனைக் கடிதங்கள், சந்திப்புச் சீட்டுகள், ரசீதுகளுடன் தொடங்குங்கள்.',
+byAI:'AI வகைப்படுத்தியது, நீங்கள் சரிபார்த்தீர்கள்',byYou:'நீங்கள் தேர்ந்தெடுத்த கோப்புறை',
+remConfirmT:'இந்தச் சந்திப்பை நீக்கவா?',remConfirmD:'{d} அன்று உள்ள “{t}” நீக்கப்படும், நினைவூட்டலும் ரத்தாகும்.',yesRemove:'ஆம், நீக்கு',noBack:'இல்லை, பின்செல்',
+apptRemoved:'சந்திப்பு நீக்கப்பட்டது',remTurnedOff:'நினைவூட்டல் நிறுத்தப்பட்டது',remTurnedOn:'நினைவூட்டல் இயக்கப்பட்டது: 1 நாள் முன்',
+newAppt:'புதிய சந்திப்பு',aq0:'இது எதற்காக?',type_doc:'மருத்துவர் அல்லது பலதுறை மருந்தகம்',type_spec:'மருத்துவமனை நிபுணர்',type_ther:'சிகிச்சை',type_dent:'பல் மருத்துவம்',type_other:'வேறு ஏதாவது',
+aq1:'எப்போது?',date:'தேதி',time:'நேரம்',aq2:'எங்கே?',place:'இடம்',placePh:'எ.கா. Westwood பலதுறை மருந்தகம்',placeHint:'பெயரைத் தட்டச்சு செய்யுங்கள், அல்லது கீழே உள்ள ஒன்றைத் தட்டுங்கள்.',
+aq3:'நினைவூட்டல் வேண்டுமா?',aq3hint:'உங்கள் கைபேசிக்குக் குறுஞ்செய்தி அனுப்புவோம்.',rem_1d:'1 நாள் முன்',rem_2h:'2 மணிநேரம் முன்',rem_both:'1 நாள் மற்றும் 2 மணிநேரம் முன்',rem_none:'நினைவூட்டல் வேண்டாம்',
+aq4:'சரிபார்த்துச் சேமி',what:'என்ன',when:'எப்போது',where:'எங்கே',reminder:'நினைவூட்டல்',fixHint:'ஏதாவது தவறா? பின்செல் என்பதைத் தட்டுங்கள்.',saveAppt:'சந்திப்பைச் சேமி',apptSaved:'சந்திப்பு சேமிக்கப்பட்டது',
+errType:'ஒன்றைத் தேர்ந்தெடுங்கள்.',errWhen:'தேதியையும் நேரத்தையும் தேர்ந்தெடுங்கள்.',errPast:'அந்தத் தேதி கடந்துவிட்டது. வேறொன்றைத் தேர்ந்தெடுங்கள்.',errPlace:'இடத்தைத் தட்டச்சு செய்யுங்கள்.',
+addDocT:'ஆவணத்தைச் சேர்',docQ:'எந்த ஆவணம்?',photoBtn:'படம் எடுங்கள் அல்லது கோப்பைத் தேர்ந்தெடுங்கள்',fileNote:'இந்த முன்மாதிரியில் கோப்பின் பெயர் மட்டுமே படிக்கப்படும். உங்கள் கோப்பு உங்கள் சாதனத்திலேயே இருக்கும்.',tryEx:'அல்லது ஒரு மாதிரியை முயலுங்கள்',
+reading:'உங்கள் ஆவணத்தைப் படிக்கிறோம்…',readingD:'இது என்ன ஆவணம் என்று காட்டும் சொற்களைத் தேடுகிறோம்.',weThink:'இது இப்படித் தெரிகிறது: {c}',
+conf_3:'நன்கு உறுதி',conf_2:'ஓரளவு உறுதி',conf_1:'உறுதியில்லை, சரிபாருங்கள்',conf_0:'கண்டறிய முடியவில்லை',
+foundWords:'இந்தச் சொற்களைக் கண்டோம்: {w}.',noWords:'அறிந்த சொற்கள் எதுவும் கிடைக்கவில்லை. கோப்புறையைத் தேர்ந்தெடுங்கள்.',youChanged:'இந்தக் கோப்புறையை நீங்கள் தேர்ந்தெடுத்தீர்கள்.',
+followT:'இதில் தொடர் சந்திப்பு குறிப்பிடப்பட்டுள்ளது.',followD:'சந்திப்புகளில் சேர்க்கவா? முதலில் சரிபார்க்கலாம்.',followBtn:'சந்திப்பைச் சேர்',
+saveIn:'ஆம், {c} இல் சேமி',otherFolder:'வேறு கோப்புறையைத் தேர்ந்தெடு',folderQ:'எந்தக் கோப்புறை?',savedIn:'{c} இல் சேமிக்கப்பட்டது',filledFromDoc:'ஆவணத்திலிருந்து நிரப்பப்பட்டது. சரிபாருங்கள்.',
+cat_med:'மருத்துவப் பதிவுகள்',cat_appt:'சந்திப்புக் கடிதங்கள்',cat_bill:'கட்டணங்களும் ரசீதுகளும்',cat_fin:'பணமும் மானியங்களும்',cat_id:'அடையாளமும் சட்டமும்',cat_other:'பிற',
+sd0:'நெஞ்சுத் தொற்றுக்குப் பிறகு {s} மருத்துவமனையிலிருந்து வீடு திரும்பினார். 5 நாட்களில் நுண்ணுயிர்க்கொல்லி மருந்தை முடித்து, சுமார் 2 வாரங்களில் பலதுறை மருந்தக மருத்துவரைப் பாருங்கள்.',sd1:'மருந்தகச் சந்திப்பின் தேதியும் நேரமும். அடையாள அட்டையும் மருந்துப் பட்டியலும் கொண்டு வாருங்கள்.',sd2:'$42.60க்கான மருந்தக ரசீது. பின்னர் கோர முடிந்தால் உதவும், வைத்திருங்கள்.',sd3:'நல்ல செய்தி: மானிய விண்ணப்பம் ஏற்கப்பட்டது. மாதந்தோறும் பணம் வழங்கப்படும்.',
+checkWithSender:'சந்தேகம் இருந்தால், அனுப்பியவரிடம் கேளுங்கள்.',
+finTitle:'நிதி உதவி',finLead:'5 சிறிய கேள்விகளுக்குப் பதிலளியுங்கள். உங்கள் குடும்பம் பெறக்<b>கூடிய</b> திட்டங்களையும் காரணங்களையும் பாருங்கள்.',
+finNotice:'<b>தகுதி இருக்கலாம் என்பது மட்டுமே.</b> இவை முன்மாதிரியில் உள்ள எளிய விதிகள். ஒவ்வொரு திட்டத்தையும் நடத்தும் அமைப்பே முடிவு செய்யும். CareBridge அரசாங்கச் சேவை அல்ல.',
+finStart:'நாங்கள் பெறக்கூடிய உதவியைச் சரிபார்',finAgain:'மீண்டும் சரிபார்',finLast:'கடைசி முடிவுகளைப் பார்',myApps:'என் விண்ணப்பங்கள்',appsEmpty:'இன்னும் விண்ணப்பங்கள் இல்லை.',
+finWorry:'வேலை செய்யும் பராமரிப்பாளர்களுக்குப் பணக் கவலைகள் பொதுவானவை.',finWorryD:'ஒருங்கிணைப்பாளர் உங்கள் வழிகளை விளக்கி, படிவங்களுக்கு உதவலாம்.',reqCb:'திரும்ப அழைக்கக் கோருங்கள்',
+fq_age:'{s} அவர்களின் வயது என்ன?',u60:'60க்குக் கீழ்',a60:'60 முதல் 64',a65:'65 அல்லது அதற்கு மேல்',
+fq_born:'{s} எப்போது பிறந்தார்?',pg:'1949 அல்லது அதற்கு முன்',mg:'1950 முதல் 1959',later:'1960 அல்லது அதற்குப் பின்',
+fq_adl:'இவற்றில் எத்தனையை {s} தானாகச் செய்ய முடியாது?',adlList:'குளித்தல், உடை அணிதல், சாப்பிடுதல், கழிவறை பயன்படுத்துதல், நடத்தல், படுக்கையிலிருந்து எழுதல்',adl0:'எதுவும் இல்லை',adl1:'1 அல்லது 2',adl3:'3 அல்லது அதற்கு மேல்',
+fq_inc:'உங்கள் குடும்பத்தின் ஒருவருக்கான மாத வருமானம் எவ்வளவு?',incHint:'வீட்டில் அனைவரின் வருமானத்தையும் கூட்டி, நபர்களின் எண்ணிக்கையால் வகுங்கள்.',low:'$1,500க்குக் கீழ்',mid:'$1,500 முதல் $3,600',high:'$3,600க்கு மேல்',na:'சொல்ல விரும்பவில்லை',
+fq_cit:'{s} சிங்கப்பூர்க் குடிமகனா?',sc:'சிங்கப்பூர்க் குடிமகன்',pr:'நிரந்தரவாசி',no:'இரண்டும் இல்லை',
+preAge:'உங்கள் சுயவிவரத்திலிருந்து இதைத் தேர்ந்தெடுத்தோம். தேவைப்பட்டால் மாற்றுங்கள்.',seeResults:'முடிவுகளைப் பார்',finCheckL:'நிதி உதவிச் சரிபார்ப்பு',
+resTitle:'நீங்கள் பெறக்கூடிய திட்டங்கள்',resNotice:'<b>தகுதி இருக்கலாம், அதிகாரபூர்வச் சரிபார்ப்பு தேவை.</b> தகுதியையும் தொகையையும் அந்த அமைப்பு மட்டுமே உறுதிப்படுத்த முடியும்.',
+possibly:'தகுதி இருக்கலாம்',runBy:'நடத்துவது: {a}',explainBtn:'எளிய சொற்களில் விளக்கு',hideExplain:'விளக்கத்தை மறை',prepBtn:'விண்ணப்பத்தைத் தயார் செய்',askFac:'ஒருங்கிணைப்பாளரிடம் கேள்',
+noMatch:'இந்த முன்மாதிரியில் எந்தத் திட்டமும் பொருந்தவில்லை. ஆனாலும் உதவி இருக்கலாம். ஒருங்கிணைப்பாளர் உங்கள் நிலையைப் பார்க்கலாம்.',nextT:'அடுத்து என்ன செய்வது என்று தெரியவில்லையா?',nextD:'ஒருங்கிணைப்பாளர் உங்களுடன் இவற்றைச் சரிபார்க்கலாம்.',
+w_adl3:'{s} 3 அல்லது அதற்கு மேற்பட்ட அன்றாடச் செயல்களைத் தானாகச் செய்ய முடியாது.',w_inc:'உங்கள் வருமானம் மாதிரி வரம்புக்குள் உள்ளது.',w_incNA:'நீங்கள் வருமானத்தைப் பகிரவில்லை. அமைப்பு சரிபார்க்கும்.',w_sc:'{s} சிங்கப்பூர்க் குடிமகன்.',w_pr:'{s} நிரந்தரவாசி (குடும்ப நிபந்தனைகள் இருக்கலாம்).',w_60:'{s} 60 அல்லது அதற்கு மேற்பட்ட வயதுடையவர்.',w_adl1:'நடமாட அல்லது அன்றாட வேலைகளுக்கு {s} அவர்களுக்குச் சிறிது உதவி தேவை.',w_fall:'ஒரு சரிபார்ப்பில் விழுதல் குறிப்பிடப்பட்டது.',w_65:'நீங்கள் 65 அல்லது அதற்கு மேற்பட்ட வயதுடையவரைப் பராமரிக்கிறீர்கள்.',w_bigHelp:'நீங்கள் அதிக உதவி தேவைப்படுபவரைப் பராமரிக்கிறீர்கள்.',w_csl:'காப்பீடு இருந்தால், இது வழக்கமான கொடுப்பனவு நிபந்தனை.',w_pg:'{s} 1949 அல்லது அதற்கு முன் பிறந்தவர்.',w_mg:'{s} 1950 முதல் 1959 வரை பிறந்தவர்.',w_low:'உங்கள் குடும்ப வருமானம் குறைந்த வரம்பில் உள்ளது.',
+hcg_what:'வீட்டில் மூத்தவரைப் பராமரிக்கக் குடும்பங்களுக்கு மாதாந்திர ரொக்க உதவி.',hcg_simple:'{s} அவர்களுக்கு அன்றாடம் அதிக உதவி தேவைப்பட்டால், வீட்டுப் பராமரிப்புக்காக உங்கள் குடும்பம் மாதந்தோறும் பணம் பெறலாம்.',
+smf_what:'நடை உதவிக் கருவிகள், சக்கர நாற்காலி, குளியல் நாற்காலி, வீட்டுப் பராமரிப்புப் பொருட்களுக்குக் குறைந்த செலவு.',smf_simple:'{s} பாதுகாப்பாக நடமாட உதவும் பொருட்கள் இதனால் மலிவாகலாம். பொதுவாக முதலில் சிகிச்சையாளர் மதிப்பிடுவார்.',
+ctg_what:'பராமரிப்பாளர் பயிற்சி வகுப்புகளுக்குக் கட்டணம் செலுத்த உதவுகிறது.',ctg_simple:'ஒருவரைப் பாதுகாப்பாக நகர்த்துவது போன்ற திறன்களைக் கற்கலாம். இந்த மானியம் கட்டணத்துக்கு உதவும்.',
+csl_what:'காப்பீடு செய்யப்பட்டவர் 3 அல்லது அதற்கு மேற்பட்ட அன்றாடச் செயல்களைச் செய்ய முடியாவிட்டால் மாதாந்திரக் கொடுப்பனவு.',csl_simple:'{s} அவர்களுக்கு இந்தக் காப்பீடு இருந்தால், மாதந்தோறும் பணம் கிடைக்கலாம். முதலில் {s} காப்பீட்டில் உள்ளாரா என்று பாருங்கள்.',
+pg_what:'1949 அல்லது அதற்கு முன் பிறந்த தகுதியுள்ள மூத்தோருக்குக் கூடுதல் சுகாதார மானியங்கள்.',pg_simple:'பல மருத்துவச் சந்திப்புகளும் மருந்துகளும் மலிவாகலாம். பொதுவாகத் தானாகவே வழங்கப்படும்.',
+mg_what:'1950 முதல் 1959 வரை பிறந்த தகுதியுள்ள மூத்தோருக்குக் கூடுதல் சுகாதார மானியங்கள்.',mg_simple:'பல மருத்துவச் சந்திப்புகளும் மருந்துகளும் மலிவாகலாம். பொதுவாகத் தானாகவே வழங்கப்படும்.',
+comcare_what:'குறைந்த வருமானக் குடும்பங்களுக்கு அன்றாடச் செலவுகளுக்கு உதவி.',comcare_simple:'பணம் போதவில்லை என்றால், சமூகச் சேவை அலுவலகம் உங்கள் நிலையைப் பார்க்கலாம்.',
+appL:'{n} விண்ணப்பம்',ff0q:'உங்களுக்காகப் படிவத்தை நிரப்பலாமா?',ff0d:'நீங்கள் ஏற்கெனவே தந்த விவரங்களைப் பயன்படுத்தலாம். ஒவ்வொன்றையும் நீங்கள் சரிபார்ப்பீர்கள்.',weUse:'நாங்கள் பயன்படுத்துவது:',
+fYourName:'உங்கள் பெயர்',fRel:'உறவு',fSenior:'நீங்கள் பராமரிப்பவர்',fAge:'அவரது வயது',ffYes:'ஆம், எனக்காக நிரப்புங்கள்',ffNo:'இல்லை, நானே தட்டச்சு செய்கிறேன்',
+ff1q:'உங்கள் விவரங்களைச் சரிபாருங்கள்',yellowNote:'மஞ்சள் பெட்டிகள் உங்களுக்காக நிரப்பப்பட்டவை.',prefTag:'உங்கள் சுயவிவரத்திலிருந்து நிரப்பப்பட்டது. சரிபாருங்கள்.',
+fFull:'உங்கள் முழுப் பெயர்',fRelL:'அவருடன் உங்கள் உறவு',fSFull:'அவரது முழுப் பெயர்',fPhone:'உங்கள் கைபேசி எண்',fPhoneHint:'ஒருங்கிணைப்பாளர் உங்களை அழைக்க.',
+ff2q:'சரிபார்ப்புக்கு அனுப்பத் தயாரா?',scheme:'திட்டம்',mobile:'கைபேசி',ff2note:'<b>முதலில் ஒருவர் சரிபார்ப்பார்.</b> ஒருங்கிணைப்பாளர் உங்களுடன் சேர்ந்து பார்ப்பார். அதன் பிறகே உங்கள் அனுமதியுடன் {a} அமைப்புக்கு அனுப்பப்படும்.',
+sendCheck:'சரிபார்க்க ஒருங்கிணைப்பாளருக்கு அனுப்பு',cfSendT:'சரிபார்ப்புக்கு அனுப்பவா?',cfSendD:'ஒருங்கிணைப்பாளர் உங்களுடன் சேர்ந்து பார்ப்பார். நீங்கள் இருவரும் ஒப்புக்கொள்ளும் வரை அமைப்புக்கு அனுப்பப்<b>படாது</b>.',cfYesSend:'ஆம், சரிபார்ப்புக்கு அனுப்பு',
+sentT:'சரிபார்ப்புக்கு அனுப்பப்பட்டது',sentD:'2 வேலை நாட்களுக்குள் ஒருங்கிணைப்பாளர் உங்களை அழைப்பார். <b>{a} அமைப்புக்கு இன்னும் எதுவும் அனுப்பப்படவில்லை.</b>',yourRef:'உங்கள் குறிப்பு எண்: <b>{r}</b>',protoNote:'முன்மாதிரி: உண்மையில் எதுவும் அனுப்பப்படவில்லை.',backHome:'முகப்புக்குத் திரும்பு',seeApps:'என் விண்ணப்பங்களைப் பார்',
+errFill:'ஒவ்வொரு பெட்டியையும் நிரப்புங்கள்.',errPhone:'8 இலக்கச் சிங்கப்பூர் எண்ணைத் தட்டச்சு செய்யுங்கள், எ.கா. 9123 4567.',
+st0:'சரிபார்ப்புக்கு அனுப்பப்பட்டது',st1:'ஒருங்கிணைப்பாளருடன் சரிபார்க்கப்பட்டது',st2:'அமைப்புக்குச் சமர்ப்பிக்கப்பட்டது',st3:'முடிவுக்காகக் காத்திருக்கிறது',st4:'முடிவு',
+actTitle:'நடவடிக்கைகளும் ஆதரவும்',ywT:'உங்கள் நலனும் முக்கியம்',ywD:'பராமரிப்பு களைப்பூட்டும். ஓய்வு தேவைப்படும்போது அறிய 1 நிமிடச் சரிபார்ப்பு உதவும்.',ywBtn:'நான் எப்படி இருக்கிறேன்? (1 நிமிடம்)',lastCk:'கடைசி சரிபார்ப்பு: {d}',
+nearT:'உங்கள் அருகிலுள்ள நடவடிக்கைகள்',nearD:'தொடர்பில் இருப்பது {s} நலமாக இருக்க உதவும். {s} எதை விரும்புவார் என்று அவரிடம் கேளுங்கள்.',
+interested:'எனக்கு ஆர்வம் உள்ளது',noted:'ஆர்வம் பதிவானது',notedToast:'பதிவானது. நிலையம் உங்களைத் தொடர்புகொள்ளும்.',removedToast:'ஆர்வம் நீக்கப்பட்டது',forCarers:'பராமரிப்பாளர்களுக்கு',suitedFor:'பரிந்துரைக் காரணம்: {w}',
+a1t:'பூங்காவில் காலை சீகோங்',a1w:'செவ்வாய், வியாழன், காலை 8 மணி',a1d:'மென்மையான அசைவுகள், சமநிலைக்கு நல்லது. நாற்காலிகள் உண்டு.',a1why:'காலை நேரம், வீட்டுக்கு அருகில், சமநிலைக்கு உதவும்',
+a2t:'காப்பியும் உரையாடலும்',a2w:'புதன், மதியம் 2:30',a2d:'ஹொக்கியன், மாண்டரின், ஆங்கிலத்தில் இலகுவான உரையாடல்.',a2why:'ஹொக்கியன் பேசுவார், உரையாட விரும்புவார்',
+a3t:'கரோக்கி மாலை',a3w:'வெள்ளி, மாலை 3 மணி',a3d:'பல மொழிகளில் பழைய பிடித்த பாடல்கள். குடும்பத்தினருக்கு வரவேற்பு.',a3why:'சமூகத் தொடர்பு, குடும்பமும் சேரலாம்',
+a4t:'பராமரிப்பாளர் குழு',a4w:'மாதத்தின் முதல் சனி, காலை 10 மணி',a4d:'மற்ற பராமரிப்பாளர்களைச் சந்தியுங்கள், அனுபவங்களைப் பகிருங்கள், மனம் திறந்து பேசுங்கள். தேநீர் உண்டு.',a4why:'உங்களுக்கான ஆதரவு',
+respT:'ஓய்வு எடுங்கள்: இடைக்காலப் பராமரிப்பு',respD:'பயிற்சி பெற்ற பராமரிப்பாளர் {s} அவர்களைச் சில மணிநேரம், ஒரு நாள் அல்லது குறுகிய காலம் கவனிப்பார். உங்களுக்கு ஓய்வு கிடைக்கும்.',respBtn:'இடைக்காலப் பராமரிப்பு பற்றிக் கேளுங்கள்',
+famT:'குடும்பமாகப் பராமரித்தல்',famD:'பெற்றோரைப் பராமரிப்பது நம் கடமை என்று நம்மில் பலர் நினைக்கிறோம், உதவி கேட்பது தவறாகத் தோன்றலாம். குடும்பத்துடனோ சேவைகளுடனோ பராமரிப்பைப் பகிர்வதும் பராமரிப்பே. அது பெரும்பாலும் சிறந்த, நீடித்த பராமரிப்பைத் தரும்.',famD2:'{s} அவர்களையும் சேர்த்து, யார் என்ன செய்வது என்று உங்கள் குடும்பம் திட்டமிட ஒருங்கிணைப்பாளர் உதவலாம்.',
+hpTitle:'உண்மையான ஒருவரிடம் பேசுங்கள்',hpIntro:'எங்கள் பராமரிப்பு ஒருங்கிணைப்பாளர்கள் பயிற்சி பெற்ற மனிதர்கள், கணினி அல்ல. <b>செயலிகள் கடினமாக இருக்கும் பராமரிப்பாளர்களுக்கு அவர்கள் உதவுகிறார்கள்</b>, உங்களுடன் சேர்ந்தோ உங்களுக்காகவோ வேலைகளைச் செய்வார்கள்.',hpTopic:'<b>நீங்கள் உதவி கேட்டது: {t}.</b> உங்கள் பதில்கள் சேமிக்கப்பட்டுள்ளன.',
+opCall:'உதவிக்கு அழையுங்கள்',opCallD:'இப்போதே ஒருவரிடம் பேசுங்கள்',opCb:'திரும்ப அழைக்கக் கோருங்கள்',opCbD:'உங்களுக்கு வசதியான நேரத்தில் அழைப்போம்',opMeet:'ஒருங்கிணைப்பாளரைச் சந்தியுங்கள்',opMeetD:'உங்கள் அருகிலுள்ள சமூக நிலையத்தில்',noSignup:'பதிவு செய்யத் தேவையில்லை.',
+callT:'உதவிக்கு அழையுங்கள்',callIntro:'CareBridge உதவி எண்ணை அழையுங்கள்:',demoNum:'மாதிரி எண். உண்மையான இணைப்பு அல்ல.',hours:'திங்கள் முதல் சனி, காலை 8 முதல் இரவு 8 வரை. ஆங்கிலம், மாண்டரின், மலாய், தமிழ், கிளைமொழிகள்.',copy:'எண்ணை நகலெடு',copied:'எண் நகலெடுக்கப்பட்டது',selected:'எண் தேர்ந்தெடுக்கப்பட்டது. உங்கள் மெனுவிலிருந்து நகலெடுங்கள்.',cantCall:'இப்போது அழைக்க முடியவில்லையா?',askCall:'எங்களை அழைக்கச் சொல்லுங்கள்',
+cbT:'திரும்ப அழைக்கக் கோருங்கள்',phone:'உங்கள் தொலைபேசி எண்',phonePh:'எ.கா. 9123 4567',whichDay:'எந்த நாள்?',todayD:'இன்று',tomorrow:'நாளை',whatTime:'எந்த நேரம்?',morningT:'காலை (9–12)',afternoonT:'மதியம் (12–5)',eveningT:'மாலை (5–8)',prefLang:'விரும்பும் மொழி',sendCbBtn:'திரும்ப அழைக்கக் கோரு',errDayTime:'நாளையும் நேரத்தையும் தேர்ந்தெடுங்கள்.',
+meetT:'ஒருங்கிணைப்பாளரைச் சந்தியுங்கள்',meetIntro:'உங்கள் அருகிலுள்ள இடத்தைத் தேர்ந்தெடுங்கள்.',whenSuits:'எப்போது வசதி?',wkM:'வார நாள் காலை',wkA:'வார நாள் மதியம்',satM:'சனிக்கிழமை காலை',meetPhonePh:'நிலையம் உறுதிப்படுத்த',sendMeetBtn:'சந்திப்பைக் கோரு',errCentre:'இடத்தையும் நேரத்தையும் தேர்ந்தெடுங்கள்.',
+walk:'{n} நிமிட நடை',bus:'பேருந்தில் {n} நிமிடம்',exCentre:'மாதிரி நிலையம்',
+cbDoneT:'நாங்கள் உங்களை அழைப்போம்',cbDoneD:'ஒருங்கிணைப்பாளர் {p} எண்ணை அழைப்பார். நாள்: {d}. நேரம்: {t}.',meetDoneT:'சந்திப்பு கோரப்பட்டது',meetDoneD:'உறுதிப்படுத்த {c} 2 வேலை நாட்களுக்குள் {p} எண்ணை அழைக்கும். இலவசம், எந்தக் கட்டாயமும் இல்லை.',
+done:'முடிந்தது',close:'மூடு',today:'இன்று',daysAgo:'{n} நாட்களுக்கு முன்'
+};
+
+Object.assign(L.en,{
+probTitle:'The problem',
+probText:'As Singapore ages, more older adults face declining health and memory. Many caregivers cope alone and wait too long to ask for help, because of guilt, family expectations or not knowing where to start. Services exist, but they are scattered and hard to use.',
+probStmtT:'Problem statement',
+probStmt:'How can we help caregivers in Singapore notice an older person’s changing needs, and get the right help before caring becomes too much for both of them?',
+solTitle:'Our solution',solSub:'An all-in-one caregiving app, combined with human support through community partners.',
+s1b1:'Contact and identity details',s1b2:'Health, medicines and daily needs',s1b3:'Living arrangements and caregiver concerns',s1f:'Use Singpass for faster setup, with your consent.',
+s2b1:'Important papers kept in one place',s2b2:'AI sorts letters and reads appointment slips',s2b3:'Forms filled in from saved details',s2f:'You only confirm dates and times.',
+s3b1:'Shows schemes you may qualify for',s3b2:'AI explains key terms in simple words',s3b3:'Tracks each application: sent, pending, decided',s3f:'Forms are filled in only with your permission.',
+s4b1:'Suggests activities by interest, place and time',s4b2:'Helps seniors stay social',s4b3:'Builds links between families and neighbours',s4f:'Help with bookings and reminders.',
+s5b1:'A short wellbeing check-in every month',s5b2:'AI flags possible issues and next steps',s5b3:'Trained facilitators at AACs and CCs',s5f:'Human support when needed, not just automated advice.',
+impTitle:'The impact',
+hf_next:'Next: {d}',hf_ckdue:'Monthly check-in is due',hf_apps:'Applications in progress: {n}',hf_fin0:'Check in 5 short questions',hf_acts:'Activities you noted: {n}',hf_acts0:'4 activities near you this week'
+});
+Object.assign(L.zh,{
+probTitle:'问题',
+probText:'随着新加坡人口老龄化，越来越多长者的健康和记忆力在衰退。许多照顾者独自承担，因为内疚、家庭期望或不知从何开始，迟迟不寻求帮助。服务是有的，但分散又难用。',
+probStmtT:'问题陈述',
+probStmt:'我们如何帮助新加坡的照顾者察觉长者不断变化的需要，并在照顾对双方都变得难以承受之前，获得合适的帮助？',
+solTitle:'我们的方案',solSub:'一个全面的照顾辅助应用程序，结合社区伙伴提供的真人支援。',
+s1b1:'联系与身份资料',s1b2:'健康、药物和日常需要',s1b3:'居住安排和照顾者的担忧',s1f:'经您同意，用 Singpass 更快完成设置。',
+s2b1:'重要文件集中保存',s2b2:'人工智能为信件分类，读取预约单',s2b3:'用已保存的资料填写表格',s2f:'您只需确认日期和时间。',
+s3b1:'显示您可能符合的计划',s3b2:'人工智能用简单的话解释重要条款',s3b3:'追踪每份申请：已发送、处理中、已决定',s3f:'只有在您允许下才会填写表格。',
+s4b1:'按兴趣、地点和时间推荐活动',s4b2:'帮助长者保持社交',s4b3:'加强家庭与邻里之间的联系',s4f:'协助报名和提醒。',
+s5b1:'每月一次简短的关怀检查',s5b2:'人工智能提示可能的问题和下一步',s5b3:'活跃乐龄中心和民众俱乐部的受训协调员',s5f:'需要时有真人支援，而不只是自动化建议。',
+impTitle:'成效',
+hf_next:'下一个：{d}',hf_ckdue:'本月关怀检查待完成',hf_apps:'处理中的申请：{n}',hf_fin0:'回答 5 个简单问题即可查看',hf_acts:'已记下的活动：{n}',hf_acts0:'本周附近有 4 项活动'
+});
+Object.assign(L.ms,{
+probTitle:'Masalahnya',
+probText:'Apabila penduduk Singapura semakin tua, lebih ramai warga emas mengalami kemerosotan kesihatan dan ingatan. Ramai penjaga menghadapinya seorang diri dan lambat meminta bantuan kerana rasa bersalah, harapan keluarga atau tidak tahu di mana hendak bermula. Perkhidmatan ada, tetapi berselerak dan sukar digunakan.',
+probStmtT:'Pernyataan masalah',
+probStmt:'Bagaimanakah kita boleh membantu penjaga di Singapura menyedari perubahan keperluan warga emas, dan mendapatkan bantuan yang betul sebelum penjagaan menjadi terlalu berat bagi kedua-dua pihak?',
+solTitle:'Penyelesaian kami',solSub:'Aplikasi penjagaan serba lengkap, digabungkan dengan sokongan manusia melalui rakan masyarakat.',
+s1b1:'Butiran hubungan dan pengenalan',s1b2:'Kesihatan, ubat dan keperluan harian',s1b3:'Susunan tempat tinggal dan kebimbangan penjaga',s1f:'Guna Singpass untuk pendaftaran lebih cepat, dengan persetujuan anda.',
+s2b1:'Dokumen penting disimpan di satu tempat',s2b2:'AI menyusun surat dan membaca slip temu janji',s2b3:'Borang diisi daripada butiran yang disimpan',s2f:'Anda hanya mengesahkan tarikh dan masa.',
+s3b1:'Menunjukkan skim yang mungkin anda layak',s3b2:'AI menerangkan istilah penting dengan mudah',s3b3:'Menjejak setiap permohonan: dihantar, dalam proses, diputuskan',s3f:'Borang diisi hanya dengan kebenaran anda.',
+s4b1:'Mencadangkan aktiviti mengikut minat, tempat dan masa',s4b2:'Membantu warga emas kekal bersosial',s4b3:'Mengeratkan hubungan keluarga dan jiran',s4f:'Bantuan untuk tempahan dan peringatan.',
+s5b1:'Semakan kesejahteraan ringkas setiap bulan',s5b2:'AI menandakan kemungkinan masalah dan langkah seterusnya',s5b3:'Fasilitator terlatih di AAC dan CC',s5f:'Sokongan manusia apabila perlu, bukan sekadar nasihat automatik.',
+impTitle:'Impak',
+hf_next:'Seterusnya: {d}',hf_ckdue:'Semakan bulanan perlu dibuat',hf_apps:'Permohonan dalam proses: {n}',hf_fin0:'Semak dengan 5 soalan ringkas',hf_acts:'Aktiviti yang anda catat: {n}',hf_acts0:'4 aktiviti berdekatan minggu ini'
+});
+Object.assign(L.ta,{
+probTitle:'பிரச்சினை',
+probText:'சிங்கப்பூர் மக்கள்தொகை மூப்படையும்போது, மேலும் பல மூத்தோரின் உடல்நலமும் நினைவாற்றலும் குறைகின்றன. பல பராமரிப்பாளர்கள் தனியாகச் சமாளிக்கிறார்கள். குற்ற உணர்வு, குடும்ப எதிர்பார்ப்புகள், அல்லது எங்கு தொடங்குவது என்று தெரியாததால் உதவி கேட்கத் தாமதிக்கிறார்கள். சேவைகள் உள்ளன, ஆனால் அவை சிதறியும் பயன்படுத்தக் கடினமாகவும் உள்ளன.',
+probStmtT:'பிரச்சினை அறிக்கை',
+probStmt:'சிங்கப்பூரில் உள்ள பராமரிப்பாளர்கள் ஒரு மூத்தவரின் மாறும் தேவைகளைக் கவனித்து, பராமரிப்பு இருவருக்கும் தாங்க முடியாததாக ஆகும் முன் சரியான உதவியைப் பெற நாம் எப்படி உதவலாம்?',
+solTitle:'எங்கள் தீர்வு',solSub:'சமூகப் பங்காளிகள் வழியாக மனித ஆதரவுடன் இணைந்த, அனைத்தும் அடங்கிய பராமரிப்புச் செயலி.',
+s1b1:'தொடர்பு மற்றும் அடையாள விவரங்கள்',s1b2:'உடல்நலம், மருந்துகள், அன்றாடத் தேவைகள்',s1b3:'வசிப்பு ஏற்பாடுகளும் பராமரிப்பாளர் கவலைகளும்',s1f:'உங்கள் ஒப்புதலுடன், Singpass மூலம் விரைவாக அமைக்கலாம்.',
+s2b1:'முக்கிய ஆவணங்கள் ஒரே இடத்தில்',s2b2:'AI கடிதங்களை வகைப்படுத்தி, சந்திப்புச் சீட்டுகளைப் படிக்கிறது',s2b3:'சேமித்த விவரங்களிலிருந்து படிவங்கள் நிரப்பப்படும்',s2f:'நீங்கள் தேதிகளையும் நேரங்களையும் மட்டும் உறுதிப்படுத்தினால் போதும்.',
+s3b1:'நீங்கள் தகுதி பெறக்கூடிய திட்டங்களைக் காட்டும்',s3b2:'AI முக்கியச் சொற்களை எளிதாக விளக்கும்',s3b3:'ஒவ்வொரு விண்ணப்பத்தையும் கண்காணிக்கும்: அனுப்பப்பட்டது, நிலுவையில், முடிவு',s3f:'உங்கள் அனுமதியுடன் மட்டுமே படிவங்கள் நிரப்பப்படும்.',
+s4b1:'ஆர்வம், இடம், நேரத்துக்கு ஏற்ப நடவடிக்கைகளைப் பரிந்துரைக்கும்',s4b2:'மூத்தோர் சமூகத் தொடர்பில் இருக்க உதவும்',s4b3:'குடும்பங்களுக்கும் அண்டை வீட்டாருக்கும் இடையே உறவை வளர்க்கும்',s4f:'முன்பதிவுகளுக்கும் நினைவூட்டல்களுக்கும் உதவி.',
+s5b1:'மாதம் ஒருமுறை சிறிய நலன் சரிபார்ப்பு',s5b2:'AI சாத்தியமான பிரச்சினைகளையும் அடுத்த படிகளையும் சுட்டிக்காட்டும்',s5b3:'AAC, CC நிலையங்களில் பயிற்சி பெற்ற ஒருங்கிணைப்பாளர்கள்',s5f:'தேவைப்படும்போது மனித ஆதரவு, தானியங்கி ஆலோசனை மட்டுமல்ல.',
+impTitle:'தாக்கம்',
+hf_next:'அடுத்து: {d}',hf_ckdue:'மாதாந்திரச் சரிபார்ப்பு செய்ய வேண்டும்',hf_apps:'நடப்பிலுள்ள விண்ணப்பங்கள்: {n}',hf_fin0:'5 சிறிய கேள்விகளில் சரிபாருங்கள்',hf_acts:'நீங்கள் குறித்த நடவடிக்கைகள்: {n}',hf_acts0:'இந்த வாரம் அருகில் 4 நடவடிக்கைகள்'
+});
+
+/* character kit: every head is built from the same parts so they look like one family of drawings */
+const _f=n=>+n.toFixed(1);
+const _pts=(cx,cy,r,s,arr)=>arr.map(seg=>seg[0]+seg.slice(1).map(([x,y])=>`${_f(cx+s*x*r)} ${_f(cy+y*r)}`).join(' ')).join('');
+const INK='#1F2160',HAIR='#1E2060',GREY='#ECEAF2',GREY2='#CFCBDD';
+const SK={light:'#F2CDB3',mid:'#E9B48F',tan:'#C98E66'};
+const SKN={light:'#E3B596',mid:'#D79E78',tan:'#B27A55'};
+function hairBack(cx,cy,r,len,sk,neckTo,c=HAIR){const nk=sk?`<rect x="${_f(cx-.3*r)}" y="${_f(cy+.4*r)}" width="${_f(.6*r)}" height="${_f(neckTo-cy-.4*r)}" rx="${_f(.14*r)}" fill="${SKN[sk]}"/>`:'';const w=1.13*r,b=cy+len;return `<path d="M${_f(cx-w)} ${_f(cy)}C${_f(cx-w)} ${_f(cy-1.36*r)} ${_f(cx+w)} ${_f(cy-1.36*r)} ${_f(cx+w)} ${_f(cy)}C${_f(cx+w*1.04)} ${_f(cy+len*.55)} ${_f(cx+w*1.12)} ${_f(b-.3*r)} ${_f(cx+w*.8)} ${_f(b)}Q${_f(cx)} ${_f(b+.22*r)} ${_f(cx-w*.8)} ${_f(b)}C${_f(cx-w*1.12)} ${_f(b-.3*r)} ${_f(cx-w*1.04)} ${_f(cy+len*.55)} ${_f(cx-w)} ${_f(cy)}Z" fill="${c}"/>`+nk}
+function fringe(cx,cy,r,side=1,c=HAIR){return `<path d="${_pts(cx,cy,r,side,[['M',[-1.08,.56]],['C',[-1.18,-.5],[-.75,-1.15],[0,-1.16]],['C',[.75,-1.16],[1.18,-.55],[1.08,.5]],['C',[1,.56],[.93,.47],[.9,.3]],['C',[.88,-.15],[.62,-.55],[.3,-.68]],['C',[-.12,-.62],[-.72,-.38],[-.86,.3]],['C',[-.88,.46],[-.96,.6],[-1.08,.56]],['Z']])}" fill="${c}"/><path d="${_pts(cx,cy,r,side,[['M',[.2,-.98]],['Q',[-.42,-.92],[-.7,-.52]]])}" fill="none" stroke="#33358A" stroke-width="${_f(Math.max(1.3,r*.07))}" stroke-linecap="round"/>`}
+function cap(cx,cy,r,c=GREY,shade=GREY2){return `<path d="${_pts(cx,cy,r,1,[['M',[-1.06,.22]],['C',[-1.14,-.7],[-.62,-1.14],[0,-1.14]],['C',[.62,-1.14],[1.14,-.7],[1.06,.22]],['C',[1,.06],[.95,-.1],[.88,-.2]],['C',[.7,-.5],[.36,-.62],[.02,-.52]],['C',[-.34,-.62],[-.7,-.5],[-.88,-.2]],['C',[-.95,-.1],[-1,.06],[-1.06,.22]],['Z']])}" fill="${c}"/><path d="${_pts(cx,cy,r,1,[['M',[.04,-.58]],['Q',[.38,-.9],[.8,-.72]],['M',[-.04,-.58]],['Q',[-.38,-.9],[-.8,-.72]]])}" fill="none" stroke="${shade}" stroke-width="${_f(Math.max(1.3,r*.06))}" stroke-linecap="round"/>`}
+function kidHair(cx,cy,r,c=HAIR){return `<path d="${_pts(cx,cy,r,1,[['M',[-1.05,.16]],['C',[-1.13,-.9],[-.5,-1.19],[0,-1.19]],['C',[.5,-1.19],[1.13,-.9],[1.05,.16]],['C',[.94,-.22],[.72,-.36],[.5,-.3]],['Q',[.26,-.54],[0,-.34]],['Q',[-.26,-.54],[-.5,-.3]],['C',[-.72,-.36],[-.94,-.22],[-1.05,.16]],['Z']])}" fill="${c}"/>`}
+const bun=(cx,cy,r,c,shade)=>`<circle cx="${_f(cx)}" cy="${_f(cy-1.1*r)}" r="${_f(.44*r)}" fill="${c}"/><path d="M${_f(cx-.26*r)} ${_f(cy-1.02*r)}q${_f(.26*r)} ${_f(-.2*r)} ${_f(.52*r)} 0" fill="none" stroke="${shade}" stroke-width="${_f(Math.max(1.2,r*.05))}" stroke-linecap="round"/>`;
+const ears=(cx,cy,r,sk)=>`<circle cx="${_f(cx-.98*r)}" cy="${_f(cy+.14*r)}" r="${_f(.2*r)}" fill="${SK[sk]}"/><circle cx="${_f(cx+.98*r)}" cy="${_f(cy+.14*r)}" r="${_f(.2*r)}" fill="${SK[sk]}"/>`;
+const neck=(cx,cy,r,sk)=>`<rect x="${_f(cx-.3*r)}" y="${_f(cy+.7*r)}" width="${_f(.6*r)}" height="${_f(.62*r)}" rx="${_f(.12*r)}" fill="${SKN[sk]}"/>`;
+const faceC=(cx,cy,r,sk)=>`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${SK[sk]}"/>`;
+function features(cx,cy,r,{closed=false,glasses=false,blush=true}={}){
+  const e=_f(Math.max(1.5,.068*r)),ex=.35*r,ey=cy+.14*r,sw=_f(Math.max(1.6,.07*r));let s='';
+  if(closed)s+=`<path d="M${_f(cx-ex-.13*r)} ${_f(ey)}q${_f(.13*r)} ${_f(-.13*r)} ${_f(.26*r)} 0M${_f(cx+ex-.13*r)} ${_f(ey)}q${_f(.13*r)} ${_f(-.13*r)} ${_f(.26*r)} 0" fill="none" stroke="${INK}" stroke-width="${sw}" stroke-linecap="round"/>`;
+  else s+=`<circle cx="${_f(cx-ex)}" cy="${_f(ey)}" r="${e}" fill="${INK}"/><circle cx="${_f(cx+ex)}" cy="${_f(ey)}" r="${e}" fill="${INK}"/>`;
+  if(glasses)s+=`<circle cx="${_f(cx-ex)}" cy="${_f(ey)}" r="${_f(.25*r)}" fill="none" stroke="${INK}" stroke-width="${sw}"/><circle cx="${_f(cx+ex)}" cy="${_f(ey)}" r="${_f(.25*r)}" fill="none" stroke="${INK}" stroke-width="${sw}"/><path d="M${_f(cx-ex+.25*r)} ${_f(ey)}h${_f(2*ex-.5*r)}" stroke="${INK}" stroke-width="${sw}"/>`;
+  if(blush)s+=`<circle cx="${_f(cx-.6*r)}" cy="${_f(cy+.4*r)}" r="${_f(.15*r)}" fill="#E58A7A" opacity=".35"/><circle cx="${_f(cx+.6*r)}" cy="${_f(cy+.4*r)}" r="${_f(.15*r)}" fill="#E58A7A" opacity=".35"/>`;
+  s+=`<path d="M${_f(cx-.2*r)} ${_f(cy+.44*r)}q${_f(.2*r)} ${_f(.17*r)} ${_f(.4*r)} 0" fill="none" stroke="${INK}" stroke-width="${sw}" stroke-linecap="round"/>`;
+  return s}
+/* whole heads (drawn after the body; long hair needs its back part drawn before the body via hairBack) */
+const womanHead=(cx,cy,r,sk,side=1)=>faceC(cx,cy,r,sk)+fringe(cx,cy,r,side)+features(cx,cy,r);
+const grannyHead=(cx,cy,r,sk,o={})=>bun(cx,cy,r,GREY,GREY2)+ears(cx,cy,r,sk)+faceC(cx,cy,r,sk)+cap(cx,cy,r)+features(cx,cy,r,o);
+const kidHead=(cx,cy,r,sk)=>ears(cx,cy,r,sk)+faceC(cx,cy,r,sk)+kidHair(cx,cy,r)+features(cx,cy,r,{blush:true});
+const bunHead=(cx,cy,r,sk)=>bun(cx,cy,r,HAIR,'#34367A')+ears(cx,cy,r,sk)+faceC(cx,cy,r,sk)+cap(cx,cy,r,HAIR,'#34367A')+features(cx,cy,r);
+
+const ILLUS={
+hero:`<svg viewBox="0 0 330 270" role="presentation">
+ <path d="M60 120C62 58 118 18 186 22s124 50 126 112-36 120-118 130-150-8-150-60c0-30 14-46 16-84z" fill="#5558D6"/>
+ <path d="M206 40c40-6 86 18 98 60 6 22-2 40-20 48-26-10-46-36-58-62-8-18-14-34-20-46z" fill="#6467E0"/>
+ <path d="M54 70s-15-8.8-15-18.3a8 8 0 0 1 15-4.4 8 8 0 0 1 15 4.4c0 9.5-15 18.3-15 18.3z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>
+ ${hairBack(226,130,33,50)}
+ <path d="M160 270v-50c0-36 30-58 66-58s70 22 70 58v50z" fill="#2F33B8"/>
+ <path d="M212 162q14 13 28 0" fill="none" stroke="#5558D6" stroke-width="3"/>
+ ${womanHead(226,130,33,'mid',1)}
+ <path d="M28 270v-34c0-40 32-64 76-64s76 24 76 64v34z" fill="#A9A27F"/>
+ <path d="M86 172l18 20 18-20" fill="${SK.light}"/>
+ ${grannyHead(104,134,36,'light',{closed:true})}
+ <g transform="rotate(-12 168 214)"><rect x="142" y="178" width="46" height="74" rx="8" fill="#1F2160"/><rect x="147" y="186" width="36" height="58" rx="4" fill="#E4E5FF"/><rect x="152" y="193" width="20" height="5" rx="2.5" fill="#3C40C4"/><rect x="152" y="203" width="26" height="4" rx="2" fill="#AEB0F5"/><rect x="152" y="211" width="22" height="4" rx="2" fill="#AEB0F5"/><rect x="152" y="224" width="26" height="12" rx="4" fill="#0E8F7A"/></g>
+ <ellipse cx="140" cy="228" rx="12" ry="10" fill="${SK.light}"/><ellipse cx="196" cy="212" rx="11" ry="10" fill="${SK.mid}"/>
+</svg>`,
+f1:`<svg viewBox="0 0 220 150" role="presentation">
+ <path d="M24 70C26 30 64 10 112 12s88 18 92 58-20 72-80 74S22 116 24 70z" fill="#E9E8FF"/>
+ <rect x="44" y="16" width="70" height="118" rx="12" fill="#3C40C4"/>
+ <rect x="51" y="25" width="56" height="100" rx="6" fill="#fff"/>
+ <circle cx="79" cy="48" r="14" fill="#DCDDFB"/>
+ <path d="M69 61c1-5 5-8 10-8s9 3 10 8z" fill="#3C40C4"/>
+ ${faceC(79,45,6.5,'light')}${kidHair(79,45,6.5)}
+ <rect x="58" y="72" width="42" height="5" rx="2.5" fill="#DCDDFB"/><rect x="58" y="82" width="30" height="5" rx="2.5" fill="#DCDDFB"/>
+ <circle cx="64" cy="103" r="6" fill="#DCDDFB"/><rect x="74" y="99" width="26" height="4" rx="2" fill="#DCDDFB"/><rect x="74" y="107" width="18" height="4" rx="2" fill="#DCDDFB"/>
+ <rect x="100" y="52" width="94" height="58" rx="10" fill="#fff" stroke="#DCDDFB" stroke-width="2"/>
+ <rect x="110" y="62" width="14" height="10" rx="3" fill="#C8CAF6"/><rect x="130" y="62" width="52" height="4" rx="2" fill="#DCDDFB"/><rect x="130" y="70" width="36" height="4" rx="2" fill="#DCDDFB"/>
+ <rect x="112" y="84" width="70" height="18" rx="5" fill="#E23B4E"/>
+ <rect x="122" y="91" width="50" height="4" rx="2" fill="#fff"/>
+</svg>`,
+f2:`<svg viewBox="0 0 220 150" role="presentation">
+ <path d="M18 74C20 34 60 12 110 14s90 22 92 60-24 70-84 72S16 118 18 74z" fill="#E9E8FF"/>
+ <rect x="26" y="28" width="108" height="98" rx="12" fill="#fff" stroke="#DCDDFB" stroke-width="2"/>
+ <path d="M26 40a12 12 0 0 1 12-12h84a12 12 0 0 1 12 12v8H26z" fill="#3C40C4"/>
+ <rect x="48" y="18" width="7" height="18" rx="3.5" fill="#1F2160"/><rect x="105" y="18" width="7" height="18" rx="3.5" fill="#1F2160"/>
+ ${[58,76,94].map(y=>[38,56,74,92,110].map(x=>`<rect x="${x}" y="${y}" width="13" height="12" rx="3" fill="${x===74&&y===76?'#0E8F7A':'#DCDDFB'}"/>`).join('')).join('')}
+ <circle cx="128" cy="116" r="20" fill="#14A38B" stroke="#fff" stroke-width="4"/><path d="M128 106v20M118 116h20" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
+ <path d="M148 150v-20c0-14 11-24 26-24s26 10 26 24v20z" fill="#fff" stroke="#DCDDFB" stroke-width="2"/>
+ <path d="M166 107l8 13 8-13z" fill="#3C40C4"/>
+ <path d="M160 112c-2 12 2 20 10 22M188 112c2 12-2 20-8 22" fill="none" stroke="#1F2160" stroke-width="2.2" stroke-linecap="round"/><circle cx="180" cy="134" r="3.5" fill="#1F2160"/>
+ ${bunHead(174,86,16,'light')}
+</svg>`,
+f3:`<svg viewBox="0 0 220 150" role="presentation">
+ <path d="M22 74C24 34 62 12 112 14s88 20 90 60-22 70-82 72S20 118 22 74z" fill="#E9E8FF"/>
+ <rect x="50" y="16" width="86" height="114" rx="10" fill="#fff" stroke="#DCDDFB" stroke-width="2"/>
+ <rect x="50" y="16" width="86" height="20" rx="10" fill="#3C40C4"/><rect x="50" y="26" width="86" height="10" fill="#3C40C4"/>
+ <rect x="60" y="22" width="30" height="6" rx="3" fill="#fff" opacity=".8"/>
+ <rect x="60" y="46" width="64" height="5" rx="2.5" fill="#DCDDFB"/><rect x="60" y="57" width="54" height="5" rx="2.5" fill="#DCDDFB"/><rect x="60" y="68" width="60" height="5" rx="2.5" fill="#DCDDFB"/>
+ <rect x="60" y="84" width="20" height="14" rx="4" fill="#C8CAF6"/><rect x="86" y="84" width="20" height="14" rx="4" fill="#C8CAF6"/>
+ <path d="M168 26l26 10v20c0 18-12 30-26 34-14-4-26-16-26-34V36z" fill="#3C40C4"/>
+ <path d="M157 57l8 8 14-14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+ <circle cx="140" cy="108" r="25" fill="#F5B83D"/><circle cx="140" cy="108" r="18" fill="none" stroke="#FFE3A3" stroke-width="3"/>
+ <text x="140" y="117.5" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="700" font-size="26" fill="#6A4500">$</text>
+</svg>`,
+f4:`<svg viewBox="0 0 220 150" role="presentation">
+ <path d="M20 78C22 36 60 14 110 16s90 22 92 62-6 72-90 72S18 122 20 78z" fill="#FDE3D0"/>
+ ${hairBack(160,76,18,30)}
+ <path d="M22 150v-16c0-18 14-30 32-30s32 12 32 30v16z" fill="#8E90F2"/>
+ <path d="M126 150v-24c0-20 14-32 34-32s34 12 34 32v24z" fill="#3C40C4"/>
+ <circle cx="160" cy="124" r="9" fill="#fff"/><circle cx="160" cy="121" r="3" fill="#3C40C4"/><path d="M155 129c1-3 3-4 5-4s4 1 5 4" fill="none" stroke="#3C40C4" stroke-width="2"/>
+ ${womanHead(160,76,18,'light',-1)}
+ ${grannyHead(54,82,19,'light',{glasses:true})}
+ <path d="M80 150v-12c0-14 9-22 22-22s22 8 22 22v12z" fill="#F79A5B"/>
+ ${kidHead(102,100,14,'tan')}
+</svg>`,
+f5:`<svg viewBox="0 0 220 150" role="presentation">
+ <path d="M18 78C20 36 58 14 108 16s92 22 94 62-12 72-92 72S16 122 18 78z" fill="#E6EBF8"/>
+ <path d="M24 150v-22c0-10 8-18 18-18h16c10 0 18 8 18 18v22z" fill="#C9D3F2"/>
+ <rect x="30" y="76" width="40" height="34" rx="12" fill="#C9D3F2"/>
+ <rect x="36" y="84" width="28" height="18" rx="8" fill="#1F2160"/>
+ <circle cx="44" cy="93" r="3" fill="#7FE3D6"/><circle cx="56" cy="93" r="3" fill="#7FE3D6"/>
+ <path d="M50 76v-8" stroke="#8E9AD0" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="66" r="3.5" fill="#8E9AD0"/>
+ <path d="M70 150v-26c0-14 10-24 24-24h22c14 0 24 10 24 24v26z" fill="#F4F5FF" stroke="#C9D3F2" stroke-width="2"/>
+ <rect x="76" y="44" width="58" height="48" rx="18" fill="#fff" stroke="#C9D3F2" stroke-width="2"/>
+ <rect x="84" y="54" width="42" height="26" rx="11" fill="#3C40C4"/>
+ <path d="M95 64q4-4 8 0M107 64q4-4 8 0" fill="none" stroke="#7FE3D6" stroke-width="3" stroke-linecap="round"/>
+ <path d="M100 72q5 3 10 0" fill="none" stroke="#7FE3D6" stroke-width="2.4" stroke-linecap="round"/>
+ <path d="M105 44v-10" stroke="#3C40C4" stroke-width="3" stroke-linecap="round"/><circle cx="105" cy="31" r="4.5" fill="#F5B83D"/>
+ <rect x="72" y="62" width="6" height="14" rx="3" fill="#C9D3F2"/><rect x="132" y="62" width="6" height="14" rx="3" fill="#C9D3F2"/>
+ ${hairBack(178,99,16,28)}
+ <path d="M146 150v-12c0-14 10-24 32-24s32 10 32 24v12z" fill="#F5C451"/>
+ ${womanHead(178,99,16,'tan',1)}
+ <rect x="150" y="22" width="56" height="36" rx="10" fill="#14A38B"/><path d="M166 56l-4 12 14-12z" fill="#14A38B"/>
+ <rect x="160" y="32" width="36" height="4" rx="2" fill="#fff"/><rect x="160" y="40" width="28" height="4" rx="2" fill="#fff"/><rect x="160" y="48" width="20" height="4" rx="2" fill="#fff" opacity=".7"/>
+</svg>`
+};
+
+const LANGS=['en','zh','ms','ta'];
+const LOCALE={en:'en-SG',zh:'zh-SG',ms:'ms-SG',ta:'ta-SG'};
+let lang='en';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function t(k,v={}){const d=L[lang],e=L.en;let s=(d&&d[k]!==undefined)?d[k]:(e[k]!==undefined?e[k]:k);if(Array.isArray(s))return s.map(x=>x.replace(/\{(\w+)\}/g,(m,n)=>esc(v[n])));return s.replace(/\{(\w+)\}/g,(m,n)=>v[n]===undefined?m:esc(v[n]))}
+const ICONS={
+ heart:'<path d="M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z"/>',
+ calendar:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+ wallet:'<path d="M4 7.5h14.5a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5.5A2 2 0 0 1 3.5 18V6.5A2.5 2.5 0 0 1 6 4h10"/><circle cx="16" cy="14" r="1.3"/>',
+ people:'<circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5c.6-3.3 3-5.2 6-5.2s5.4 1.9 6 5.2"/><circle cx="17" cy="9.5" r="2.5"/><path d="M16.5 14.4c2.4.2 4 1.8 4.5 4.6"/>',
+ phone:'<path d="M5.5 3.5h3l1.5 4-2 1.3a11 11 0 0 0 7.2 7.2l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 5.7a2 2 0 0 1 2-2.2z"/>',
+ back:'<path d="M15 5l-7 7 7 7"/>', next:'<path d="M9 5l7 7-7 7"/>',
+ home:'<path d="M4 11l8-7 8 7v8.5a1 1 0 0 1-1 1h-4.5V15h-5v5.5H5a1 1 0 0 1-1-1z"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ doc:'<path d="M14 3.5H7A2 2 0 0 0 5 5.5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M14 3.5v5h5M8.5 13h7M8.5 16.5h5"/>',
+ shield:'<path d="M12 3.5l7 2.8v5.4c0 4.4-3 7.6-7 8.8-4-1.2-7-4.4-7-8.8V6.3z"/><path d="M9 12l2 2 4-4"/>',
+ spark:'<path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2v.5h5V16c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/>',
+ robot:'<rect x="5" y="8" width="14" height="11" rx="3.5"/><path d="M12 4.5V8"/><circle cx="12" cy="3.6" r="1.1"/><circle cx="9.5" cy="13" r="1.1"/><circle cx="14.5" cy="13" r="1.1"/><path d="M10 16.3h4M3 12v3M21 12v3"/>',
+ target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>',
+ sprout:'<path d="M12 21v-8"/><path d="M12 13C12 8 8.8 5 4 5c0 4.8 3.2 8 8 8z"/><path d="M12 15c0-4.4 3-7.2 8-7.2 0 4.4-3 7.2-8 7.2z"/><path d="M7 21h10"/>',
+ alert:'<path d="M12 6.5v7.5"/><circle cx="12" cy="18" r=".9" fill="currentColor"/>',
+ chart:'<path d="M5 20v-8M10 20V5M15 20v-6M20 20v-10M3 20.5h18"/>',
+ mobile:'<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.5h2"/>',
+ clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>', close:'<path d="M6 6l12 12M18 6L6 18"/>',
+ pin:'<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+ bell:'<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+ chat:'<path d="M4 5.5h16v10.5H9l-5 4z"/>',
+ info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.4"/>',
+ leaf:'<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l7-7"/>',
+ building:'<path d="M4 20.5h16M6 20.5V8l6-4 6 4v12.5M10 20.5v-5h4v5"/>',
+ user:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.6-6 7-6s6.2 2 7 6"/>',
+ upload:'<path d="M12 15V4.5M7.5 9L12 4.5 16.5 9M4.5 15v3.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V15"/>',
+ link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+ coins:'<ellipse cx="12" cy="6.5" rx="6.5" ry="2.5"/><path d="M5.5 6.5v5c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-5M5.5 11.5v5c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-5"/>',
+ globe:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.3 2.4 3.5 5.2 3.5 8.5s-1.2 6.1-3.5 8.5c-2.3-2.4-3.5-5.2-3.5-8.5s1.2-6.1 3.5-8.5z"/>',
+ eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>'
+};
+const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
+const pad=n=>String(n).padStart(2,'0');
+function isoOffset(d){const x=new Date();x.setDate(x.getDate()+d);return `${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}`}
+const toDate=iso=>new Date(iso+'T00:00');
+const fmtDate=iso=>toDate(iso).toLocaleDateString(LOCALE[lang],{weekday:'long',day:'numeric',month:'long'});
+const fmtMon=iso=>toDate(iso).toLocaleDateString(LOCALE[lang],{month:'short'});
+const fmtTime=tm=>{if(!tm)return'';const[h,m]=tm.split(':').map(Number);return new Date(2000,0,1,h,m).toLocaleTimeString(LOCALE[lang],{hour:'numeric',minute:'2-digit'})};
+const daysAgo=iso=>Math.round((toDate(isoOffset(0))-toDate(iso))/864e5);
+const ref=()=>'CB-'+Math.floor(10000+Math.random()*89999);
+const agoText=iso=>{const n=daysAgo(iso);return n===0?t('today'):t('daysAgo',{n})};
+
+/* ---------- state ---------- */
+const EXAMPLE={caregiver:'Mei Ling',relation:'rel_daughter',senior:'Mdm Tan Siew Lan',short:'Mdm Tan',age:78,prefs:['home','activities'],tech:'some',consent:true,prefill:true,conditions:['ex_c1','ex_c2'],matters:['ex_m1','ex_m2','ex_m3']};
+const S={view:'landing',stack:[],demo:false,profile:null,appts:[],docs:[],checks:[],apps:[],interests:[],finAnswers:null,explain:{},
+  forms:{onb:{prefs:[]},appt:{},fin:{},ff:{},cb:{},meet:{}},onbStep:0,apptStep:0,finStep:0,ffStep:0,ffScheme:null,ffDone:null,
+  doc:{stage:'pick'},ck:null,help:{view:'menu',topic:null},singpass:false,sugDone:false};
+function loadExample(){
+  S.profile={...EXAMPLE};S.demo=true;S.sugDone=false;
+  S.appts=[{id:1,type:'type_doc',date:isoOffset(2),time:'09:30',place:'Westwood Polyclinic (example)',reminder:'rem_1d'},
+    {id:2,type:'type_spec',date:isoOffset(9),time:'14:15',place:'General Hospital, Eye Clinic (example)',reminder:'rem_1d'},
+    {id:3,type:'type_ther',date:isoOffset(16),time:'10:00',place:'Sunbird Active Ageing Centre (example)',reminder:'rem_none'}];
+  S.docs=[{id:1,name:'Medicine list from polyclinic.pdf',cat:'cat_med',by:'byAI'},{id:2,name:'Pharmacy receipt August.jpg',cat:'cat_bill',by:'byAI'}];
+  S.checks=[{kind:'senior',date:isoOffset(-33),level:'good',label:'lbl_good'},{kind:'carer',date:isoOffset(-15),level:'warn',label:'clbl_warn'}];
+  S.apps=[{id:1,scheme:'hcg',ref:'CB-48213',stage:3}];
+}
+const P=()=>S.profile||EXAMPLE;
+const sName=()=>P().short||P().senior;
+
+/* ---------- navigation ---------- */
+function go(v){S.stack.push(S.view);S.view=v;render()}
+function back(){S.view=S.stack.pop()||(S.profile?'home':'landing');render()}
+function goHome(){S.stack=[];S.view=S.profile?'home':'landing';render()}
+function stepBack(){
+  const v=S.view;
+  if(v==='onboard'&&S.onbStep>0){S.onbStep--;S.onbErr='';return render()}
+  if(v==='apptAdd'&&S.apptStep>0){S.apptStep--;S.apptErr='';return render()}
+  if(v==='finCheck'&&S.finStep>0){S.finStep--;return render()}
+  if(v==='finForm'&&S.ffStep>0&&!S.ffDone){S.ffStep--;S.ffErr='';return render()}
+  if(v==='check'&&S.ck.i>0){S.ck.i--;return render()}
+  if(v==='docAdd'&&S.doc.stage==='change'){S.doc.stage='result';return render()}
+  if(v==='docAdd'&&S.doc.stage==='result'){S.doc={stage:'pick'};return render()}
+  back()}
+function chrome(){
+  $('#langBtn').innerHTML=`${ic('globe')} <span>${esc(L[lang].langName)}</span>`;
+  $('#langBtn').setAttribute('aria-label',t('language')+': '+L[lang].langName);
+  $('#sizeGroup').setAttribute('aria-label',t('textSize'));
+  const hb=$('#homeBtn');hb.hidden=S.view==='landing';hb.innerHTML=`${ic('home')} <span class="tl">${S.profile?t('home'):t('start')}</span>`;hb.setAttribute('aria-label',S.profile?t('home'):t('start'));
+  document.querySelector('.brand').hidden=S.view==='landing';
+  $('#fab').innerHTML=`<span class="fi">${ic('phone')}</span><span><b>${t('needHelp')}</b>${t('talk')}</span>`;
+}
+function render(keep){
+  const y=window.scrollY;const app=$('#app');app.innerHTML=(VIEWS[S.view]||VIEWS.landing)();chrome();
+  if(keep){window.scrollTo(0,y);return}
+  window.scrollTo(0,0);const h=app.querySelector('h1');if(h){h.tabIndex=-1;h.focus({preventScroll:true})}
+}
+
+/* ---------- shared bits ---------- */
+const backBtn=(label)=>`<button class="back" data-act="back">${ic('back')} ${label||t('back')}</button>`;
+const helpMe=topic=>`<div class="helpme"><p><b>${t('helpMeTitle')}</b> ${t('helpMeText')}</p><button class="btn btn-human" data-act="helpWith" data-arg="${esc(topic)}">${ic('people')} ${t('helpMeBtn')}</button></div>`;
+const progress=(i,n)=>`<div class="progress"><span class="muted">${t('stepOf',{i,n})}</span><div class="bar" aria-hidden="true"><i style="width:${Math.round(i/n*100)}%"></i></div></div>`;
+function choices(key,opts,{multi=false,auto=null}={}){
+  const [f,k]=key.split('.');const cur=S.forms[f][k];
+  return `<div class="choices" role="group">${opts.map(o=>{const on=multi?(cur||[]).includes(o.v):cur===o.v;
+    return `<button class="choice ${multi?'multi':''}" data-act="${multi?'toggle':'pick'}" data-key="${key}" data-arg="${esc(o.v)}" ${auto?`data-auto="${auto}"`:''} aria-pressed="${on}"><span class="mark"></span><span>${o.l}${o.s?`<small>${o.s}</small>`:''}</span></button>`}).join('')}</div>`}
+const field=(key,label,{type='text',hint='',ph='',mode='',cls=''}={})=>{
+  const [f,k]=key.split('.');const v=S.forms[f][k]??'';const id='f-'+f+'-'+k;
+  return `<div class="field"><label for="${id}">${label}</label>${hint?`<span class="hint">${hint}</span>`:''}<input class="input ${cls}" id="${id}" type="${type}" data-field="${key}" value="${esc(v)}" ${ph?`placeholder="${esc(ph)}"`:''} ${mode?`inputmode="${mode}"`:''} autocomplete="off"></div>`};
+const footer=()=>`<div class="foot"><p>${t('disclaimer')}</p><p>${t('emergency')}</p></div>`;
+const pic=(k,cls='pic')=>`<span class="${cls}" aria-hidden="true">${ILLUS[k]}</span>`;
+
+/* ---------- views ---------- */
+const VIEWS={};
+const LOGO=`<svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22 24 6l20 16"/><path d="M9.5 18.5V40a3 3 0 0 0 3 3h23a3 3 0 0 0 3-3V18.5"/><circle cx="16.5" cy="26" r="3"/><circle cx="31.5" cy="26" r="3"/><circle cx="24" cy="23" r="3.4"/><path d="M11.5 38.5c.4-3.8 2.4-6 5-6M36.5 38.5c-.4-3.8-2.4-6-5-6M18 39c.5-4.6 2.8-7.2 6-7.2s5.5 2.6 6 7.2"/></svg>`;
+const pageHead=(icon,title,sub)=>`<header class="barhead">${ic(icon)}<div><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</div></header>`;
+const PLAN=[['people',''],['user','teal'],['mobile',''],['link','teal'],['chart','purple'],['target','']];
+VIEWS.landing=()=>`
+<section class="hero">
+  <div class="hero-txt">
+    <div class="langrow" role="group" aria-label="${t('chooseLang')}">${LANGS.map(l=>`<button class="lp" lang="${l}" data-act="setLang" data-arg="${l}" aria-pressed="${l===lang}">${L[l].langName}</button>`).join('')}</div>
+    <div class="bigbrand">${LOGO}<h1>CareBridge SG</h1></div>
+    <p class="tagline">${t('tagline')}</p>
+    <p class="hero-lead">${t('heroLead')}</p>
+    <div class="row"><button class="btn btn-white" data-act="startOnb">${t('btnSetup')}</button><button class="btn btn-ghost" data-act="tryDemo">${t('btnExample')}</button></div>
+    <p class="hero-note">${t('setupNote')}</p>
+  </div>
+  <div class="hero-art" aria-hidden="true">${ILLUS.hero}</div>
+  <section class="probcard" aria-labelledby="probh">
+    <div class="ph-row"><span class="alert-dot">${ic('alert')}</span><h2 id="probh">${t('probTitle')}</h2></div>
+    <p>${t('probText')}</p>
+    <div class="stmt"><div class="ph-row">${ic('target')}<h3>${t('probStmtT')}</h3></div><p>${t('probStmt')}</p></div>
+  </section>
+</section>
+<section class="board" aria-labelledby="solh">
+  <div class="pillhead"><h2 class="titlepill" id="solh">${ic('spark')}<span>${t('solTitle')}</span></h2><p>${t('solSub')}</p></div>
+  <div class="features">${[1,2,3,4,5].map(n=>`<article class="feat"><div class="feat-h"><span class="num">${n}</span><h3>${t('s'+n+'t')}</h3></div>${pic('f'+n)}<ul class="dots">${[1,2,3].map(b=>`<li>${t('s'+n+'b'+b)}</li>`).join('')}</ul><p class="strip">${t('s'+n+'f')}</p></article>`).join('')}</div>
+  <div class="motto"><div class="dig"><b>${t('mottoD')}</b><span>${t('mottoDs')}</span></div><div class="hum"><b>${t('mottoH')}</b><span>${t('mottoHs')}</span></div></div>
+</section>
+<section class="board" aria-labelledby="planh">
+  <div class="barhead">${ic('calendar')}<div><h2 id="planh">${t('planTitle')}</h2><p>${t('planSub')}</p></div></div>
+  <ol class="plan">${PLAN.map(([i,c],n)=>`<li><div class="ph-row"><span class="disc ${c}">${ic(i)}</span><span class="mtag ${c}">${t('p'+(n+1)+'m')}</span></div><h3>${t('p'+(n+1)+'t')}</h3><p>${t('p'+(n+1)+'d')}</p></li>`).join('')}</ol>
+</section>
+<section class="board" aria-labelledby="tsph">
+  <div class="pillhead"><h2 class="titlepill" id="tsph">${ic('people')}<span>${t('tspTitle')}</span></h2></div>
+  <div class="trio">${[['stem','spark',''],['biz','building','teal'],['hum','heart','purple']].map(([k,i,c])=>`<article><div class="ph-row"><span class="disc ${c}">${ic(i)}</span><span class="lens">${t(k+'L')}</span></div><h3>${t(k+'T')}</h3><p>${t(k+'D')}</p></article>`).join('')}</div>
+  ${howSection(true)}
+</section>
+<section class="impact" aria-labelledby="imph">
+  <div class="imp-title">${ic('sprout')}<h2 id="imph">${t('impTitle')}</h2></div>
+  ${['S','C','M'].map((g,i)=>`<div class="imp-g"><span class="imp-ic">${ic(['user','heart','people'][i])}</span><div><h3>${t('imp'+g)}</h3><ul>${[1,2,3].map(j=>`<li>${ic('check')}<span>${t('imp'+g+j)}</span></li>`).join('')}</ul></div></div>`).join('')}
+  <p class="quote">${ic('heart')}<span>${t('impQuote')}</span></p>
+</section>
+<div class="canvas-foot">${footer()}</div>`;
+function howSection(sub){const icons=['building','coins','doc','link','shield','people'];return `<section class="section">${sub?`<div class="subhead"><h2>${t('howTitle')}</h2></div>`:''}<div class="how">${icons.map((i,n)=>`<div><span class="disc ${['','teal','','teal','purple',''][n]}">${ic(i)}</span><div><h3>${t('h'+(n+1)+'t')}</h3><p>${t('h'+(n+1)+'d')}</p></div></div>`).join('')}</div></section>`}
+
+/* home */
+VIEWS.home=()=>{
+  const p=P(),h=new Date().getHours();
+  const up=S.appts.filter(a=>a.date>=isoOffset(0)).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))[0];
+  const last=S.checks.filter(c=>c.kind==='senior').sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const due=!last||daysAgo(last.date)>=30;
+  const live=S.apps.filter(a=>a.stage<4).length;
+  const strips={
+    care:due?t('hf_ckdue'):t('ckDone',{d:agoText(last.date)}),
+    appts:up?t('hf_next',{d:toDate(up.date).toLocaleDateString(LOCALE[lang],{weekday:'short',day:'numeric',month:'short'})+', '+fmtTime(up.time)}):t('noAppt'),
+    fin:live?t('hf_apps',{n:live}):t('hf_fin0'),
+    acts:S.interests.length?t('hf_acts',{n:S.interests.length}):t('hf_acts0')};
+  return `<section class="greet"><span class="hi">${t(h<12?'morning':h<18?'afternoon':'evening')}</span><h1>${t('hello',{n:p.caregiver})}</h1><p>${t('caringFor',{s:p.senior,a:p.age})}</p>
+${S.demo?`<span class="chip">${ic('info')} ${t('exampleFamily')}</span>`:''}</section>
+<div class="wrap">
+${(p.prefs||[]).includes('unsure')?`<div class="banner">${ic('people')}<div><b>${t('unsureT')}</b><p>${t('unsureD')}</p></div><button class="btn btn-human" data-act="helpView" data-arg="meet">${t('unsureBtn')}</button></div>`:''}
+<div class="today">
+  <div class="today-row"><span class="disc">${ic('calendar')}</span><div>${up?`<b>${t('nextAppt')}:</b> ${t(up.type)}<br><span class="muted">${fmtDate(up.date)}, ${fmtTime(up.time)}</span>`:`<b>${t('noAppt')}</b>`}</div></div>
+  <div class="today-row"><span class="disc teal">${ic('heart')}</span><div>${due?`<b>${t('ckDue',{s:sName()})}</b><br><span class="muted">${t('ckDueS')}</span>`:`<b>${t('ckDone',{d:agoText(last.date)})}</b> <span class="chip ${last.level}">${t(last.label)}</span>`}</div>${due?`<button class="btn btn-primary" data-act="startCheck" data-arg="senior">${t('ckStart')}</button>`:''}</div>
+</div>
+<nav class="cards4" aria-label="CareBridge">
+  ${[['care','f1',1,'heart'],['appts','f2',2,'calendar'],['fin','f3',3,'wallet'],['acts','f4',4,'people']].map(([v,img,n,i])=>`<button class="hcard" data-act="go" data-arg="${v}"><span class="feat-h"><span class="disc">${ic(i)}</span><h2>${t('c'+n+'t')}</h2></span>${pic(img)}<p>${t('c'+n+'d')}</p><span class="strip">${strips[v]}</span></button>`).join('')}
+</nav>
+<button class="linkbtn" data-act="go" data-arg="how">${t('howLink')}</button>
+${footer()}</div>`};
+VIEWS.how=()=>`<div class="wrap">${backBtn()}${pageHead('info',t('howTitle'))}${howSection(false)}${footer()}</div>`;
+
+/* onboarding */
+VIEWS.onboard=()=>{
+  const f=S.forms.onb,i=S.onbStep,N=5;let body='',q='';const err=S.onbErr||'';
+  if(i===0){q=t('ob0q');body=`<div class="singpass"><button class="btn btn-primary" data-act="singpass">${ic('shield')} ${t('singpassBtn')}</button>${S.singpass?`<p class="small">${t('singpassNote')}</p>`:''}</div><p class="muted">${t('orType')}</p>`+field('onb.caregiver',t('yourName'),{ph:t('yourNamePh'),cls:S.singpass?'prefilled':''})+`<span class="flabel">${t('relQ')}</span>`+choices('onb.relation',['daughter','son','spouse','family','friend'].map(r=>({v:'rel_'+r,l:t('rel_'+r)})))}
+  if(i===1){q=t('ob1q');body=field('onb.senior',t('theirName'),{ph:t('theirNamePh'),hint:t('theirNameHint'),cls:S.singpass?'prefilled':''})+field('onb.age',t('age'),{mode:'numeric',ph:t('agePh'),cls:S.singpass?'prefilled':''})}
+  if(i===2){q=t('ob2q');body=`<p class="muted">${t('ob2hint')}</p>`+choices('onb.prefs',['home','respite','activities','unsure'].map(p=>({v:p,l:t('pref_'+p),s:t('pref_'+p+'S')})),{multi:true})+`<div class="banner">${ic('heart')}<div><p>${t('ob2note')}</p></div></div>`}
+  if(i===3){q=t('ob3q');body=choices('onb.tech',['ok','some','person'].map(x=>({v:x,l:t('tech_'+x)})))+(f.tech==='person'?`<div class="banner">${ic('people')}<div><b>${t('techPersonT')}</b><p>${t('techPersonD')}</p></div><button class="btn btn-human" data-act="openHelp">${t('techPersonBtn')}</button></div>`:'')}
+  if(i===4){q=t('ob4q');body=`<div class="panel"><ul style="margin:0;padding-left:1.2em" class="stack"><li>${t('ob4a')}</li><li>${t('ob4b')}</li><li>${t('ob4c')}</li><li>${t('ob4d')}</li></ul></div>
+    <label class="check"><input type="checkbox" id="c-consent" data-field="onb.consent" ${f.consent?'checked':''}><span>${t('consent1')} <span class="muted">${t('consent1n')}</span></span></label>
+    <label class="check"><input type="checkbox" id="c-prefill" data-field="onb.prefill" ${f.prefill?'checked':''}><span>${t('consent2')} <span class="muted">${t('consent2n')}</span></span></label>`}
+  return `<div class="wrap">${backBtn()}${progress(i+1,N)}<h1 class="q">${q}</h1><div class="stack">${body}</div>${err?`<p class="err" role="alert">${err}</p>`:''}
+  <div class="stepfoot"><button class="btn btn-primary btn-block" data-act="onbNext">${i===N-1?ic('check')+' '+t('finishSetup'):t('next')}</button><button class="linkbtn" data-act="openHelp">${t('personSetup')}</button></div></div>`};
+
+/* my senior's care */
+VIEWS.care=()=>{
+  const p=P();const hist=S.checks.filter(c=>c.kind==='senior').sort((a,b)=>b.date.localeCompare(a.date));
+  return `<div class="wrap">${backBtn()}${pageHead('heart',t('careTitle'),t('c1d'))}
+<section class="panel"><h2>${esc(p.senior)}</h2>
+  <dl class="facts"><dt>${t('ageL')}</dt><dd>${esc(p.age)}</dd><dt>${t('caredBy')}</dt><dd>${esc(p.caregiver)} (${t(p.relation)})</dd></dl>
+  <div class="tags">${(p.prefs||[]).map(x=>`<span class="chip">${t('pref_'+x)}</span>`).join('')}</div>
+  <div><b>${t('health')}</b><p class="${p.conditions?'':'muted'}">${p.conditions?p.conditions.map(c=>t(c)).join(', '):t('noneYet')}</p></div>
+  ${p.matters?`<div><b>${t('matters',{s:sName()})}</b><ul style="margin:.3em 0 0;padding-left:1.2em">${p.matters.map(m=>`<li>${t(m)}</li>`).join('')}</ul></div>`:''}
+  <p class="muted small">${t('dignity',{s:sName()})}</p></section>
+<section class="section"><div class="row">${pic('f5','mini')}<h2>${t('ckTitle')}</h2></div>
+  <p>${t('ckIntro',{s:sName()})}</p>
+  <button class="btn btn-primary" data-act="startCheck" data-arg="senior">${ic('heart')} ${t('ckBtn')}</button>
+  ${hist.length?`<div class="stack">${hist.map(c=>`<div class="item"><div class="body"><b>${fmtDate(c.date)}</b></div><span class="chip ${c.level}">${t(c.label)}</span></div>`).join('')}</div>`:`<div class="empty">${t('ckEmpty')}</div>`}</section>
+<section class="banner">${ic('heart')}<div><b>${t('youT')}</b><p>${t('youD')}</p></div><button class="btn btn-quiet" data-act="startCheck" data-arg="carer">${t('youBtn')}</button></section></div>`};
+
+/* check-ins */
+const CHECKS={senior:['eat','sleep','fall','mind','mood','daily'],carer:['tired','self','alone','money','work']};
+VIEWS.check=()=>{
+  const ck=S.ck,ks=CHECKS[ck.kind],s=sName();
+  if(ck.i>=ks.length)return `<div class="wrap">${ck.kind==='senior'?seniorResult():carerResult()}</div>`;
+  const k=ks[ck.i],sen=ck.kind==='senior';const opts=t((sen?'o_':'co_')+k,{s});
+  return `<div class="wrap">${backBtn(ck.i===0?t('back'):t('prevQ'))}${progress(ck.i+1,ks.length)}
+  <span class="label">${sen?t('ckSenior',{s}):t('ckCarer')}</span><h1 class="q">${t((sen?'q_':'cq_')+k,{s})}</h1>
+  <div class="choices" role="group">${opts.map((o,n)=>`<button class="choice" data-act="ckAnswer" data-arg="${n}" aria-pressed="${ck.a[k]===n}"><span class="mark"></span><span>${o}</span></button>`).join('')}</div>
+  <p class="muted small">${t('tapNext')}</p></div>`};
+function seniorResult(){
+  const a=S.ck.a,s=sName(),why=[],next=[];let score=0,medical=false;
+  for(const k in a){score+=a[k];if(a[k])why.push(t('r_'+k+a[k],{s}))}
+  if(a.fall===2||a.mind===2||a.eat===2)medical=true;
+  const level=medical?'alert':score>=2?'warn':'good';const L2={good:'Good',warn:'Warn',alert:'Alert'}[level];
+  if(medical||a.mind>=1)next.push(`<button class="btn btn-primary" data-act="bookDoctor">${ic('calendar')} ${t('nBook')}</button>`);
+  if(a.fall>=1||a.daily>=1)next.push(`<button class="btn btn-quiet" data-act="go" data-arg="fin">${ic('wallet')} ${t('nFin')}</button>`);
+  if(a.mood>=1)next.push(`<button class="btn btn-quiet" data-act="go" data-arg="acts">${ic('people')} ${t('nAct',{s})}</button>`);
+  if(level!=='good')next.push(`<button class="btn btn-human" data-act="helpView" data-arg="callback">${ic('phone')} ${t('nTalk')}</button>`);
+  S.ckResult={kind:'senior',level,label:'lbl_'+level};
+  return `<span class="label">${t('ckSenior',{s})}</span>
+  <div class="result ${level}"><h1>${ic(level==='good'?'check':'info')} ${t('res'+L2+'T')}</h1><p>${t('res'+L2+'D')}</p></div>
+  ${why.length?`<div class="why"><h4>${ic('spark')} ${t('whyTitle')}</h4><p class="small">${t('rulesNote')}</p><ul>${why.map(w=>`<li>${w}</li>`).join('')}</ul>${medical?`<p class="small">${t('medNote',{s})}</p>`:''}</div>`:''}
+  ${next.length?`<div class="stack">${next.join('')}</div>`:''}
+  <p class="muted small">${t('emerg995',{s})}</p>
+  <button class="btn btn-primary btn-block" data-act="saveCheck">${ic('check')} ${t('saveFinish')}</button>`}
+function carerResult(){
+  const a=S.ck.a,s=sName();let score=0;for(const k in a)score+=a[k];
+  const level=score>=6?'alert':score>=3?'warn':'good';const out=[];
+  if(a.tired>=1||a.self>=1)out.push(['break','meet','helpView']);
+  if(a.alone>=1)out.push(['alone','acts','go']);
+  if(a.money>=1)out.push(['money','fin','go']);
+  if(a.work>=1)out.push(['work','callback','helpView']);
+  S.ckResult={kind:'carer',level,label:'clbl_'+level};
+  const T={good:['cGoodT','cGoodD'],warn:['cWarnT','cWarnD'],alert:['cAlertT','cWarnD']}[level];
+  return `<span class="label">${t('ckCarer')}</span>
+  <div class="result ${level}"><h1>${ic('heart')} ${t(T[0])}</h1><p>${t(T[1])}</p></div>
+  ${out.map(([k,arg,act])=>`<div class="panel"><h3>${t('o_'+k)}</h3><p>${t('o_'+k+'D',{s})}</p><div><button class="btn btn-quiet" data-act="${act}" data-arg="${arg}">${t('o_'+k+'B')}</button></div></div>`).join('')}
+  ${level==='alert'?`<div class="banner">${ic('phone')}<div><b>${t('sosT')}</b><p>${t('sosD')}</p></div><button class="btn btn-human" data-act="helpView" data-arg="callback">${t('reqCb')}</button></div>`:''}
+  <button class="btn btn-primary btn-block" data-act="saveCheck">${ic('check')} ${t('saveFinish')}</button>`}
+
+/* appointments & documents */
+VIEWS.appts=()=>{
+  const list=S.appts.filter(a=>a.date>=isoOffset(0)).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const showSug=(P().conditions||[]).includes('ex_c2')&&!S.sugDone;
+  return `<div class="wrap">${backBtn()}${pageHead('calendar',t('apTitle'),t('c2d'))}
+${showSug?`<section class="panel suggest"><h3>${ic('eye')} ${t('sugT')}</h3><p>${t('sugD',{s:sName()})}</p><p class="small muted">${ic('spark')} ${t('sugNote')}</p><div><button class="btn btn-primary" data-act="sugAdd">${ic('plus')} ${t('sugBtn')}</button></div></section>`:''}
+<section class="section"><div class="section-head"><h2>${t('upcoming')}</h2><button class="btn btn-primary" data-act="newAppt">${ic('plus')} ${t('addAppt')}</button></div>
+${list.length?list.map(a=>{const d=toDate(a.date);return `<article class="item"><div class="datebox"><b>${d.getDate()}</b><span>${fmtMon(a.date)}</span></div><div class="body"><h3>${t(a.type)}</h3><span>${fmtDate(a.date)}, ${fmtTime(a.time)}</span><span class="muted">${ic('pin')} ${esc(a.place)}</span><div class="row" style="margin-top:6px"><button class="toggle" data-act="toggleRem" data-arg="${a.id}" aria-pressed="${a.reminder!=='rem_none'}">${ic('bell')} ${a.reminder==='rem_none'?t('remOff'):t('remOn',{r:t(a.reminder)})}</button><button class="linkbtn" data-act="delAppt" data-arg="${a.id}">${t('remove')}</button></div></div></article>`}).join(''):`<div class="empty">${t('apEmpty')}</div>`}
+</section>
+<section class="section"><div class="section-head"><h2>${t('docs')}</h2><button class="btn btn-primary" data-act="newDoc">${ic('upload')} ${t('addDoc')}</button></div>
+<p class="muted">${t('docsIntro')}</p>
+${S.docs.length?S.docs.map(d=>`<div class="item"><span class="docic">${ic('doc')}</span><div class="body"><h3>${esc(d.name)}</h3><div class="row"><span class="chip">${t(d.cat)}</span><span class="muted small">${t(d.by)}</span></div></div></div>`).join(''):`<div class="empty">${t('docEmpty')}</div>`}
+</section></div>`};
+VIEWS.apptAdd=()=>{
+  const f=S.forms.appt,i=S.apptStep,N=5;let q='',body='';const err=S.apptErr||'';
+  if(i===0){q=t('aq0');body=choices('appt.type',['doc','spec','ther','dent','other'].map(x=>({v:'type_'+x,l:t('type_'+x)})),{auto:'apptNext'})}
+  if(i===1){q=t('aq1');body=field('appt.date',t('date'),{type:'date'})+field('appt.time',t('time'),{type:'time'})}
+  if(i===2){q=t('aq2');const places=[...new Set(S.appts.map(a=>a.place))].slice(0,3);body=field('appt.place',t('place'),{ph:t('placePh'),hint:places.length?t('placeHint'):''})+`<div class="pills">${places.map(p=>`<button class="pill" data-act="setPlace" data-arg="${esc(p)}">${esc(p)}</button>`).join('')}</div>`}
+  if(i===3){q=t('aq3');body=`<p class="muted">${t('aq3hint')}</p>`+choices('appt.reminder',['1d','2h','both','none'].map(x=>({v:'rem_'+x,l:t('rem_'+x)})),{auto:'apptNext'})}
+  if(i===4){q=t('aq4');body=`<div class="panel"><dl class="facts"><dt>${t('what')}</dt><dd>${t(f.type)}</dd><dt>${t('when')}</dt><dd>${f.date?fmtDate(f.date):''}, ${fmtTime(f.time)}</dd><dt>${t('where')}</dt><dd>${esc(f.place)}</dd><dt>${t('reminder')}</dt><dd>${t(f.reminder)}</dd></dl></div><p class="muted">${t('fixHint')}</p>`}
+  return `<div class="wrap">${backBtn()}${progress(i+1,N)}<span class="label">${t('newAppt')}</span><h1 class="q">${q}</h1><div class="stack">${body}</div>${err?`<p class="err" role="alert">${err}</p>`:''}
+  <div class="stepfoot"><button class="btn btn-primary btn-block" data-act="apptNext">${i===N-1?ic('check')+' '+t('saveAppt'):t('next')}</button></div>${helpMe(t('newAppt'))}</div>`};
+
+const DOC_CATS={cat_med:['discharge','diagnosis','medication','medicine','ward','memo','referral','lab','results'],cat_appt:['appointment','visit','scheduled','bring','slip','clinic'],cat_bill:['receipt','invoice','bill','paid','total','gst'],cat_fin:['grant','payout','scheme','subsidy','cpf','approved','application'],cat_id:['nric','passport','lpa','lasting','power','attorney','will','birth']};
+const SAMPLE_DOCS=[
+ {name:'Hospital discharge summary.pdf',text:'Discharge summary. Ward 7. Diagnosis: chest infection, treated. Medication: antibiotics for 5 more days. Please see your polyclinic doctor in 2 weeks.',sum:'sd0',appt:{type:'type_doc',days:14,place:'Westwood Polyclinic (example)'}},
+ {name:'Polyclinic appointment slip.jpg',text:'Appointment slip. Your visit is scheduled on 12 Nov, 9.00am at the clinic. Please bring your NRIC and medicine list.',sum:'sd1',appt:{type:'type_doc',days:18,place:'Westwood Polyclinic (example)'}},
+ {name:'Pharmacy receipt.jpg',text:'Receipt. Total paid $42.60 incl. GST. Thank you.',sum:'sd2'},
+ {name:'Letter about caregiving grant.pdf',text:'Your application for the grant has been approved. Monthly payout will be credited.',sum:'sd3'}];
+function classify(text){const x=text.toLowerCase();let best='cat_other',hits=[];for(const c in DOC_CATS){const h=DOC_CATS[c].filter(w=>x.includes(w));if(h.length>hits.length){best=c;hits=h}}return {cat:best,hits,conf:'conf_'+Math.min(hits.length,3)}}
+VIEWS.docAdd=()=>{
+  const d=S.doc,s=sName();
+  if(d.stage==='pick')return `<div class="wrap">${backBtn()}<span class="label">${t('addDocT')}</span><h1 class="q">${t('docQ')}</h1>
+  <label class="btn btn-primary btn-block" for="docfile" style="cursor:pointer">${ic('upload')} ${t('photoBtn')}</label>
+  <input id="docfile" type="file" class="sr" accept="image/*,.pdf">
+  <p class="muted small">${t('fileNote')}</p><h2>${t('tryEx')}</h2>
+  <div class="choices">${SAMPLE_DOCS.map((x,n)=>`<button class="choice" data-act="docSample" data-arg="${n}"><span class="docic">${ic('doc')}</span><span>${esc(x.name)}</span></button>`).join('')}</div>${helpMe(t('addDocT'))}</div>`;
+  if(d.stage==='reading')return `<div class="wrap"><span class="label">${t('addDocT')}</span><h1 class="q">${t('reading')}</h1><div class="row"><div class="spinner"></div><p>${t('readingD')}</p></div></div>`;
+  const r=d.result;
+  if(d.stage==='change')return `<div class="wrap">${backBtn()}<h1 class="q">${t('folderQ')}</h1><div class="choices">${[...Object.keys(DOC_CATS),'cat_other'].map(c=>`<button class="choice" data-act="docSetCat" data-arg="${c}" aria-pressed="${r.cat===c}"><span class="mark"></span><span>${t(c)}</span></button>`).join('')}</div></div>`;
+  return `<div class="wrap">${backBtn()}<span class="label">${t('addDocT')}</span><h1 class="q">${t('weThink',{c:t(r.cat)})}</h1>
+  <div class="item"><span class="docic">${ic('doc')}</span><div class="body"><b>${esc(d.doc.name)}</b><span class="chip ${r.hits.length>=2?'good':'warn'}" style="align-self:flex-start">${t(r.conf)}</span></div></div>
+  <div class="why"><h4>${ic('spark')} ${t('whyTitle')}</h4><p>${r.hits.length?t('foundWords',{w:r.hits.map(h=>'"'+h+'"').join(', ')}):t('noWords')}</p>${r.changed?`<p><b>${t('youChanged')}</b></p>`:''}</div>
+  ${d.doc.sum?`<div class="ai"><span class="tag">${ic('robot')} ${t('aiTag')}</span><p>${t(d.doc.sum,{s})}</p><p class="small muted">${t('checkWithSender')}</p></div>`:''}
+  ${d.doc.appt?`<div class="banner">${ic('calendar')}<div><b>${t('followT')}</b><p>${t('followD')}</p></div><button class="btn btn-quiet" data-act="docToAppt">${t('followBtn')}</button></div>`:''}
+  <div class="stack"><button class="btn btn-primary btn-block" data-act="docSave">${ic('check')} ${t('saveIn',{c:t(r.cat)})}</button><button class="btn btn-quiet btn-block" data-act="docChange">${t('otherFolder')}</button></div></div>`};
+
+/* financial help */
+const SCHEMES={hcg:{name:'Home Caregiving Grant',agency:'Agency for Integrated Care (AIC)',prep:true},smf:{name:'Seniors’ Mobility and Enabling Fund',agency:'Agency for Integrated Care (AIC)',prep:true},ctg:{name:'Caregivers Training Grant',agency:'Agency for Integrated Care (AIC)'},csl:{name:'CareShield Life / ElderShield',agency:'CPF Board / insurer'},pg:{name:'Pioneer Generation Package',agency:'Pioneer Generation Office'},mg:{name:'Merdeka Generation Package',agency:'Merdeka Generation Office'},comcare:{name:'ComCare',agency:'Social Service Office'}};
+const FIN_Q=[{k:'age',o:['u60','a60','a65']},{k:'born',o:['pg','mg','later']},{k:'adl',o:['adl0','adl1','adl3'],hint:'adlList'},{k:'inc',o:['low','mid','high','na'],hint:'incHint'},{k:'cit',o:['sc','pr','no']}];
+function statusList(a){return `<ol class="status">${[0,1,2,3,4].map(n=>`<li class="${n<a.stage?'done':n===a.stage?'now':'todo'}"><span class="dot">${n<a.stage?ic('check'):''}</span><span>${t('st'+n)}</span></li>`).join('')}</ol>`}
+VIEWS.fin=()=>`<div class="wrap">${backBtn()}${pageHead('wallet',t('finTitle'),t('c3d'))}
+<p class="lead">${t('finLead')}</p>
+<div class="banner info">${ic('info')}<div><p>${t('finNotice')}</p></div></div>
+<div class="row"><button class="btn btn-primary" data-act="startFin">${ic('wallet')} ${S.finAnswers?t('finAgain'):t('finStart')}</button>${S.finAnswers?`<button class="btn btn-quiet" data-act="go" data-arg="finResults">${t('finLast')}</button>`:''}</div>
+<section class="section" id="apps"><h2>${t('myApps')}</h2>
+${S.apps.length?S.apps.map(a=>`<article class="scheme"><div class="scheme-top"><h3>${esc(SCHEMES[a.scheme].name)}</h3><span class="muted small">${a.ref}</span></div>${statusList(a)}</article>`).join(''):`<div class="empty">${t('appsEmpty')}</div>`}</section>
+<div class="banner">${ic('people')}<div><b>${t('finWorry')}</b><p>${t('finWorryD')}</p></div><button class="btn btn-human" data-act="helpView" data-arg="callback">${t('reqCb')}</button></div></div>`;
+VIEWS.finCheck=()=>{
+  const i=S.finStep,q=FIN_Q[i],s=sName(),f=S.forms.fin;
+  const pre=(i<2&&S.profile)?`<p class="prefill-tag">${ic('robot')} ${t('preAge')}</p>`:'';
+  return `<div class="wrap">${backBtn()}${progress(i+1,FIN_Q.length)}<span class="label">${t('finCheckL')}</span><h1 class="q">${t('fq_'+q.k,{s})}</h1>${q.hint?`<p class="muted">${t(q.hint)}</p>`:''}${pre}
+  ${choices('fin.'+q.k,q.o.map(o=>({v:o,l:t(o)})),{auto:'finNext'})}
+  <div class="stepfoot"><button class="btn btn-primary btn-block" data-act="finNext" ${f[q.k]?'':'disabled'}>${i===FIN_Q.length-1?t('seeResults'):t('next')}</button></div>${helpMe(t('finCheckL'))}</div>`};
+function matchSchemes(A){
+  const s=sName(),out=[];const res=A.cit==='sc'||A.cit==='pr';const incOK=A.inc==='low'||A.inc==='mid',incNA=A.inc==='na';
+  const incW=t(incNA?'w_incNA':'w_inc');const fell=S.checks.some(c=>c.fall);
+  if(A.adl==='adl3'&&(incOK||incNA)&&res)out.push({id:'hcg',why:[t('w_adl3',{s}),incW,t(A.cit==='sc'?'w_sc':'w_pr',{s})]});
+  if(A.age!=='u60'&&(incOK||incNA)&&A.cit==='sc'&&(A.adl!=='adl0'||fell))out.push({id:'smf',why:[t('w_60',{s}),A.adl!=='adl0'?t('w_adl1',{s}):t('w_fall'),incW]});
+  if(A.age==='a65'||A.adl==='adl3')out.push({id:'ctg',why:[t(A.age==='a65'?'w_65':'w_bigHelp')]});
+  if(A.adl==='adl3')out.push({id:'csl',why:[t('w_adl3',{s}),t('w_csl')]});
+  if(A.born==='pg'&&A.cit==='sc')out.push({id:'pg',why:[t('w_pg',{s})]});
+  if(A.born==='mg'&&A.cit==='sc')out.push({id:'mg',why:[t('w_mg',{s})]});
+  if(A.inc==='low'&&res)out.push({id:'comcare',why:[t('w_low')]});
+  return out}
+VIEWS.finResults=()=>{
+  const r=matchSchemes(S.finAnswers),s=sName();
+  return `<div class="wrap">${backBtn()}${pageHead('wallet',t('resTitle'))}
+  <div class="banner info">${ic('info')}<div><p>${t('resNotice')}</p></div></div>
+  ${r.length?r.map(x=>{const sc=SCHEMES[x.id];const open=S.explain[x.id];return `<article class="scheme">
+   <div class="scheme-top"><h2>${esc(sc.name)}</h2><span class="chip warn">${t('possibly')}</span></div>
+   <p>${t(x.id+'_what')}</p><p class="muted small">${t('runBy',{a:sc.agency})}</p>
+   <div class="why"><h4>${ic('spark')} ${t('whyTitle')}</h4><ul>${x.why.map(w=>`<li>${w}</li>`).join('')}</ul></div>
+   ${open?`<div class="ai"><span class="tag">${ic('robot')} ${t('aiTag')}</span><p>${t(x.id+'_simple',{s})}</p></div>`:''}
+   <div class="row"><button class="btn btn-quiet" data-act="explain" data-arg="${x.id}" aria-expanded="${!!open}">${open?t('hideExplain'):t('explainBtn')}</button>
+   ${sc.prep?`<button class="btn btn-primary" data-act="prepForm" data-arg="${x.id}">${ic('doc')} ${t('prepBtn')}</button>`:`<button class="btn btn-human" data-act="helpWith" data-arg="${esc(sc.name)}">${t('askFac')}</button>`}</div></article>`}).join(''):`<div class="empty">${t('noMatch')}</div>`}
+  <div class="banner">${ic('people')}<div><b>${t('nextT')}</b><p>${t('nextD')}</p></div><button class="btn btn-human" data-act="helpView" data-arg="callback">${t('reqCb')}</button></div>
+  ${footer()}</div>`};
+VIEWS.finForm=()=>{
+  const sc=SCHEMES[S.ffScheme],i=S.ffStep,f=S.forms.ff,p=P(),N=3;
+  if(S.ffDone)return `<div class="wrap"><span class="label">${t('appL',{n:sc.name})}</span><div class="result good"><h1>${ic('check')} ${t('sentT')}</h1><p>${t('sentD',{a:sc.agency})}</p><p>${t('yourRef',{r:S.ffDone})}</p></div>
+   ${statusList({stage:0})}<p class="muted small">${t('protoNote')}</p>
+   <div class="stack"><button class="btn btn-primary btn-block" data-act="go" data-arg="fin">${t('seeApps')}</button><button class="btn btn-quiet btn-block" data-act="goHome">${ic('home')} ${t('backHome')}</button></div></div>`;
+  let q='',body='';const err=S.ffErr||'';
+  if(i===0){q=t('ff0q');body=`<p>${t('ff0d')}</p><div class="panel"><b>${t('weUse')}</b><dl class="facts"><dt>${t('fYourName')}</dt><dd>${esc(p.caregiver)}</dd><dt>${t('fRel')}</dt><dd>${t(p.relation)}</dd><dt>${t('fSenior')}</dt><dd>${esc(p.senior)}</dd><dt>${t('fAge')}</dt><dd>${esc(p.age)}</dd></dl></div>
+   <div class="stack"><button class="btn btn-primary btn-block" data-act="ffConsent" data-arg="yes">${ic('check')} ${t('ffYes')}</button><button class="btn btn-quiet btn-block" data-act="ffConsent" data-arg="no">${t('ffNo')}</button></div>`}
+  if(i===1){const pf=S.ffPrefill;const tag=pf?`<span class="prefill-tag">${ic('robot')} ${t('prefTag')}</span>`:'';const c=pf?'prefilled':'';
+   q=t('ff1q');body=`${pf?`<p class="muted">${t('yellowNote')}</p>`:''}${field('ff.cname',t('fFull'),{cls:c})}${tag}${field('ff.rel',t('fRelL'),{cls:c})}${tag}${field('ff.sname',t('fSFull'),{cls:c})}${tag}${field('ff.phone',t('fPhone'),{type:'tel',mode:'tel',ph:t('phonePh'),hint:t('fPhoneHint')})}`}
+  if(i===2){q=t('ff2q');body=`<div class="panel"><dl class="facts"><dt>${t('scheme')}</dt><dd>${esc(sc.name)}</dd><dt>${t('fFull')}</dt><dd>${esc(f.cname)}</dd><dt>${t('fRel')}</dt><dd>${esc(f.rel)}</dd><dt>${t('fSFull')}</dt><dd>${esc(f.sname)}</dd><dt>${t('mobile')}</dt><dd>${esc(f.phone)}</dd></dl></div>
+   <div class="banner info">${ic('people')}<div><p>${t('ff2note',{a:sc.agency})}</p></div></div>`}
+  return `<div class="wrap">${backBtn()}${progress(i+1,N)}<span class="label">${t('appL',{n:sc.name})}</span><h1 class="q">${q}</h1><div class="stack">${body}</div>${err?`<p class="err" role="alert">${err}</p>`:''}
+  ${i>0?`<div class="stepfoot"><button class="btn btn-primary btn-block" data-act="ffNext">${i===N-1?t('sendCheck'):t('next')}</button></div>`:''}${helpMe(t('appL',{n:sc.name}))}</div>`};
+
+/* activities & support */
+const ACTS=[{id:'a1',p:'Sunbird Active Ageing Centre (example)',i:'leaf'},{id:'a2',p:'Sunbird Active Ageing Centre (example)',i:'chat'},{id:'a3',p:'Lakeview Community Club (example)',i:'people'},{id:'a4',p:'Banyan Community Centre (example)',i:'heart',carer:true}];
+VIEWS.acts=()=>{const s=sName();const lastC=S.checks.filter(c=>c.kind==='carer').sort((a,b)=>b.date.localeCompare(a.date))[0];
+ return `<div class="wrap">${backBtn()}${pageHead('people',t('actTitle'),t('c4d'))}
+<section class="panel" style="background:var(--sun-soft);border:1px solid var(--sun-line)"><h2>${t('ywT')}</h2><p>${t('ywD')}</p>
+  ${lastC?`<p class="small">${t('lastCk',{d:agoText(lastC.date)})} <span class="chip ${lastC.level}">${t(lastC.label)}</span></p>`:''}
+  <div><button class="btn btn-primary" data-act="startCheck" data-arg="carer">${ic('heart')} ${t('ywBtn')}</button></div></section>
+<section class="section"><div class="row">${pic('f4','mini')}<h2>${t('nearT')}</h2></div><p class="muted">${t('nearD',{s})}</p>
+${ACTS.map(a=>{const on=S.interests.includes(a.id);return `<article class="item"><span class="docic">${ic(a.i)}</span><div class="body"><h3>${t(a.id+'t')}${a.carer?` <span class="chip sun">${t('forCarers')}</span>`:''}</h3><span>${t(a.id+'w')}</span><span class="muted">${ic('pin')} ${esc(a.p)}</span><p class="small">${t(a.id+'d')}</p><p class="small" style="color:var(--teal)">${ic('spark')} ${t('suitedFor',{w:t(a.id+'why')})}</p><div style="margin-top:6px"><button class="toggle" data-act="interest" data-arg="${a.id}" aria-pressed="${on}">${on?ic('check')+' '+t('noted'):t('interested')}</button></div></div></article>`}).join('')}</section>
+<section class="panel"><h2>${t('respT')}</h2><p>${t('respD',{s})}</p><div><button class="btn btn-human" data-act="helpView" data-arg="meet">${ic('people')} ${t('respBtn')}</button></div></section>
+<section class="panel"><h2>${t('famT')}</h2><p>${t('famD')}</p><p class="muted">${t('famD2',{s})}</p></section></div>`};
+
+/* ---------- help panel ---------- */
+const CENTRES=[{n:'Sunbird Active Ageing Centre',d:['walk',5]},{n:'Lakeview Community Club',d:['bus',10]},{n:'Banyan Community Centre',d:['bus',15]}];
+function helpHTML(){
+  const h=S.help,cb=S.forms.cb,m=S.forms.meet;
+  const head=(ti,backTo)=>`<div class="sheet-head">${backTo?`<button class="back" data-act="helpView" data-arg="${backTo}">${ic('back')} ${t('back')}</button>`:'<span></span>'}<button class="x" data-act="closeHelp" aria-label="${t('close')}">${ic('close')}</button></div><h2 id="helpTitle">${ti}</h2>`;
+  const topic=h.topic?`<div class="banner info"><p>${t('hpTopic',{t:h.topic})}</p></div>`:'';
+  const err=S.cbErr?`<p class="err" role="alert">${S.cbErr}</p>`:'';
+  const pills=(key,vals)=>`<div class="pills" role="group">${vals.map(v=>`<button class="pill" data-act="pickPill" data-key="${key}" data-arg="${v}" aria-pressed="${S.forms[key.split('.')[0]][key.split('.')[1]]===v}">${t(v)}</button>`).join('')}</div>`;
+  if(h.view==='menu')return `${head(t('hpTitle'))}${topic}<div class="help-hero">${pic('f5','mini')}<p>${t('hpIntro')}</p></div>
+   ${[['call','phone','opCall'],['callback','clock','opCb'],['meet','building','opMeet']].map(([v,i,k])=>`<button class="opt" data-act="helpView" data-arg="${v}"><span class="oi">${ic(i)}</span><span><b>${t(k)}</b><span>${t(k+'D')}</span></span></button>`).join('')}
+   <p class="muted small">${t('noSignup')} ${t('emergency')}</p>`;
+  if(h.view==='call')return `${head(t('callT'),'menu')}<p>${t('callIntro')}</p><p class="bignum">6000 0000</p><p><span class="demo-label">${t('demoNum')}</span></p><p class="muted">${t('hours')}</p>
+   <div><button class="btn btn-quiet" data-act="copyNum">${t('copy')}</button></div><p class="muted small">${t('cantCall')} <button class="linkbtn" data-act="helpView" data-arg="callback">${t('askCall')}</button></p>`;
+  if(h.view==='callback')return `${head(t('cbT'),'menu')}${topic}${field('cb.phone',t('phone'),{type:'tel',mode:'tel',ph:t('phonePh')})}
+   <div class="field"><span class="flabel">${t('whichDay')}</span>${pills('cb.day',['todayD','tomorrow'])}</div>
+   <div class="field"><span class="flabel">${t('whatTime')}</span>${pills('cb.time',['morningT','afternoonT','eveningT'])}</div>
+   <div class="field"><span class="flabel">${t('prefLang')}</span><div class="pills" role="group">${LANGS.map(l=>`<button class="pill" lang="${l}" data-act="pickPill" data-key="cb.lang" data-arg="${l}" aria-pressed="${(cb.lang||lang)===l}">${L[l].langName}</button>`).join('')}</div></div>
+   ${err}<button class="btn btn-human btn-block" data-act="sendCb">${ic('phone')} ${t('sendCbBtn')}</button>`;
+  if(h.view==='meet')return `${head(t('meetT'),'menu')}${topic}<p>${t('meetIntro')}</p>
+   <div class="choices" role="group">${CENTRES.map(c=>`<button class="choice" data-act="pickPill" data-key="meet.centre" data-arg="${c.n}" aria-pressed="${m.centre===c.n}"><span class="mark"></span><span>${c.n}<small>${t(c.d[0],{n:c.d[1]})}, ${t('exCentre')}</small></span></button>`).join('')}</div>
+   <div class="field"><span class="flabel">${t('whenSuits')}</span>${pills('meet.slot',['wkM','wkA','satM'])}</div>
+   ${field('meet.phone',t('phone'),{type:'tel',mode:'tel',ph:t('meetPhonePh')})}${err}
+   <button class="btn btn-human btn-block" data-act="sendMeet">${ic('calendar')} ${t('sendMeetBtn')}</button>`;
+  if(h.view==='done')return `${head(t(h.doneT))}<div class="result good"><p>${h.doneD}</p><p>${t('yourRef',{r:h.ref})}</p></div><p class="muted small">${t('protoNote')}</p><button class="btn btn-primary btn-block" data-act="closeHelp">${t('done')}</button>`;
+}
+function openHelp(view='menu',topic=null){if($('#helpLayer').hidden)S.lastFocus=document.activeElement;S.help={view,topic};S.cbErr='';renderHelp()}
+function renderHelp(){const L2=$('#helpLayer');L2.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="helpTitle">${helpHTML()}</div>`;L2.hidden=false;document.body.style.overflow='hidden';const h=L2.querySelector('h2');h.tabIndex=-1;h.focus()}
+function closeHelp(){$('#helpLayer').hidden=true;document.body.style.overflow='';S.lastFocus&&S.lastFocus.focus&&S.lastFocus.focus()}
+
+/* sheets: language + confirm */
+function openSheet(html){S.lastFocus2=document.activeElement;const l=$('#sheetLayer');l.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">${html}</div>`;l.hidden=false;l.querySelector('#shT').focus()}
+function closeSheet(){$('#sheetLayer').hidden=true;S.lastFocus2&&S.lastFocus2.focus&&S.lastFocus2.focus()}
+function openLang(){openSheet(`<div class="sheet-head"><span></span><button class="x" data-act="closeSheet" aria-label="${t('close')}">${ic('close')}</button></div><h2 id="shT" tabindex="-1">${ic('globe')} ${t('chooseLang')}</h2>
+  <div class="choices" role="group">${LANGS.map(l=>`<button class="choice langopt" lang="${l}" data-act="setLang" data-arg="${l}" aria-pressed="${l===lang}"><span class="mark"></span><span>${L[l].langName}</span></button>`).join('')}</div>`)}
+function confirmBox({title,body,yes,onYes}){S._onYes=onYes;openSheet(`<h2 id="shT" tabindex="-1">${title}</h2><p>${body}</p><div class="stack"><button class="btn btn-primary btn-block" data-act="cfYes">${yes}</button><button class="btn btn-quiet btn-block" data-act="closeSheet">${t('noBack')}</button></div>`)}
+let toastT;function toast(msg){const el=$('#toast');el.innerHTML=ic('check')+' '+msg;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3600)}
+function setLang(l){if(!L[l])return;lang=l;document.documentElement.lang=l;try{localStorage.setItem('cb-lang',l)}catch(e){}if(!$('#sheetLayer').hidden)closeSheet();render(true);if(!$('#helpLayer').hidden)renderHelp()}
+function setSize(n){document.documentElement.dataset.size=n;document.querySelectorAll('[data-act=size]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.arg===String(n)));try{localStorage.setItem('cb-size',n)}catch(e){}}
+const phoneOK=v=>/^[689]\d{7}$/.test((v||'').replace(/\s/g,''));
+const fmtPhone=v=>{const p=v.replace(/\s/g,'');return p.slice(0,4)+' '+p.slice(4)};
+
+/* ---------- actions ---------- */
+const A={
+ back:stepBack,goHome,brandHome:goHome,go:v=>go(v),size:n=>setSize(n),setLang,openLang,closeSheet,
+ cfYes:()=>{$('#sheetLayer').hidden=true;const f=S._onYes;S._onYes=null;f&&f()},
+ tryDemo:()=>{loadExample();S.stack=[];S.view='home';render();toast(t('exampleFamily'))},
+ startOnb:()=>{S.onbStep=0;S.onbErr='';S.singpass=false;go('onboard')},
+ singpass:()=>{Object.assign(S.forms.onb,{caregiver:'Tan Mei Ling',relation:'rel_daughter',senior:'Mdm Tan Siew Lan',age:'78'});S.singpass=true;render(true)},
+ onbNext:()=>{
+  const f=S.forms.onb,i=S.onbStep;S.onbErr='';
+  if(i===0&&(!(f.caregiver||'').trim()||!f.relation))S.onbErr=t('errName');
+  if(i===1){const age=parseInt(f.age,10);if(!(f.senior||'').trim())S.onbErr=t('errSenior');else if(!age||age<40||age>115)S.onbErr=t('errAge')}
+  if(i===2&&!(f.prefs||[]).length)S.onbErr=t('errPrefs');
+  if(i===3&&!f.tech)S.onbErr=t('errOne');
+  if(i===4&&!f.consent)S.onbErr=t('errConsent');
+  if(S.onbErr)return render(true);
+  if(i<4){S.onbStep++;return render()}
+  S.profile={caregiver:f.caregiver.trim(),relation:f.relation,senior:f.senior.trim(),short:f.senior.trim(),age:parseInt(f.age,10),prefs:f.prefs,tech:f.tech,consent:true,prefill:!!f.prefill};
+  S.demo=false;S.appts=[];S.docs=[];S.checks=[];S.apps=[];S.stack=[];S.view='home';render();toast(t('welcome',{n:S.profile.caregiver}))},
+ pick:(v,b)=>{const[f,k]=b.dataset.key.split('.');S.forms[f][k]=v;b.closest('[role=group]').querySelectorAll('.choice').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  if(S.view==='onboard'&&k==='tech'){render(true);return}
+  if(b.dataset.auto)setTimeout(()=>A[b.dataset.auto](),260)},
+ toggle:(v,b)=>{const[f,k]=b.dataset.key.split('.');const arr=S.forms[f][k]=S.forms[f][k]||[];const i=arr.indexOf(v);i>=0?arr.splice(i,1):arr.push(v);b.setAttribute('aria-pressed',i<0)},
+ pickPill:(v,b)=>{const[f,k]=b.dataset.key.split('.');S.forms[f][k]=v;b.closest('[role=group]').querySelectorAll('[aria-pressed]').forEach(x=>x.setAttribute('aria-pressed',x===b))},
+ openHelp:()=>openHelp('menu'),closeHelp,helpView:v=>openHelp(v,$('#helpLayer').hidden?null:S.help.topic),helpWith:x=>openHelp('menu',x),
+ copyNum:()=>{const sel=()=>{const el=document.querySelector('.bignum');if(!el)return;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast(t('selected'))};try{navigator.clipboard.writeText('6000 0000').then(()=>toast(t('copied')),sel)}catch(e){sel()}},
+ sendCb:()=>{const c=S.forms.cb;if(!phoneOK(c.phone)){S.cbErr=t('errPhone');return renderHelp()}if(!c.day||!c.time){S.cbErr=t('errDayTime');return renderHelp()}
+  S.help={...S.help,view:'done',ref:ref(),doneT:'cbDoneT',doneD:t('cbDoneD',{p:fmtPhone(c.phone),d:t(c.day),t:t(c.time)})+' '+L[c.lang||lang].langName+'.'};renderHelp()},
+ sendMeet:()=>{const m=S.forms.meet;if(!m.centre||!m.slot){S.cbErr=t('errCentre');return renderHelp()}if(!phoneOK(m.phone)){S.cbErr=t('errPhone');return renderHelp()}
+  S.help={...S.help,view:'done',ref:ref(),doneT:'meetDoneT',doneD:t('meetDoneD',{c:m.centre,p:fmtPhone(m.phone)})+' ('+t(m.slot)+')'};renderHelp()},
+ startCheck:k=>{S.ck={kind:k,i:0,a:{}};go('check')},
+ ckAnswer:(n,b)=>{const k=CHECKS[S.ck.kind][S.ck.i];S.ck.a[k]=+n;b.setAttribute('aria-pressed','true');setTimeout(()=>{S.ck.i++;render()},220)},
+ saveCheck:()=>{const r=S.ckResult;S.checks.push({kind:r.kind,date:isoOffset(0),level:r.level,label:r.label,fall:r.kind==='senior'&&S.ck.a.fall>0});S.stack=['home'];S.view=r.kind==='senior'?'care':'acts';render();toast(t('ckSaved'))},
+ bookDoctor:()=>{S.forms.appt={type:'type_doc',reminder:'rem_1d'};S.apptStep=1;S.apptErr='';go('apptAdd')},
+ sugAdd:()=>{S.forms.appt={type:'type_spec',reminder:'rem_1d',place:'General Hospital, Eye Clinic (example)'};S.apptStep=1;S.apptErr='';S.sugPending=true;go('apptAdd')},
+ newAppt:()=>{S.forms.appt={};S.apptStep=0;S.apptErr='';S.sugPending=false;go('apptAdd')},
+ apptNext:()=>{const f=S.forms.appt,i=S.apptStep;S.apptErr='';
+  if(i===0&&!f.type)S.apptErr=t('errType');
+  if(i===1){if(!f.date||!f.time)S.apptErr=t('errWhen');else if(f.date<isoOffset(0))S.apptErr=t('errPast')}
+  if(i===2&&!(f.place||'').trim())S.apptErr=t('errPlace');
+  if(i===3&&!f.reminder)S.apptErr=t('errType');
+  if(S.apptErr)return render(true);
+  if(i<4){S.apptStep++;return render()}
+  S.appts.push({id:Date.now(),type:f.type,date:f.date,time:f.time,place:f.place.trim(),reminder:f.reminder});if(S.sugPending)S.sugDone=true;
+  S.view='appts';S.stack=['home'];render();toast(t('apptSaved'))},
+ setPlace:p=>{S.forms.appt.place=p;render(true)},
+ toggleRem:id=>{const a=S.appts.find(x=>x.id==id);a.reminder=a.reminder==='rem_none'?'rem_1d':'rem_none';render(true);toast(a.reminder==='rem_none'?t('remTurnedOff'):t('remTurnedOn'))},
+ delAppt:id=>{const a=S.appts.find(x=>x.id==id);confirmBox({title:t('remConfirmT'),body:t('remConfirmD',{t:t(a.type),d:fmtDate(a.date)}),yes:t('yesRemove'),onYes:()=>{S.appts=S.appts.filter(x=>x.id!=id);render(true);toast(t('apptRemoved'))}})},
+ newDoc:()=>{S.doc={stage:'pick'};go('docAdd')},
+ docSample:n=>readDoc(SAMPLE_DOCS[n]),
+ docChange:()=>{S.doc.stage='change';render()},
+ docSetCat:c=>{S.doc.result.cat=c;S.doc.result.changed=true;S.doc.stage='result';render()},
+ docSave:()=>{const d=S.doc;S.docs.unshift({id:Date.now(),name:d.doc.name,cat:d.result.cat,by:d.result.changed?'byYou':'byAI'});S.view='appts';S.stack=['home'];render();toast(t('savedIn',{c:t(d.result.cat)}))},
+ docToAppt:()=>{const a=S.doc.doc.appt;S.forms.appt={type:a.type,date:isoOffset(a.days),time:'09:00',place:a.place,reminder:'rem_1d'};S.apptStep=4;S.apptErr='';S.sugPending=false;go('apptAdd');toast(t('filledFromDoc'))},
+ startFin:()=>{S.forms.fin={};if(S.profile){const age=P().age;S.forms.fin.age=age>=65?'a65':age>=60?'a60':'u60';const by=new Date().getFullYear()-age;S.forms.fin.born=by<=1949?'pg':by<=1959?'mg':'later'}S.finStep=0;go('finCheck')},
+ finNext:()=>{const q=FIN_Q[S.finStep];if(!S.forms.fin[q.k])return;if(S.finStep<FIN_Q.length-1){S.finStep++;render()}else{S.finAnswers={...S.forms.fin};S.explain={};S.stack=['home','fin'];S.view='finResults';render()}},
+ explain:id=>{S.explain[id]=!S.explain[id];render(true)},
+ prepForm:id=>{S.ffScheme=id;S.ffStep=0;S.ffDone=null;S.ffErr='';S.forms.ff={};go('finForm')},
+ ffConsent:v=>{const p=P();S.ffPrefill=v==='yes';S.forms.ff=v==='yes'?{cname:p.caregiver,rel:t(p.relation),sname:p.senior}:{};S.ffStep=1;render()},
+ ffNext:()=>{const f=S.forms.ff;S.ffErr='';
+  if(S.ffStep===1){if(!f.cname||!f.rel||!f.sname)S.ffErr=t('errFill');else if(!phoneOK(f.phone))S.ffErr=t('errPhone');if(S.ffErr)return render(true);S.ffStep=2;return render()}
+  confirmBox({title:t('cfSendT'),body:t('cfSendD'),yes:t('cfYesSend'),onYes:()=>{S.ffDone=ref();S.apps.unshift({id:Date.now(),scheme:S.ffScheme,ref:S.ffDone,stage:0});S.stack=['home','fin'];render()}})},
+ interest:id=>{const i=S.interests.indexOf(id);if(i>=0){S.interests.splice(i,1);render(true);toast(t('removedToast'))}else{S.interests.push(id);render(true);toast(t('notedToast'))}}
+};
+function readDoc(doc){S.doc={stage:'reading',doc};render();setTimeout(()=>{S.doc.result=classify(doc.text);S.doc.stage='result';if(S.view==='docAdd')render()},1300)}
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;const f=A[b.dataset.act];if(f){e.preventDefault();f(b.dataset.arg,b,e)}});
+document.addEventListener('input',e=>{const k=e.target.dataset.field;if(!k||e.target.type==='checkbox')return;const[f,x]=k.split('.');S.forms[f][x]=e.target.value});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset.field&&el.type==='checkbox'){const[f,x]=el.dataset.field.split('.');S.forms[f][x]=el.checked}
+  if(el.id==='docfile'&&el.files&&el.files[0]){const name=el.files[0].name;readDoc({name,text:name.replace(/[_\-.]+/g,' ')})}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#sheetLayer').hidden)closeSheet();else if(!$('#helpLayer').hidden)closeHelp()}});
+$('#helpLayer').addEventListener('click',e=>{if(e.target.id==='helpLayer')closeHelp()});
+$('#sheetLayer').addEventListener('click',e=>{if(e.target.id==='sheetLayer')closeSheet()});
+
+let sz='1',lg='en';try{sz=localStorage.getItem('cb-size')||'1';lg=localStorage.getItem('cb-lang')||'en'}catch(e){}
+setSize(sz);lang=L[lg]?lg:'en';document.documentElement.lang=lang;render();
+</script>
+
+</body>
+</html>
